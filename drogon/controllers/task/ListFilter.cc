@@ -16,6 +16,7 @@ void TaskCtrl::listFilter(
     std::string project_id = req->getParameter("project_id");
     std::string completedInput = req->getParameter("completed");
     std::string executor_id = req->getParameter("executor_id");
+    std::string name = req->getParameter("name");
 
     std::string completed = completedInput;
 
@@ -51,7 +52,8 @@ void TaskCtrl::listFilter(
             milestone_id,
             project_id,
             completed,
-            executor_id
+            executor_id,
+            name
         );
 
         Json::Value data(Json::arrayValue);

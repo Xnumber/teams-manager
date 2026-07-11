@@ -51,7 +51,7 @@ build_and_run() {
         echo "❌ 服務未啟動，跳過測試資料。"
         return 1
     fi
-    bash -c "k6 run k6/prepare-data.ts"
+    bash -c "k6 run ../k6/prepare-data.ts"
 }
 # 終止舊進程
 if [ -f "$PID_FILE" ]; then

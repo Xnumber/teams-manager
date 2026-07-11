@@ -10,6 +10,7 @@ public:
   METHOD_LIST_BEGIN
   ADD_METHOD_TO(Project::get, "/projects/{1}", Get, "AuthFilter");    // path is /projects/{projectId}
   ADD_METHOD_TO(Project::list, "/projects", Get, "AuthFilter");        // path is /projects
+  ADD_METHOD_TO(Project::listFilterByExecutor, "/projects-filter-by-executor", Get, "AuthFilter");        // path is /projects
   ADD_METHOD_TO(Project::listForAnalytics, "/projects/analytics", Get, "AuthFilter");        // path is /projects/analytics
   // ADD_METHOD_TO(Project::list, "/projects", Get);        // path is /projects
   ADD_METHOD_TO(Project::getCumulativeWorkingDayDelta, "/projects/get-cumulative-working-day-delta", Get);        // compatibility path
@@ -34,6 +35,8 @@ public:
   void get(const HttpRequestPtr &req,
            std::function<void(const HttpResponsePtr &)> &&callback, std::string projectId);
   void list(const HttpRequestPtr &req,
+            std::function<void(const HttpResponsePtr &)> &&callback);
+  void listFilterByExecutor(const HttpRequestPtr &req,
             std::function<void(const HttpResponsePtr &)> &&callback);
   void listForAnalytics(const HttpRequestPtr &req,
             std::function<void(const HttpResponsePtr &)> &&callback);

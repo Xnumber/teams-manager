@@ -16,6 +16,7 @@ WITH filtered_tasks AS (
 				AND et.user_id = NULLIF($5, '')::uuid
 		)
 	  )
+	  AND (NULLIF($6, '') IS NULL OR t.name ILIKE ('%' || NULLIF($6, '') || '%'))
 ),
 
 task_with_users AS (
@@ -44,7 +45,7 @@ task_with_users AS (
 	) et ON TRUE
 )
 SELECT
-	COALESCE(json_agg(to_jsonb(twu) ORDER BY twu.created_at, twu.id), '[]'::json) AS data,
+	COALESCE(json_agg(to_jsonb(twu) ORDER BY twu.created_at DESC, twu.id DESC), '[]'::json) AS data,
 	(SELECT COUNT(*)::int FROM filtered_tasks) AS count
 FROM task_with_users twu
 )";

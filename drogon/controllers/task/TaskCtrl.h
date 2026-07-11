@@ -12,6 +12,8 @@ public:
     ADD_METHOD_TO(TaskCtrl::list, "/tasks", Get, "AuthFilter");        // path is /tasks
     ADD_METHOD_TO(TaskCtrl::create, "/tasks", Post, "AuthFilter");     // path is /tasks
     ADD_METHOD_TO(TaskCtrl::update, "/tasks/{1}", Put, "AuthFilter"); // path is /tasks/{taskId}
+    ADD_METHOD_TO(TaskCtrl::updateDependency, "/tasks/{1}/dependency", Put, "AuthFilter"); // path is /tasks/{taskId}/dependency
+    ADD_METHOD_TO(TaskCtrl::getDependency, "/tasks/{1}/dependency", Get, "AuthFilter"); // path is /tasks/{taskId}/dependency
     // ADD_METHOD_TO(TaskCtrl::remove, "/tasks/{1}", Delete, "AuthFilter"); // path is /tasks/{taskId}
     ADD_METHOD_TO(TaskCtrl::listFilter, "/tasks-filter", Get, "AuthFilter"); // path is /list-filter
     ADD_METHOD_TO(TaskCtrl::listThisWeek, "/this-week-tasks", Get, "AuthFilter"); // path is /this-week-tasks
@@ -33,13 +35,20 @@ public:
     
     METHOD_LIST_END
 
+
+
+
     void get(const HttpRequestPtr &req,
+             std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
+    void getDependency(const HttpRequestPtr &req,
              std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
     void list(const HttpRequestPtr &req,
               std::function<void(const HttpResponsePtr &)> &&callback);
     void create(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback);
     void update(const HttpRequestPtr &req,
+                std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
+    void updateDependency(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
     void remove(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);

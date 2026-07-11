@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 import CustomStore from 'devextreme/data/custom_store';
 import { DataSource, LoadOptions } from 'devextreme-angular/common/data';
 import { JBTask, RawTask } from '../pages/tasks/typing';
@@ -33,6 +33,40 @@ export class Task {
             }
             throw new Error('Task not found');
           });
+        },
+        load: (loadOptions: LoadOptions) => {
+          const filter = loadOptions.searchValue
+          const params: Record<string, any> = {}
+          if (filter) {
+            params['filter'] = filter;
+          }
+          return lastValueFrom(this.http.get<any>("/tasks", { params })).then(res => {
+            if (res && Array.isArray(res.tasks)) {
+              return res.tasks.map((p: any) => ({ id: p.id, name: p.name }));
+            }
+            return [];
+          });
+        }
+      })
+    };
+  }
+
+  createTasksDependencyLookupDataSource = (id?: string) => {
+    return {
+      store: new CustomStore({
+        byKey: (key: string) => {
+
+          if(id) {
+            return lastValueFrom(this.http.get<any>(`/tasks/${id}/dependency`)).then(res => {
+              if (res && res.data) {
+                return { id: res.data.id, name: res.data.name };
+              }
+              throw new Error('Task not found');
+            });
+          } else {
+            return lastValueFrom(of(null))
+          }
+
         },
         load: (loadOptions: LoadOptions) => {
           const filter = loadOptions.searchValue

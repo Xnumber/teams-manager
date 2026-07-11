@@ -15,7 +15,9 @@ import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import { Column } from 'devextreme/ui/data_grid';
 import { DxChartModule, DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
+import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
+import { DependencyInsertingEvent } from 'devextreme/ui/gantt';
 
 @Component({
   selector: 'app-plans',
@@ -25,6 +27,7 @@ import { PlanService } from './service/plans';
     CommonModule,
     DxTagBoxModule,
     DxCheckBoxModule,
+    DxPopupModule,
     DxDataGridModule,
     DxSelectBoxModule,
     DxToastModule,
@@ -174,6 +177,9 @@ export class Plans {
   totalDelayedDays = signal<number>(0);
   latestTaskEnd = signal<string | null>(null);
 
+  popupVisible = signal<boolean>(false);
+  popupTask = signal<any | null>(null);
+
   toastVisible = signal<boolean>(false);
   toastMessage = signal<string>('');
   toastType = signal<'info' | 'success' | 'warning' | 'error'>('info');
@@ -208,12 +214,6 @@ export class Plans {
             const end = task.end ? new Date(`${task.end}T23:59:59.999+08:00`) : null;
 
             let color = undefined;
-
-
-
-            // if (task.delayed && !task.isDelayMarker) {
-            //   color = '#ffb5b5';
-            // }
 
             if (task.delayed) {
               color = '#ff2e2e';
@@ -333,5 +333,58 @@ export class Plans {
 
   zoomOut() {
     this.gantt()?.instance.zoomOut();
+  }
+
+
+
+
+
+
+
+
+  // Dependency Type	Supported Values
+  // Finish to Start (FS)	0, "0", "FS", "fs"
+  // Start to Start (SS)	1, "1", "SS", "ss"
+  // Finish to Finish (FF)	2, "2", "FF", "ff"
+  // Start to Finish (SF)	3, "3", "SF", "sf"
+  
+  onDependencyInserting(e: DependencyInsertingEvent) {
+    const task = (e as any).taskData ?? (e as any).task ?? null;
+    const predecessorId = e.values.predecessorId;
+    const successorId = e.values.successorId;
+
+    // If dependency type is not FS (0), call backend API to create dependency
+    if (e.values.type != 0) {
+      e.cancel = true; // prevent default client-side insertion
+
+      
+      
+    } else {
+      if (!predecessorId || !successorId) {
+        this.toastMessage.set('Invalid dependency data');
+        this.toastType.set('error');
+        this.toastVisible.set(true);
+        return;
+      }
+      const url = `/tasks/${successorId}/dependency`;
+      const body = { dependency_id: predecessorId };
+      
+      this.http.put(url, body)
+      .subscribe({
+        next: (res: any) => {
+          this.toastMessage.set(res?.message || 'Dependency created');
+          this.toastType.set('success');
+          this.toastVisible.set(true);
+          // refresh gantt data
+          this.planId$.next(this.planId$.value);
+        },
+        error: (err: any) => {
+          this.toastMessage.set(err?.error?.message || 'Failed to create dependency');
+          this.toastType.set('error');
+          this.toastVisible.set(true);
+        }
+      });
+      // FS default behavior: allow client insertion (do nothing)
+    }
   }
 }

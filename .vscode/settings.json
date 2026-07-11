@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/clement/projects/project-teams-manager/drogon"
+    "cmake.sourceDirectory": "/home/clement/projects/project-teams-manager/drogon",
+    "liveServer.settings.port": 5501
 }

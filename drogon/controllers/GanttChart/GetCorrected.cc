@@ -1,9 +1,10 @@
-#include "GanttChartCtrl.h"
-#include "sql/sql.h"
-#include "../../utils/date/date.h"
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+
+#include "GanttChartCtrl.h"
+#include "sql/sql.h"
+#include "../../utils/date/date.h"
 #include "GetCorrected/utils.h"
 using namespace drogon;
 using namespace drogon::orm;
@@ -134,13 +135,13 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
             );
 
             
-            correctDatesByDependencies(
-                dependenciesResult,
-                ganttData,
-                // newGanttData,
-                taskResult,
-                dependencyData
-            );
+            // correctDatesByDependencies(
+            //     dependenciesResult,
+            //     ganttData,
+            //     // newGanttData,
+            //     taskResult,
+            //     dependencyData
+            // );
             
             
             // ganttData = newGanttData;

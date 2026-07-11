@@ -36,7 +36,7 @@
 					<dxi-column [hidingPriority]="1" dataField="description"
 						[formItem]="{ colSpan: 2, editorType: 'dxTextArea', disabled: true }" caption="描述"></dxi-column>
 					<dxi-column [hidingPriority]="2" dataField="progress" [calculateDisplayValue]="displayProgress"
-						[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 }, disabled: true }" caption="進度"
+						[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 }, disabled: true }" caption="進度" [allowFiltering]="false"
 						dataType="number">
 					</dxi-column>
 					<dxi-column dataField="creator_id" [visible]="false" caption="建立者" [formItem]="{ visible: false }"
@@ -63,7 +63,7 @@
 					<dxi-column dataField="completion_date" caption="完成日期" dataType="date" [visible]="false" [formItem]="{ disabled: true }"></dxi-column>
 					<dxi-column dataField="completed" [visible]="false" caption="已完成" dataType="boolean"></dxi-column>
 					<dxi-column  dataField="estimated_workdays"
-						[formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" caption="估計工作天數"></dxi-column>
+						[formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" [allowFiltering]="false" caption="估計工作天數"></dxi-column>
 					<dxi-column [hidingPriority]="0" dataField="remark"
 						[formItem]="{ colSpan: 2, editorType: 'dxTextArea', disabled: true }" caption="備註"></dxi-column>
 					
@@ -119,14 +119,14 @@
 				<dxi-column dataField="project_id" caption="專案" [validationRules]="[{ type: 'required' }]"
 					[lookup]="{ dataSource: projects, valueExpr: 'id', displayExpr: 'name' }"></dxi-column>
 				<dxi-column dataField="milestone_id" caption="工作大項" [lookup]="{ dataSource: milestoneDataSource, valueExpr: 'id', displayExpr: 'name' }" [validationRules]="[{ type: 'required' }]" [editorOptions]="{ onFocusIn: onFocusIn }"></dxi-column>
-				<dxi-column  dataField="estimated_workdays" [formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" caption="估計工作天數"></dxi-column>
+				<dxi-column  dataField="estimated_workdays" [formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" [allowFiltering]="false" caption="估計工作天數"></dxi-column>
 				<dxi-column dataField="id" caption="ID" [formItem]="{ visible: false }" [visible]="false"></dxi-column>
 				<dxi-column dataField="name" caption="工作名稱" [validationRules]="[{ type: 'required' }]"></dxi-column>
 				<dxi-column dataField="status_id" [lookup]="{ dataSource: taskStatus, valueExpr: 'id', displayExpr: 'name' }"  caption="狀態" [validationRules]="[{ type: 'required' }]"></dxi-column>
 				<dxi-column [hidingPriority]="1" dataField="description"
 					[formItem]="{ colSpan: 2, editorType: 'dxTextArea' }" caption="描述"></dxi-column>
 				<dxi-column [hidingPriority]="2" dataField="progress" [calculateDisplayValue]="displayProgress"
-					[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 } }" caption="進度"
+					[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 } }" caption="進度" [allowFiltering]="false"
 					dataType="number">
 				</dxi-column>
 				<dxi-column dataField="creator_id" [visible]="false" caption="建立者" [formItem]="{ visible: false }"
@@ -136,7 +136,7 @@
 				<dxi-column dataField="task_type_id" [visible]="false" caption="工作類型"
 					[lookup]="{ dataSource: taskTypes, valueExpr: 'id', displayExpr: 'name' }"></dxi-column>
 				<dxi-column dataField="task_type_name" [formItem]="{ visible: false }" [visible]="false" caption="工作類型"></dxi-column>
-				<dxi-column dataField="status_last_changed" format="yyyy/MM/dd" caption="狀態變更時間" [hidingPriority]="7"
+				<dxi-column dataField="status_last_changed" format="yyyy/MM/dd" caption="狀態變更時間" [hidingPriority]="7" [allowFiltering]="false"
 					[formItem]="{ visible: false }" dataType="date"></dxi-column>
 				<dxi-column [hidingPriority]="2" [formItem]="{ editorType: 'dxTagBox' }" dataField="executor_ids"
 					caption="執行者"
@@ -150,7 +150,7 @@
 					dataType="date"></dxi-column>
 				<dxi-column dataField="scheduled_start_date" format="yyyy/MM/dd" caption="開始日期" dataType="date" [visible]="false"></dxi-column>
 				<dxi-column [hidingPriority]="6" dataField="scheduled_end_date" format="yyyy/MM/dd"
-					[formItem]="{ visible: false }" [visible]="false" caption="結束日期" dataType="date"></dxi-column>
+					[formItem]="{ visible: false }" caption="結束日期" dataType="date"></dxi-column>
 				<dxi-column dataField="completion_date" caption="完成日期" dataType="date" [visible]="false"></dxi-column>
 				<dxi-column
 					dataField="dependencies"
@@ -215,14 +215,14 @@
 				<dxi-column dataField="project_id" [visible]="true" caption="專案"
 					[lookup]="{ dataSource: projects, valueExpr: 'id', displayExpr: 'name' }" [validationRules]="[{ type: 'required' }]"></dxi-column>
 				<dxi-column dataField="milestone_id" caption="工作大項" [lookup]="{ dataSource: milestoneDataSource, valueExpr: 'id', displayExpr: 'name' }" [editorOptions]="{ onFocusIn: onFocusIn }" [validationRules]="[{ type: 'required' }]"></dxi-column>
-				<dxi-column  dataField="estimated_workdays" [formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" caption="估計工作天數"></dxi-column>
+				<dxi-column  dataField="estimated_workdays" [formItem]="{ colSpan: 2, editorType: 'dxNumberBox' }" [allowFiltering]="false" caption="估計工作天數"></dxi-column>
 				<dxi-column dataField="id" caption="ID" [formItem]="{ visible: false }" [visible]="false"></dxi-column>
 				<dxi-column dataField="name" caption="工作名稱" [validationRules]="[{ type: 'required' }]"></dxi-column>
 				<dxi-column dataField="status_id" [lookup]="{ dataSource: taskStatus, valueExpr: 'id', displayExpr: 'name' }"  caption="狀態" [validationRules]="[{ type: 'required' }]"></dxi-column>
 				<dxi-column [hidingPriority]="1" dataField="description"
 					[formItem]="{ colSpan: 2, editorType: 'dxTextArea' }" caption="描述"></dxi-column>
 				<dxi-column [hidingPriority]="2" dataField="progress" [calculateDisplayValue]="displayProgress"
-					[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 } }" caption="進度"
+					[formItem]="{ editorOptions: { min: 0, format: 'percent', max: 1, step: 0.01 } }" caption="進度" [allowFiltering]="false"
 					dataType="number">
 				</dxi-column>
 				<dxi-column dataField="creator_id" [visible]="false" caption="建立者" [formItem]="{ visible: false }"
@@ -232,7 +232,7 @@
 				<dxi-column dataField="task_type_id" [visible]="false" caption="工作類型"
 					[lookup]="{ dataSource: taskTypes, valueExpr: 'id', displayExpr: 'name' }"></dxi-column>
 				<dxi-column dataField="task_type_name" [formItem]="{ visible: false }" [visible]="false" caption="工作類型"></dxi-column>
-				<dxi-column dataField="status_last_changed" format="yyyy/MM/dd" caption="狀態變更時間" [hidingPriority]="7"
+				<dxi-column dataField="status_last_changed" format="yyyy/MM/dd" caption="狀態變更時間" [hidingPriority]="7" [allowFiltering]="false"
 					[formItem]="{ visible: false }" dataType="date"></dxi-column>
 				<dxi-column [hidingPriority]="2" [formItem]="{ editorType: 'dxTagBox' }" dataField="executor_ids"
 					caption="執行者"

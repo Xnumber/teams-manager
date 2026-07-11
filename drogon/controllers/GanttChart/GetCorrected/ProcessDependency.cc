@@ -13,6 +13,18 @@ Json::Value *findGanttItemById(Json::Value &ganttData, const std::string &id)
     return nullptr;
 }
 
+int *findGanttItemIndexById(Json::Value &ganttData, const std::string &id)
+{
+    for (int i = 0; i < ganttData.size(); ++i)
+    {
+        if (ganttData[i]["id"].asString() == id)
+        {
+            return new int(i);
+        }
+    }
+    return nullptr;
+}
+
 void updateSuccessorDates(
     Json::Value *successorItem, 
     const std::string &newStartDate,
@@ -103,7 +115,8 @@ void correctDatesByDependency(
     Json::Value *predecessorItem = findGanttItemById(ganttData, predecessorId);
     Json::Value *successorItem = findGanttItemById(ganttData, successorId);
     std::string parentId = successorItem ? (*successorItem)["parentId"].asString() : "";
-
+    
+    int *successorIndex = findGanttItemIndexById(ganttData, successorId);
     
     if (predecessorItem && successorItem && predecessorItem->isMember("end") &&
     (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString())
@@ -123,7 +136,7 @@ void correctDatesByDependency(
         
         // std::string newStartDate = date_utils::getNextDate((*predecessorItem)["end"].asString());
         
-        // LOG_DEBUG << "diffDays " << diffDays;
+        LOG_DEBUG << "diffDays " << diffDays;
         // LOG_DEBUG << "diffDays " << diffDays;
         // LOG_DEBUG << "diffDays " << diffDays;
         // LOG_DEBUG << "diffDays " << diffDays;
@@ -160,8 +173,20 @@ void correctDatesByDependency(
                 lastIndex = i;
             }
         }
+        LOG_DEBUG << "firstIndex " << firstIndex;
+        LOG_DEBUG << "lastIndex " << lastIndex;
+        int startIndex = *successorIndex + 1;
+        LOG_DEBUG << "startIndex " << startIndex;
 
-        for (int i = firstIndex; i <= lastIndex; ++i)
+        ganttData[*successorIndex]["start"] = date_utils::getNextDate((*predecessorItem)["end"].asString());
+        ganttData[*successorIndex]["end"] = date_utils::addWorkdays(
+            ganttData[*successorIndex]["end"].asString(),
+            diffDays,
+            1
+        );
+
+
+        for (int i = startIndex; i <= lastIndex; ++i)
         {
             float executorTimeRatio = ganttData[i]["executorTimeRatio"].asFloat();
             std::string previousEnd = ganttData[i - 1]["end"].asString();

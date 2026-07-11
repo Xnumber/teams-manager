@@ -135,13 +135,13 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
             );
 
             
-            // correctDatesByDependencies(
-            //     dependenciesResult,
-            //     ganttData,
-            //     // newGanttData,
-            //     taskResult,
-            //     dependencyData
-            // );
+            correctDatesByDependencies(
+                dependenciesResult,
+                ganttData,
+                // newGanttData,
+                taskResult,
+                dependencyData
+            );
             
             
             // ganttData = newGanttData;

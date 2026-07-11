@@ -1,0 +1,85 @@
+<div>
+	<div>
+		<h1>專案列表</h1>
+	</div>
+	<div class="content">
+		<dx-data-grid #dataGrid [dataSource]="projectsDataSource" [columns]="columns" [paging]="{ enabled: false }"
+			[editing]="{ allowUpdating: true, allowAdding: true, allowDeleting: true, mode: 'popup' }"
+			[showBorders]="true" (onOptionChanged)="onOptionChanged($event)">
+			
+			
+			<dxo-data-grid-master-detail [enabled]="true" template="projectDetailTemplate"></dxo-data-grid-master-detail>
+
+			<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onProjectReorder"
+				[showDragIcons]="true"></dxo-data-grid-row-dragging>
+
+			<div *dxTemplate="let project of 'projectDetailTemplate'">
+				<dx-data-grid 
+					[dataSource]="getMilestonesDataSource(project.data.id)" 
+					[columns]="milestoneColumns"
+					[showBorders]="true"
+					(onRowExpanding)="onMilestoneRowExpanded($event)"
+				>
+					<dxo-paging [enabled]="false"></dxo-paging>
+					<dxo-filter-row [visible]="true"></dxo-filter-row>
+					<dxo-search-panel [visible]="true"></dxo-search-panel>
+
+					<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onMilestoneReorder"
+						[showDragIcons]="true">
+					</dxo-data-grid-row-dragging>
+					<dxo-data-grid-master-detail
+						[enabled]="true" template="milestoneDetailTemplate"
+					>
+					</dxo-data-grid-master-detail>
+					<div *dxTemplate="let milestone of 'milestoneDetailTemplate'">
+						<dx-data-grid
+							[remoteOperations]="{ filtering: true }"
+							[columns]="taskColumns"
+							[dataSource]="tasksDataSource"
+						>
+							<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onTasksReorder" [showDragIcons]="true"></dxo-data-grid-row-dragging>
+						</dx-data-grid>
+					</div>
+				</dx-data-grid>
+			</div>
+			<dxo-filter-row [visible]="true"></dxo-filter-row>
+			<dxo-search-panel [visible]="true"></dxo-search-panel>
+			<div *dxTemplate="let cellInfo of 'dependenciesEditCellTemplate'" class="dependencies-edit-cell">
+				<app-dependencies-edit-cell
+					[selfId]="cellInfo.data?.id"
+					[selfDependencyType]="'TASK'"
+					[value]="cellInfo.data?.dependencies"
+					(valueChanged)="cellInfo.setValue($event)"
+				></app-dependencies-edit-cell>
+					<!-- (valueChanged)="onDependenciesChanged($event, cellInfo.data?.id)" -->
+			</div>
+		</dx-data-grid>
+		<!-- <div class="flex-row">
+			<div class="flex-1">
+				<dx-chart [dataSource]="projectsChartDataSource$ | async"
+					[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '專案待辦工作數' }"
+					[rotated]="true">
+					<dxi-series valueField="tasks_count_in_queue" name="待辦工作"></dxi-series>
+
+
+
+					<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+					</dxo-tooltip>
+
+				</dx-chart>
+
+			</div>
+			<div class="flex-1">
+				<dx-chart [dataSource]="projectsChartDataSource$ | async"
+					[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '專案待辦工作大項數' }"
+					[rotated]="true">
+					
+					<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+					</dxo-tooltip>
+					<dxi-series valueField="milestones_count_in_queue" name="待辦工作大項"></dxi-series>
+				</dx-chart>
+			</div>
+
+		</div> -->
+	</div>
+</div>

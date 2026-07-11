@@ -1,0 +1,501 @@
+<div class="profile-container">
+    
+    <h2>
+        本月統計
+    </h2>
+    <h3>工作</h3>
+    <div>
+        <dx-tab-panel width="100%">
+            <dxi-item [title]="'完成任務數 ' + completedTasksCountThisMonth()">
+                <div *dxTemplate>
+                    <!-- [columns]="['name', 'completion_date', 'created_at']" -->
+                    <dx-data-grid
+                        [dataSource]="completedTasksThisMonthDataSource"
+                        [remoteOperations]="{ filtering: false, sorting: false }"
+                        [filterRow]="{ visible: true }"
+                    >
+                        <dxi-column dataField="name" caption="任務名稱"></dxi-column>
+                        <dxi-column dataField="completion_date" caption="完成日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                        <dxi-column dataField="created_at" caption="建立日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dxi-item>
+            <dxi-item [title]="'參與專案數 ' + participatingProjectCountThisMonth()">
+                <div *dxTemplate>
+                    <!-- [columns]="['project_name', 'task_count']" -->
+                    <dx-data-grid
+                        [dataSource]="participatingProjectThisMonthDataSource"
+                        [showBorders]="true"
+                        [remoteOperations]="{ filtering: false, sorting: false }"
+                        [filterRow]="{ visible: true }"
+                    >
+                        <dxi-column dataField="project_name" caption="專案名稱"></dxi-column>
+                        <dxi-column dataField="task_count" caption="任務數" dataType="number"></dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dxi-item>
+            <dxi-item [title]="'統計 ' + (completedTasksCountThisMonth() * 20 + completedTasksCountThisMonth() * 10 * (weightedMap[participatingProjectCountThisMonth()]))">
+                <div class="statistic" *dxTemplate>
+                    <div class="statistic-categories">
+                        <div class="statistic-category-title light">
+                            任務數
+                        </div>
+                        <div class="statistic-category-count dark">
+                            <span>
+                                {{ completedTasksCountThisMonth() }}
+                            </span>
+                        </div>
+                        <div class="statistic-category-title light">
+                            參與專案數
+                        </div>
+                        <div class="statistic-category-count dark">
+                            <span>{{ participatingProjectCountThisMonth()}}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="statistic-item">
+                        <div class="statistic-item-title">
+                            附載
+                        </div>
+                        <div class="statistic-item-calculate">
+                            <span class="dark">{{ completedTasksCountThisMonth() }}</span> * 10 * <span class="dark">{{ weightedMap[participatingProjectCountThisMonth()] }} </span> = 
+                        </div>
+                        <div class="statistic-item-result">
+                            <span>{{ completedTasksCountThisMonth() * 10 * (weightedMap[participatingProjectCountThisMonth()]) }}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="statistic-item">
+                        <div class="statistic-item-title">
+                            貢獻
+                        </div>
+                        <div class="statistic-item-calculate">
+                            <span class="dark">{{ completedTasksCountThisMonth() }}</span> * 20 =   
+                        </div>
+                        <div class="statistic-item-result">
+                            <span> {{ completedTasksCountThisMonth() * 20 }}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="total black">
+                        總計 {{ completedTasksCountThisMonth() * 20 + completedTasksCountThisMonth() * 10 * (weightedMap[participatingProjectCountThisMonth()]) }}
+                    </div>
+                </div>
+            </dxi-item>
+            <dxi-item title="說明">
+                <div class="description" *dxTemplate>
+                    <div>
+                        參與專案數與附載加權說明
+                    </div>
+                    <ul>
+                        <li>1 個專案: 1 倍</li>
+                        <li>2 個專案: 1.3 倍</li>
+                        <li>3 個專案: 1.6 倍</li>
+                        <li>4 個專案: 1.9 倍</li>
+                        <li>5 個專案: 2.2 倍</li>
+                        <li>6 個專案: 2.5 倍</li>
+                        <li>7 個專案: 2.8 倍</li>
+                        <li>8 個專案: 3.1 倍</li>
+                        <li>9 個專案: 3.4 倍</li>
+                        <li>10 個專案: 3.7 倍</li>
+                    </ul>
+                </div>
+            </dxi-item>
+        </dx-tab-panel>
+    </div>
+    
+    <h3>Github</h3>
+    
+    
+    
+    <div>
+        <dx-tab-panel width="100%">
+            <dxi-item [title]="'Pull Requests ' + pRsThisMonth()">
+                <div *dxTemplate>
+                    <!-- [columns]="['title', 'github_repository_name', 'created_at']" -->
+                    <dx-data-grid
+                        [dataSource]="pRsThisMonthDataSource()"
+                        [remoteOperations]="{ filtering: false, sorting: false }"
+                        [filterRow]="{ visible: true }"
+                    >
+                        <dxi-column dataField="title" caption="標題"></dxi-column>
+                        <dxi-column dataField="github_repository_name" caption="Repo名稱"></dxi-column>
+                        <dxi-column dataField="created_at" caption="建立日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dxi-item>
+            <dxi-item [title]="'Commits ' + commitsThisMonth()">
+                <div *dxTemplate>
+                    <!-- [columns]="['message', 'github_repository_name', 'committed_at']" -->
+                    <dx-data-grid
+                        [dataSource]="commitsThisMonthDataSource()"
+                        [showBorders]="true"
+                        [remoteOperations]="{ filtering: false, sorting: false }"
+                        [filterRow]="{ visible: true }"
+                    >
+                        <dxi-column dataField="message" caption="提交訊息"></dxi-column>
+                        <dxi-column dataField="github_repository_name" caption="Repo名稱"></dxi-column>
+                        <dxi-column dataField="committed_at" caption="提交日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                    </dx-data-grid>
+                </div>
+            </dxi-item>
+            <dxi-item [title]="'統計 ' + (workLoadThisMonth() + contributionThisMonth())">
+                <div class="statistic" *dxTemplate>
+                    <div class="statistic-categories">
+                        <div class="statistic-category-title light">
+                            Pull Requests
+                        </div>
+                        <div class="statistic-category-count dark">
+                            <span>
+                                {{ pRsThisMonth() }}
+                            </span>
+                        </div>
+                        <div class="statistic-category-title light">
+                            Commits
+                        </div>
+                        <div class="statistic-category-count dark">
+                            <span>{{ commitsThisMonth()}}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="statistic-item">
+                        <div class="statistic-item-title">
+                            附載
+                        </div>
+                        <div class="statistic-item-calculate">
+                            ( <span class="dark">{{ pRsThisMonth() }}</span> + <span class="dark">{{ commitsThisMonth() }} </span> ) * {{ githubWeightedMap[participatingRepositoryCountThisMonth()]   }} = 
+                        </div>
+                        <div class="statistic-item-result">
+                            <span>{{ workLoadThisMonth()}}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="statistic-item">
+                        <div class="statistic-item-title">
+                            貢獻
+                        </div>
+                        <div class="statistic-item-calculate">
+                            <span class="dark">{{ pRsThisMonth() }}</span> * 10 + <span class="dark">{{ commitsThisMonth() }} </span> =   
+                        </div>
+                        <div class="statistic-item-result">
+                            <span> {{ contributionThisMonth() }}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="total black">
+                        總計 {{ workLoadThisMonth() + contributionThisMonth() }}
+                    </div>
+                </div>
+            </dxi-item>
+            <dxi-item title="說明">
+                <div class="description" *dxTemplate>
+                    <div>
+                        PR 與 Commit 加權說明
+                    </div>
+                    <ul>
+                        <li>PR: 10</li>
+                        <li>Commit: 1</li>
+                    </ul>
+                </div>
+            </dxi-item>
+        </dx-tab-panel>
+    </div>
+
+
+    <!-- <div class="flex-row">
+        <h3>
+            本月完成任務 {{ completedCountThisMonth() }}
+        </h3>
+        <h3>/</h3>
+        <h3>
+            本月參與專案數 {{ participatingProjectCountThisMonth() }}
+        </h3>
+    </div>
+    <hr>
+    <h3>
+        總計完成任務: {{ count() }}
+    </h3>
+    <hr>
+    <h3>
+        未完成任務: {{ inCompleteCount() }}
+    </h3>
+    <hr>
+    <h3>
+        本月 PR 數: {{ pRsThisMonth() }}
+    </h3>
+    <hr>
+    <h3>
+        本月提交數: {{ commitsThisMonth() }}
+    </h3>
+    <hr> -->
+
+
+
+
+
+    <div>
+        <h2>
+            歷史查詢
+        </h2>
+    </div>
+    <div class="mb-2">
+        <dx-form
+            [formData]="historyFilterFormData"
+            [colCount]="2"
+            [items]="[
+                {
+                    dataField: 'year',
+                    label: { text: '年份' },
+                    editorType: 'dxSelectBox',
+                    editorOptions: {
+                        dataSource: years,
+                        displayExpr: 'text',
+                        valueExpr: 'value',
+                        value: '2026'
+                    }
+                },
+                {
+                    dataField: 'month',
+                    label: { text: '月份' },
+                    editorType: 'dxSelectBox',
+                    editorOptions: {
+                        dataSource: months,
+                        displayExpr: 'text',
+                        valueExpr: 'value',
+                        value: '04'
+                    }
+                },
+                {
+                    itemType: 'button',
+                    horizontalAlignment: 'left',
+                    buttonOptions: {
+                        text: '查詢',
+                        type: 'default',
+                        onClick: lookupHistory
+                    }
+                }
+            ]"
+        >
+        </dx-form>
+    </div>
+
+    <!-- @if (historyChecked()) { -->
+        <h2>工作</h2>
+        <div>
+            <dx-tab-panel width="100%">
+                <dxi-item [title]="'完成任務數 ' + completedTasksCountByMonth()">
+                    <div *dxTemplate>
+                        <!-- [columns]="['name', 'completion_date', 'created_at']" -->
+                        <dx-data-grid
+                            [dataSource]="completedTasksByMonthDataSource"
+                            [remoteOperations]="{ filtering: false, sorting: false }"
+                            [filterRow]="{ visible: true }"
+                        >
+                            <dxi-column dataField="name" caption="任務名稱"></dxi-column>
+                            <dxi-column dataField="completion_date" caption="完成日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                            <dxi-column dataField="created_at" caption="建立日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dxi-item>
+                <dxi-item [title]="'參與專案數 ' + participatingProjectCountByMonth()">
+                    <div *dxTemplate>
+                        <dx-data-grid
+                            [dataSource]="participatingProjectByMonthDataSource"
+                            [columns]="['project_name', 'task_count']"
+                            [showBorders]="true"
+                            [remoteOperations]="{ filtering: false, sorting: false }"
+                            [filterRow]="{ visible: true }"
+                        >
+                            <dxi-column dataField="project_name" caption="專案名稱"></dxi-column>
+                            <dxi-column dataField="task_count" caption="任務數" dataType="number"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dxi-item>
+                <dxi-item [title]="'統計 ' + (completedTasksCountByMonth() * 20 + completedTasksCountByMonth() * 10 * (weightedMap[participatingProjectCountByMonth()]))">
+                    <div class="statistic" *dxTemplate>
+                        <div class="statistic-categories">
+                            <div class="statistic-category-title light">
+                                任務數
+                            </div>
+                            <div class="statistic-category-count dark">
+                                <span>
+                                    {{ completedTasksCountByMonth() }}
+                                </span>
+                            </div>
+                            <div class="statistic-category-title light">
+                                參與專案數
+                            </div>
+                            <div class="statistic-category-count dark">
+                                <span>{{ participatingProjectCountByMonth()}}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="statistic-item">
+                            <div class="statistic-item-title">
+                                附載
+                            </div>
+                            <div class="statistic-item-calculate">
+                                <span class="dark">{{ completedTasksCountByMonth() }}</span> * 10 * <span class="dark">{{ weightedMap[participatingProjectCountByMonth()] }} </span> = 
+                            </div>
+                            <div class="statistic-item-result">
+                                <span>{{ completedTasksCountByMonth() * 10 * (weightedMap[participatingProjectCountByMonth()]) }}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="statistic-item">
+                            <div class="statistic-item-title">
+                                貢獻
+                            </div>
+                            <div class="statistic-item-calculate">
+                                <span class="dark">{{ completedTasksCountByMonth() }}</span> * 20 =   
+                            </div>
+                            <div class="statistic-item-result">
+                                <span> {{ completedTasksCountByMonth() * 20 }}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="total black">
+                            總計 {{ completedTasksCountByMonth() * 20 + completedTasksCountByMonth() * 10 * (weightedMap[participatingProjectCountByMonth()]) }}
+                        </div>
+                    </div>
+                </dxi-item>
+                <dxi-item title="說明">
+                    <div class="description" *dxTemplate>
+                        <div>
+                            參與專案數與附載加權說明
+                        </div>
+                        <ul>
+                            <li>1 個專案: 1 倍</li>
+                            <li>2 個專案: 1.3 倍</li>
+                            <li>3 個專案: 1.6 倍</li>
+                            <li>4 個專案: 1.9 倍</li>
+                            <li>5 個專案: 2.2 倍</li>
+                            <li>6 個專案: 2.5 倍</li>
+                            <li>7 個專案: 2.8 倍</li>
+                            <li>8 個專案: 3.1 倍</li>
+                            <li>9 個專案: 3.4 倍</li>
+                            <li>10 個專案: 3.7 倍</li>
+                        </ul>
+                    </div>
+                </dxi-item>
+            </dx-tab-panel>
+        </div>
+
+
+
+
+
+        <h2>Github</h2>
+        
+        
+        
+        
+        
+        
+        
+        <div>
+            <dx-tab-panel width="100%">
+                <dxi-item [title]="'Pull Requests ' + pRCountByMonth()">
+                    <div *dxTemplate>
+                        <!-- [columns]="['title', 'github_repository_name', 'created_at']" -->
+                        <dx-data-grid
+                            [dataSource]="prsByMonthDataSource()"
+                            [remoteOperations]="{ filtering: false, sorting: false }"
+                            [filterRow]="{ visible: true }"
+                        >
+                            <dxi-column dataField="title" caption="標題"></dxi-column>
+                            <dxi-column dataField="github_repository_name" caption="Repo名稱"></dxi-column>
+                            <dxi-column dataField="created_at" caption="建立日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dxi-item>
+                
+                <dxi-item [title]="'Commits ' + commitCountByMonth()">
+                    <div *dxTemplate>
+                        <dx-data-grid
+                            [dataSource]="commitsByMonthDataSource()"
+                            [columns]="['message', 'github_repository_name', 'committed_at']"
+                            [showBorders]="true"
+                            [remoteOperations]="{ filtering: false, sorting: false }"
+                            [filterRow]="{ visible: true }"
+                        >
+                            <dxi-column dataField="message" caption="提交訊息"></dxi-column>
+                            <dxi-column dataField="github_repository_name" caption="Repo名稱"></dxi-column>
+                            <dxi-column dataField="committed_at" caption="提交日期" dataType="date" format="yyyy/MM/dd"></dxi-column>
+                        </dx-data-grid>
+                    </div>
+                </dxi-item>
+                 
+                <dxi-item [title]="'統計 ' + (githubWorkLoadByMonth() + githubContributionByMonth())">
+                    <div class="statistic" *dxTemplate>
+                        <div class="statistic-categories">
+                            <div class="statistic-category-title light">
+                                Pull Requests
+                            </div>
+                            <div class="statistic-category-count dark">
+                                <span>
+                                    {{ pRCountByMonth() }}
+                                </span>
+                            </div>
+                            <div class="statistic-category-title light">
+                                Commits
+                            </div>
+                            <div class="statistic-category-count dark">
+                                <span>{{ commitCountByMonth()}}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="statistic-item">
+                            <div class="statistic-item-title">
+                                附載
+                            </div>
+                            <div class="statistic-item-calculate">
+                                ( <span class="dark">{{ pRCountByMonth() }}</span> + <span class="dark">{{ commitCountByMonth() }} </span> ) * {{ githubWeightedMap[repositoryCountByMonth()]   }} = 
+                            </div>
+                            <div class="statistic-item-result">
+                                <span>{{ githubWorkLoadByMonth() }}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="statistic-item">
+                            <div class="statistic-item-title">
+                                貢獻
+                            </div>
+                            <div class="statistic-item-calculate">
+                                <span class="dark">{{ pRCountByMonth() }}</span> * 10 + <span class="dark">{{ commitCountByMonth() }} </span> =   
+                            </div>
+                            <div class="statistic-item-result">
+                                <span> {{ githubContributionByMonth() }}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="total black">
+                            總計 {{ githubWorkLoadByMonth() + githubContributionByMonth() }}
+                        </div>
+                    </div>
+                </dxi-item>
+                <dxi-item title="說明">
+                    <div class="description" *dxTemplate>
+                        <div>
+                            參與專案數與附載加權說明
+                        </div>
+                        <ul>
+                            <li>1 個專案: 1 倍</li>
+                            <li>2 個專案: 1.3 倍</li>
+                            <li>3 個專案: 1.6 倍</li>
+                            <li>4 個專案: 1.9 倍</li>
+                            <li>5 個專案: 2.2 倍</li>
+                            <li>6 個專案: 2.5 倍</li>
+                            <li>7 個專案: 2.8 倍</li>
+                            <li>8 個專案: 3.1 倍</li>
+                            <li>9 個專案: 3.4 倍</li>
+                            <li>10 個專案: 3.7 倍</li>
+                        </ul>
+                    </div>
+                </dxi-item>
+            </dx-tab-panel>
+        </div>
+    <!-- } -->
+
+    
+</div>

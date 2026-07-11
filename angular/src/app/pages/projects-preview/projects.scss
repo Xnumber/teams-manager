@@ -1,0 +1,45 @@
+
+
+.content {
+    display: block;
+    overflow: scroll;
+
+    
+    dx-data-grid  {
+        height: 500px;
+    }
+
+    dx-chart {
+        margin-top: 20px;
+        height: 360px;
+    }
+}
+.projects-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > div {
+        flex: 0 0 100%
+    }
+
+    .one {
+        padding: 10px;
+        flex: 0 0 33%;
+        overflow: hidden
+    }
+    .two {
+        padding: 10px;
+        flex: 0 0 50%;
+        overflow: hidden
+    }
+    .three {
+        padding: 10px;
+        flex: 0 0 100%;
+        overflow: hidden
+    }
+    .four {
+        padding: 10px;
+        flex: 0 0 100%;
+        overflow: hidden
+    }
+}

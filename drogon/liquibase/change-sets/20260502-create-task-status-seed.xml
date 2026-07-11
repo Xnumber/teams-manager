@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+
+	<changeSet author="clement" id="20260502-1-seed-task-status">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(*) FROM task_status
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="task_status">
+			<column name="code" value="queued"/>
+			<column name="name" value="排隊中"/>
+			<column name="description" value="任務已排隊等待處理"/>
+		</insert>
+		<insert tableName="task_status">
+			<column name="code" value="in_progress"/>
+			<column name="name" value="進行中"/>	
+			<column name="description" value="任務正在進行中"/>
+		</insert>
+		<insert tableName="task_status">
+			<column name="code" value="completed"/>
+			<column name="name" value="完成"/>
+			<column name="description" value="任務已完成"/>
+		</insert>
+		<insert tableName="task_status">
+			<column name="code" value="archived"/>
+			<column name="name" value="封存"/>
+			<column name="description" value="任務已封存"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>

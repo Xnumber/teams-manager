@@ -1,0 +1,6 @@
+drogon/build/
+drogon/liquibase/liquibase.properties
+node_modules/
+pat
+drogon/.git/
+angular/.git/

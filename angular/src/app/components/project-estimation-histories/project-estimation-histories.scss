@@ -1,0 +1,65 @@
+.milesones-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    // justify-content: space-between;
+    
+    
+    
+    
+    
+    
+    > div {
+        flex: 0 0 100%
+    }
+
+    .one {
+        flex: 0 0 20%;
+    }
+    .two {
+        flex: 0 0 50%;
+    }
+    .three {
+        flex: 0 0 75%;
+    }
+    .four {
+        flex: 0 0 100%;
+    }
+}
+
+.projects-charts-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    // justify-content: space-between;
+    > div {
+        flex: 0 0 100%
+    }
+
+    .one {
+        // padding: 10px;
+        flex: 0 0 100%;
+        overflow: hidden
+    }
+    .two {
+        // padding: 10px;
+        flex: 0 0 50%;
+        overflow: hidden
+    }
+    .three {
+        // padding: 10px;
+        flex: 0 0 33%;
+        overflow: hidden
+    }
+    .four {
+        // padding: 10px;
+        flex: 0 0 25%;
+        overflow: hidden
+    }
+}
+
+.project-milestone-name {
+    font-weight: 700;
+    font-size: 1.2em;
+    color: #201e1e;
+}

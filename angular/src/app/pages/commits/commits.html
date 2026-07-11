@@ -1,0 +1,117 @@
+<dx-form
+  #form
+  [formData]="formData"
+  [colCount]="2"
+  [showColonAfterLabel]="true"
+  [showValidationSummary]="true"
+  [labelLocation]="'top'"
+  class="p-3"
+  (onFieldDataChanged)="onFieldDataChanged($event)"
+>
+  <dxi-item
+    dataField="repo_id"
+    [isRequired]="true"
+    editorType="dxSelectBox"
+    [colSpan]="2"
+    [label]="{ text: 'Repository' }"
+    [editorOptions]="{ dataSource: repos, valueExpr: 'id', displayExpr: 'name' }"
+  ></dxi-item>
+
+  <dxi-item
+    itemType="group"
+    [colSpan]="2"
+    [colCount]="2"
+    caption="同步設定"
+  >
+    <dxi-item
+      dataField="github_token"
+      [isRequired]="true"
+      editorType="dxTextBox"
+      [colSpan]="2"
+      [editorOptions]="{ showClearButton: true, placeholder: 'Github PAT (Read 權限)' }"
+    ></dxi-item>
+
+    <dxi-item
+      dataField="sha"
+      editorType="dxTextBox"
+      [colSpan]="1"
+      [label]="{ text: 'Branch (sha)' }"
+      [editorOptions]="{ showClearButton: true, placeholder: 'develop' }"
+    ></dxi-item>
+
+    <dxi-item
+      dataField="since"
+      editorType="dxDateBox"
+      [colSpan]="1"
+      [label]="{ text: '起始時間 (since)' }"
+      [editorOptions]="{ type: 'datetime', displayFormat: 'yyyy-MM-dd HH:mm', showClearButton: true }"
+      [validationRules]="[
+        { type: 'required', message: '請選擇起始時間' },
+        {
+          type: 'custom',
+          message: '起始時間必須早於結束時間',
+          validationCallback: sinceValidationCallback
+        }
+      ]"
+    ></dxi-item>
+
+    <dxi-item
+      dataField="until"
+      editorType="dxDateBox"
+      [colSpan]="1"
+      [label]="{ text: '結束時間 (until)' }"
+      [editorOptions]="{ type: 'datetime', displayFormat: 'yyyy-MM-dd HH:mm', showClearButton: true }"
+      [validationRules]="[
+        { type: 'required', message: '請選擇結束時間' },
+        {
+          type: 'custom',
+          message: '結束時間必須晚於起始時間',
+          validationCallback: untilValidationCallback
+        }
+      ]"
+    ></dxi-item>
+
+    <dxi-item
+      itemType="button"
+      [colSpan]="1"
+      [horizontalAlignment]="'left'"
+      [buttonOptions]="{ text: '同步 Commits (請使用對應 read 權限 PAT)', type: 'success', onClick: sync.bind(this), disabled: loading() }"
+    ></dxi-item>
+  </dxi-item>
+</dx-form>
+
+@if (loading()) {
+  <div class="alert alert-info">同步中...</div>
+}
+
+@if (result()) {
+  <div class="alert alert-success">
+    同步結果: 
+    <pre>{{ result() | json }}</pre>
+  </div>
+}
+
+
+<div>
+  <dx-button text="同步使用者資料(需先於Profile的設定中綁定github user)" type="success" (onClick)="syncUsers()"></dx-button>
+</div>
+
+<dx-data-grid
+  [dataSource]="commitsDataSource"
+  [columns]="columns"
+  [showBorders]="true"
+  [height]="500"
+  [remoteOperations]="false"
+  [rowAlternationEnabled]="true"
+  [hoverStateEnabled]="true"
+  [columnAutoWidth]="true"
+  [wordWrapEnabled]="true"
+>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <div *dxTemplate="let data of 'shaCell'">
+    <code>{{ data.data.commit_sha?.substring(0, 7) }}</code>
+  </div>
+  <div *dxTemplate="let data of 'linkCell'">
+    <a [href]="data.data.html_url" target="_blank">連結</a>
+  </div>
+</dx-data-grid>

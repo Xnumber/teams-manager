@@ -1,0 +1,108 @@
+<div>
+    <div class="flex-row">
+        <div class="flex-1 p-1">
+            <div class="flex-row chartHeader">
+                <div class="flex-1">
+                    <h3 class="mb-0">大項</h3>
+                </div>
+                <div class="flex-1 flex-row">
+                    <div class="flex-row">
+                        <h5 class="mb-0 me-1">
+                            今日
+                        </h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__total">
+                        <h5 class="mb-0">共</h5>
+                        <h5 class="mb-0">{{ milestones() }}</h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__added">
+                        <i class="dx-icon-add"></i>
+                        <h5 class="mb-0">{{ milestoneAdded() }}</h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__completed">
+                        <i class="dx-icon-todo"></i>
+                        <h5 class="mb-0">{{ milestoneCompleted() }}</h5>
+                    </div>
+                </div>
+            </div>
+            <dx-chart 
+                [dataSource]="milestonesDataSource" 
+                [commonSeriesSettings]="{ argumentField: 'date', type: 'line' }"
+            >
+                <dxi-series valueField="milestone_count" name="總計" [color]="totalColor"></dxi-series>
+                <dxi-series valueField="milestone_added_count" name="增加" [color]="addedColor"></dxi-series>
+                <dxi-series valueField="milestone_completed_count" name="完成" [color]="completedColor"></dxi-series>\
+                <dxo-tooltip 
+                    [enabled]="true"
+                    [font]="{ size: '26px' }"
+                    [customizeTooltip]="customTooltip">
+                </dxo-tooltip>
+                <dxo-legend
+                    verticalAlignment="bottom"
+                    horizontalAlignment="left"
+                    orientation="horizontal"
+                    position="inside"
+                    [visible]="true"
+                >
+                </dxo-legend>
+                <!-- <dxo-chart-common-series-settings [color]="seriesColor"></dxo-chart-common-series-settings> -->
+                <!-- <dxi-value-axis
+                argumentType="date"
+                [label]="{ format: 'yyyy/MM/dd'}"
+                [tickInterval]="{ days: 5 }"
+                ></dxi-value-axis> -->
+            </dx-chart>
+        </div>
+        <div class="flex-1 p-1">
+            
+            <div class="flex-row chartHeader">
+                <div class="flex-1">
+                    <h3 class="mb-0">細項</h3>
+                </div>
+                <div class="flex-1 flex-row">
+                    <div class="flex-1 flex-row">
+                        <h5 class="mb-0">今日</h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__total">
+                        <h5 class="mb-0">共</h5>
+                        <h5 class="mb-0">{{ tasks() }}</h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__added">
+                        <i class="dx-icon-add"></i>
+                        <h5 class="mb-0">{{ taskAdded() }}</h5>
+                    </div>
+                    <div class="flex-1 flex-row chartHeader__completed">
+                        <i class="dx-icon-todo"></i>
+                        <h5 class="mb-0">{{ taskCompleted() }}</h5>
+                    </div>
+                </div>
+            </div>
+            <dx-chart 
+                [dataSource]="tasksDataSource" 
+                [commonSeriesSettings]="{ argumentField: 'date', type: 'line' }"
+            >
+                <dxi-series valueField="task_count" name="總計" [color]="totalColor"></dxi-series>
+                <dxi-series valueField="task_added_count" name="增加" [color]="addedColor"></dxi-series>
+                <dxi-series valueField="task_completed_count" name="完成" [color]="completedColor"></dxi-series>
+                <dxo-tooltip 
+                    [enabled]="true"
+                    [font]="{ size: '26px' }"
+                    [customizeTooltip]="customTooltip">
+                </dxo-tooltip>
+                <dxo-legend 
+                    [visible]="true"
+                    verticalAlignment="bottom"
+                    horizontalAlignment="left"
+                    orientation="horizontal"
+                    position="inside"
+                ></dxo-legend>
+                <!-- <dxi-value-axis
+                    argumentType="date"
+                    [label]="{ format: 'yyyy/MM/dd'}"
+                    [tickInterval]="{ days: 5 }"
+                ></dxi-value-axis> -->
+            </dx-chart>
+        </div>
+    </div>
+    <hr class="mt-2 mb-2">
+</div>

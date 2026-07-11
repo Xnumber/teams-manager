@@ -1,0 +1,15 @@
+.content {
+    // height: 500px;
+    display: block;
+    overflow: scroll;
+
+    
+    dx-data-grid  {
+        height: 500px;
+    }
+
+    dx-chart {
+        margin-top: 20px;
+        height: 360px;
+    }
+}

@@ -1,0 +1,38 @@
+<div>
+    <div class="mb-2">
+        <dx-text-box
+            [(value)]="github_login_username"
+            [showClearButton]="true"
+            valueChangeEvent="keyup"
+            placeholder="請輸入 GitHub PAT (Classic)，產生此權杖時，不須任何權限。"
+            [disabled]="loading()"
+            width="100%"
+        ></dx-text-box>
+    </div>
+	<div class="mb-2">
+		說明: 請輸入 GitHub PAT (Classic)，產生此權杖時，不須任何權限。
+	</div>
+	<dx-button
+		text="綁定 GitHub 帳號"
+		type="success"
+		[disabled]="loading() || !github_login_username"
+		(onClick)="bindGithubUser()"
+		width="100%"
+		class="mt-2"
+	></dx-button>
+	@if (loading()) {
+		<div class="alert alert-info mt-2">綁定中...</div>
+	}
+	@if (error()) {
+		<h2>綁定失敗</h2>
+		<div class="alert alert-danger mt-2">{{ error() }}</div>
+	}
+	@if (result()) {
+		<div class="alert alert-success mt-2">
+			<h2>
+				綁定成功！GitHub 使用者資訊如下：
+			</h2>
+			<pre>{{ result() | json }}</pre>
+		</div>
+	}
+</div>

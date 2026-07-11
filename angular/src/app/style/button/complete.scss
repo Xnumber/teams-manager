@@ -1,0 +1,21 @@
+.complete-btn {
+	border: 0;
+	border-radius: 8px;
+	background: #1f7a44;
+	color: #fff;
+	padding: 8px 12px;
+	font-size: 13px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.complete-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.complete-btn-error-text {
+	margin-top: 6px;
+	color: #b42318;
+	font-size: 12px;
+}

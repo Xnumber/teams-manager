@@ -1,0 +1,33 @@
+<div class="flex-row mb-2">
+    <div>
+        {{milestoneName()}}
+    </div>
+    @if (showUpdateButton()) {
+        <dx-button text="更新"
+            (onClick)="updateMileStoneInfo()"
+        ></dx-button>
+    }
+    <!-- <dx-button text="更新"
+        (onClick)="updateMileStoneInfo()"
+    ></dx-button> -->
+</div>
+<dx-chart
+    [dataSource]="milestoneConvergenceData | async"
+    [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+    style="height: 300px; width: 100%;"
+>
+    <dxi-series valueField="complete_date" name="預計"></dxi-series>
+    <dxi-series valueField="optimistic_estimated_complete_date" name="樂觀"></dxi-series>
+    <dxi-series valueField="pessimistic_estimated_complete_date" name="悲觀"></dxi-series>
+    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+    <dxo-legend [visible]="false"></dxo-legend>
+    <dxi-value-axis
+        argumentType="date"
+        [label]="{ format: 'yyyy/MM/dd'}"
+        [tickInterval]="{ days: 5 }"
+    ></dxi-value-axis>
+    	<dxo-argument-axis
+		[label]="{ format: 'yyyy/MM/dd'}"
+		[tickInterval]="{ days: 5 }"
+	></dxo-argument-axis>
+</dx-chart>

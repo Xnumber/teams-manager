@@ -1,0 +1,26 @@
+<div>
+    <!-- <dx-tag-box
+        [dataSource]="projectsDataSource"
+        label="專案"
+        valueExpr="id"
+        displayExpr="name"
+        [searchEnabled]="true"
+        (onValueChanged)="onProjectsChanged($event)"
+    ></dx-tag-box>
+    <dx-tag-box
+        [dataSource]="milestonesDataSource"
+        label="大項"
+        valueExpr="id"
+        displayExpr="name"
+        [searchEnabled]="true"
+        (onValueChanged)="onMilestonesChanged($event)"
+    ></dx-tag-box> -->
+    <dx-select-box
+        [dataSource]="tasksDataSource"
+        label="工作"
+        valueExpr="id"
+        displayExpr="name"
+        [searchEnabled]="true"
+        (onValueChanged)="onTasksChanged($event)"
+    ></dx-select-box>
+</div>

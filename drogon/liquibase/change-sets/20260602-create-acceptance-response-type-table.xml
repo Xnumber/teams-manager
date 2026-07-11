@@ -1,0 +1,79 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <changeSet id="create-acceptance-response-type" author="clement">
+
+        <createTable tableName="acceptance_response_types">
+
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="acceptance_response_types_pkey"/>
+			</column>
+
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false"
+                            unique="true"
+                            uniqueConstraintName="uk_acceptance_response_types_code"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="VARCHAR(500)"/>
+
+            <column name="sort" type="INT"
+                    defaultValueNumeric="0"/>
+
+            <column name="enabled" type="BOOLEAN"
+                    defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+    <changeSet id="seed-acceptance-response-type" author="clement">
+        <insert tableName="acceptance_response_types">
+            <column name="code" value="NO_OPINION"/>
+            <column name="name" value="無意見"/>
+            <column name="description" value="無意見"/>
+            <column name="sort" valueNumeric="1"/>
+        </insert>
+        <insert tableName="acceptance_response_types">
+            <column name="code" value="FIXED"/>
+            <column name="name" value="已修正"/>
+            <column name="description" value="已修正，重新發出驗收請求。"/>
+            <column name="sort" valueNumeric="2"/>
+        </insert>
+        <insert tableName="acceptance_response_types">
+            <column name="code" value="ADJUSTMENT_REQUIRED"/>
+            <column name="name" value="出現與原始需求不符的需求"/>
+            <column name="description" value="要求調整與原始需求不符，以新任務執行。"/>
+            <column name="sort" valueNumeric="3"/>
+        </insert>
+        <insert tableName="acceptance_response_types">
+            <column name="code" value="ORIGIN_REQUIREMENT_UNCLEAR"/>
+            <column name="name" value="出現原需求未明示的需求"/>
+            <column name="description" value="出現原需求未明示的需求，以新任務執行。"/>
+            <column name="sort" valueNumeric="4"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

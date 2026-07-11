@@ -1,0 +1,135 @@
+<div class="flex-row mb-2">
+    <h3 class="mb-0">
+        {{milestoneName()}}
+    </h3>
+    
+    @if (showUpdateButton()) {
+        <dx-button text="更新"
+            (onClick)="updateMileStoneInfo()"
+        ></dx-button>
+    }
+    <!-- <dx-button text="更新"
+        (onClick)="updateMileStoneInfo()"
+    ></dx-button> -->
+</div>
+<div class="flex-row align-stretch">
+    @if (selectedeChartTypes().includes('convergence')) {
+        <div class="flex-2">
+            <div class="chart-title">
+                <h5>預估完成歷史</h5>
+            </div>
+            <dx-chart
+                [dataSource]="milestoneConvergenceData | async"
+                [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+                style="height: 300px; width: 100%;"
+            >
+                <dxi-series valueField="complete_date" name="預計"></dxi-series>
+                <dxi-series valueField="optimistic_estimated_complete_date" name="樂觀"></dxi-series>
+                <dxi-series valueField="pessimistic_estimated_complete_date" name="悲觀"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend
+                    verticalAlignment="bottom"
+                    horizontalAlignment="center"
+                    [visible]="true"
+                ></dxo-legend>
+                <dxi-value-axis
+                    argumentType="date"
+                    [label]="{ format: 'yyyy/MM/dd' }"
+                    [visualRange]="{
+                        startValue: convergenceStartDate,
+                        endValue: convergenceEndDate
+                    }"
+                ></dxi-value-axis>
+                    <dxo-argument-axis
+                    [label]="{ format: 'yyyy/MM/dd'}"
+                    [tickInterval]="{ days: 5 }"
+                ></dxo-argument-axis>
+            </dx-chart>
+        </div>
+    }
+    @if (selectedeChartTypes().includes('left')) {
+        <div class="flex-2">
+
+            <div class="chart-title">
+                <h5>剩餘工作</h5>
+            </div>
+            <div>
+                <dx-chart
+                    [dataSource]="milestoneConvergenceData | async"
+                    [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+                    style="height: 300px; width: 100%;"
+                >
+        
+
+
+
+                    <dxi-series valueField="left_tasks" name="剩餘任務數"></dxi-series>
+                    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                    <dxo-legend 
+                        [visible]="true"
+                        verticalAlignment="bottom"
+                        horizontalAlignment="center"
+                    ></dxo-legend>
+                    <dxi-value-axis
+                        [tickInterval]="1"
+                        [visualRange]="{
+                            startValue: leftTasksRangeStart,
+                            endValue: leftTasksRangeEnd
+					    }"
+                    ></dxi-value-axis>
+                    <dxo-argument-axis
+                        [label]="{ format: 'yyyy/MM/dd'}"
+                        [tickInterval]="{ days: 5 }"
+                    ></dxo-argument-axis>
+                </dx-chart>
+            </div>
+        </div>
+    }
+
+
+    @if (selectedeChartTypes().includes('delta')) {
+        <div class="flex-2">
+            <div class="chart-title">
+                <h5>累積工作日超前/落後</h5>
+            </div>
+            <dx-chart
+                [dataSource]="cumulativeWorkingDayDeltaData | async"
+                [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+                style="height: 300px; width: 100%;"
+            >
+                <dxi-series valueField="delta" name="累積工作日超前/落後"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend 
+                    [visible]="true"
+                    verticalAlignment="bottom"
+                    horizontalAlignment="center"
+                ></dxo-legend>
+                <dxi-value-axis
+                    [tickInterval]="1"
+                    [visualRange]="{
+                        startValue: cumulativeWorkingDayDeltaRangeStart,
+                        endValue: cumulativeWorkingDayDeltaRangeEnd
+                    }"
+                ></dxi-value-axis>
+                <dxo-argument-axis
+                    [label]="{ format: 'yyyy/MM/dd'}"
+                    [tickInterval]="{ days: 5 }"
+                ></dxo-argument-axis>
+            </dx-chart>
+        </div>
+    }
+
+    @if (selectedeChartTypes().includes('list')) {
+        <div class="flex-1">
+            <div class="chart-title">
+                <h5>工作列表</h5>
+            </div>
+            <dx-data-grid
+                height="100%"
+                [dataSource]="tasksDataSource$ | async"
+                [columns]="milestoneTasksColumns"
+                [showBorders]="true"
+            ></dx-data-grid>
+        </div>
+    }
+</div>

@@ -1,0 +1,24 @@
+<div class="completed-tasks-page">
+	<h3>已完成任務 {{ taskCount() }} 項</h3>
+
+	<dx-data-grid
+		[dataSource]="completedTasks"
+		[remoteOperations]="{ filtering: true }"
+		[showBorders]="true"
+	>
+		<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+
+		<dxi-column dataField="project_name" caption="專案"></dxi-column>
+		<dxi-column dataField="name" caption="工作名稱"></dxi-column>
+		<dxi-column dataField="status_name" caption="狀態"></dxi-column>
+		<dxi-column dataField="task_type_name" caption="任務類型"></dxi-column>
+		<dxi-column
+			dataField="progress"
+			caption="進度"
+			[calculateDisplayValue]="displayProgress"
+		></dxi-column>
+		<dxi-column dataField="scheduled_completion_date" caption="預定完成日期" format="yyyy/MM/dd" dataType="date"></dxi-column>
+		<dxi-column dataField="completion_date" caption="完成日期" format="yyyy/MM/dd" dataType="date"></dxi-column>
+		<dxi-column dataField="remark" caption="備註"></dxi-column>
+	</dx-data-grid>
+</div>

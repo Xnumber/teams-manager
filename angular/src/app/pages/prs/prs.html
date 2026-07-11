@@ -1,0 +1,70 @@
+<dx-form 
+  [formData]="formData" 
+  [colCount]="2" 
+  [showColonAfterLabel]="true" 
+  [showValidationSummary]="true"
+  [labelLocation]="'top'" class="p-3"
+  (onFieldDataChanged)="onFieldDataChanged($event)"
+>
+  <dxi-item 
+    dataField="repo_id" 
+    [isRequired]="true"
+    editorType="dxSelectBox"
+    [colSpan]="2"
+    [label]="{ text: 'Repository' }"
+    [editorOptions]="{ dataSource: repos, valueExpr: 'id', displayExpr: 'name' }">
+  </dxi-item>
+
+  <dxi-item
+    itemType="group"
+    [colSpan]="2"
+    [colCount]="2"
+    caption="同步"
+  >
+    <dxi-item dataField="github_token" [isRequired]="true" editorType="dxTextBox"
+      [colSpan]="1"
+      [editorOptions]="{ showClearButton: true, placeholder: 'github_token' }"></dxi-item>
+    <dxi-item 
+      itemType="button"
+      [horizontalAlignment]="'left'"
+      [buttonOptions]="{ text: '同步 PR (請使用對應 read 權限 PAT)', type: 'success', onClick: sync.bind(this), disabled: loading(),  }">
+    </dxi-item>
+  </dxi-item>
+</dx-form>
+
+<div>
+  <dx-button text="同步使用者資料(需先於Profile的設定中綁定github user)" type="success" (onClick)="syncUsers()"></dx-button>
+</div>
+<div class="mb-3"></div>
+@if (result()) {
+<div class="alert alert-success">
+  <pre>{{ result() | json }}</pre>
+</div>
+}
+
+@if (error()) {
+<div class="alert alert-danger">{{ error() }}</div>
+}
+
+
+@if (loading()) {
+  <div class="alert alert-info">同步中...</div>
+}
+
+
+
+<dx-data-grid
+  [dataSource]="pullRequestsDataSource"
+  [columns]="columns"
+  [showBorders]="true"
+  [height]="500"
+  [remoteOperations]="false"
+  [rowAlternationEnabled]="true"
+  [hoverStateEnabled]="true"
+  [columnAutoWidth]="true"
+  [wordWrapEnabled]="true"
+>
+  <div *dxTemplate="let data of 'linkCell'">
+    <a [href]="data.data.html_url" target="_blank">連結</a>
+  </div>
+</dx-data-grid>

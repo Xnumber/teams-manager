@@ -1,0 +1,27 @@
+<!-- <dx-select-box
+	[value]="projectData"
+	label="專案"
+>
+</dx-select-box> -->
+<h1>團隊</h1>
+<dx-data-grid #dataGrid [dataSource]="teamsDataSource" [columns]="columns"
+	[editing]="{ allowUpdating: true, allowAdding: true, allowDeleting: false, mode: 'popup' }" [showBorders]="true"
+	(onOptionChanged)="onOptionChanged($event)">
+	<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+	<dxo-filter-row [visible]="true" (onOptionChanged)="onFilterRowChanged($event)">
+
+	</dxo-filter-row>
+	<dxo-search-panel [visible]="false"></dxo-search-panel>
+</dx-data-grid>
+<dx-chart [dataSource]="teamsChartDataSource$ | async" [commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }"
+	[title]="{ text: '團隊待辦工作'}" [rotated]="true">
+
+
+	<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+	</dxo-tooltip>
+	<dxo-argument-axis>
+		<dxo-label [overlappingBehavior]="'none'">
+		</dxo-label>
+	</dxo-argument-axis>
+	<dxi-series valueField="tasks_count_in_queue" name="待辦任務"></dxi-series>
+</dx-chart>

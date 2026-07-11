@@ -1,0 +1,12 @@
+<button
+	type="button"
+	class="complete-btn"
+	[disabled]="disabled() || isSubmitting || !milestoneId"
+	(click)="completeMilestone()"
+>
+	{{ label() }}
+</button>
+
+@if (errorMessage) {
+	<div class="complete-btn-error-text">{{ errorMessage }}</div>
+}

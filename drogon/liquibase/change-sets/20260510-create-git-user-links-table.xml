@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <changeSet author="clement" id="20260510-1-create-git-user-links-table">
+        <createTable tableName="git_user_links">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="git_user_links_pkey"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="git_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="git_user_login" type="VARCHAR(100)"/>
+            <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addUniqueConstraint tableName="git_user_links" columnNames="git_user_id" constraintName="uq_git_user_id"/>
+        <addUniqueConstraint tableName="git_user_links" columnNames="user_id,git_user_id" constraintName="uq_user_git_user"/>
+        <addForeignKeyConstraint baseTableName="git_user_links" baseColumnNames="user_id" referencedTableName="users" referencedColumnNames="id" constraintName="fk_git_user_links_user" onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

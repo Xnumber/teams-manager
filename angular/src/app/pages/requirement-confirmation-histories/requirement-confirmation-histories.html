@@ -1,0 +1,12 @@
+<dx-data-grid
+    [dataSource]="data"
+    [columns]="columns"
+>
+
+</dx-data-grid>
+
+<app-reject-form
+    [visible]="showRejectForm()"
+    (cancelled)="closeRejectForm()"
+    [taskAcceptanceRecordId]="selectedConfirmRequestId()"
+></app-reject-form>

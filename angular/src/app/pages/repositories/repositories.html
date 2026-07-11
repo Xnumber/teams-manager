@@ -1,0 +1,10 @@
+<h2>Repository 管理</h2>
+<dx-data-grid
+	[dataSource]="repositoriesDataSource"
+	[columns]="columns"
+	[editing]="{ allowAdding: true, mode: 'popup' }"
+	[showBorders]="true">
+	<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+	<dxo-filter-row [visible]="true"></dxo-filter-row>
+	<dxo-search-panel [visible]="true"></dxo-search-panel>
+</dx-data-grid>

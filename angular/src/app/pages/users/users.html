@@ -1,0 +1,41 @@
+<h2>成員狀態</h2>
+
+
+
+
+<dx-data-grid #dataGrid [dataSource]="usersDataSource" [columns]="columns"
+	[editing]="{ allowUpdating: false, allowAdding: false, allowDeleting: false, mode: 'popup' }" [showBorders]="true"
+	(onOptionChanged)="onOptionChanged($event)">
+	<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+	<dxo-filter-row [visible]="true"></dxo-filter-row>
+	<dxo-search-panel [visible]="false"></dxo-search-panel>
+</dx-data-grid>
+
+<div class="flex-row">
+	<div class="flex-1">
+		<dx-chart [dataSource]="userTasksChartDataSource$ | async"
+			[commonSeriesSettings]="{ argumentField: 'username', type: 'bar' }" [title]="{ text: '成員待辦工作'}"
+			[rotated]="true">
+			<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+			</dxo-tooltip>
+			<dxi-series valueField="left_tasks" name="待辦工作"></dxi-series>
+			<dxo-argument-axis>
+				<dxo-label [overlappingBehavior]="'none'">
+				</dxo-label>
+			</dxo-argument-axis>
+		</dx-chart>
+	</div>
+	<div class="flex-1">
+		<dx-chart [dataSource]="userProjectsChartDataSource$ | async"
+			[commonSeriesSettings]="{ argumentField: 'username', type: 'bar' }" [title]="{ text: '成員參與專案數'}"
+			[rotated]="true">
+			<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+			</dxo-tooltip>
+			<dxi-series valueField="project_count" name="參與專案數"></dxi-series>
+			<dxo-argument-axis>
+				<dxo-label [overlappingBehavior]="'none'">
+				</dxo-label>
+			</dxo-argument-axis>
+		</dx-chart>
+	</div>
+</div>

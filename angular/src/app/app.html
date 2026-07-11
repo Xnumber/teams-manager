@@ -1,0 +1,73 @@
+<main class="app-shell">
+
+
+    <header class="app-header">
+        <h1 class="app-title">JB Watch</h1>
+        <nav class="primary-nav">
+            @if (isLoggedIn()) {
+                @for (route of routes; track $index) {
+                    @if (
+                        route.title != 'Tenants' &&
+                        route.title != 'Roles' &&
+                        route.title != 'qwertyuiop' &&
+                        route.title != 'qwertyuiop2' &&
+                        route.title != 'Statistics' &&
+                        route.title != 'Knowledge Management' &&
+                        route.title != 'Task Types' &&
+                        route.title != '首頁' &&
+                        route.title != 'Register' &&
+                        route.title != 'Login' &&
+                        route.title != 'Project' &&
+                        route.title != 'Teams' &&
+                        route.title != 'Users' &&
+                        route.title != 'Projects prview'
+                        && route.title != 'Commits'
+                        && route.title != 'Repositories'
+                        && route.title != 'Pull Requests'
+                    ) {
+                        <!-- && route.title != 'Plans' -->
+                        <a [routerLink]="route.path" routerLinkActive="active" class="nav-link">
+                            {{ route.title }}
+                        </a>
+                    }
+                }
+            } @else {
+                <a [routerLink]="'/login'" routerLinkActive="active" class="nav-link nav-link--auth">
+                    {{ '登入' }}
+                </a>
+                <a [routerLink]="'/register'" routerLinkActive="active" class="nav-link nav-link--auth">
+                    {{ '註冊' }}
+                </a>
+            }
+        </nav>
+        <hr class="mt-1 mb-1">
+        <div class="secondary-nav">
+            <a routerLink="repositories" routerLinkActive="active" class="nav-link">
+                {{ 'Repositories' }}
+            </a>
+            <a routerLink="pull-requests" routerLinkActive="active" class="nav-link">
+                {{ 'Pull Requests' }}
+            </a>
+            <a routerLink="commits" routerLinkActive="active" class="nav-link">
+                {{ 'Commits' }}
+            </a>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </header>
+    <section class="app-content">
+        <router-outlet></router-outlet>
+    </section>
+</main>

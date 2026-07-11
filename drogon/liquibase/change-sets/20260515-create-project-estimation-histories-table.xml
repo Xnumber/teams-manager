@@ -1,0 +1,46 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+	<changeSet author="clement" id="20260515-1-create-project-estimation-histories-table">
+		<createTable tableName="project_estimation_histories">
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="project_estimation_histories_pkey"/>
+			</column>
+			<column name="project_id" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+            <column name="estimation_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="complete_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optimistic_estimated_complete_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pessimistic_estimated_complete_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                name="created_at"
+                type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+		</createTable>
+        <addForeignKeyConstraint 
+            baseTableName="project_estimation_histories"
+            baseColumnNames="project_id"
+            constraintName="fk_project_estimation_histories_project"
+            referencedTableName="projects"
+            referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,73 @@
+.delayed-days {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.delayed-task-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ac0000;
+}
+
+.delayed-scheduled-date {
+    font-size: 26px;
+    font-weight: bold;
+    color: #000000;
+}
+
+
+.gantt-tooltip {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: auto !important;
+    display: block;
+
+    &-container {
+        background-color: #ffffff;
+        height: auto !important;
+    }
+    
+    &-title {
+        height: 60px;
+        font-size: 30px !important;
+        font-weight: bold;
+        line-height: normal;
+    }
+
+    &-date {
+        font-size: 24px !important;
+        height: 30px;
+    }
+}
+
+
+
+
+
+
+
+:host ::ng-deep .dx-checkbox-text {
+    font-size: 26px !important;
+}
+
+:host ::ng-deep .dx-texteditor-input-container {
+    font-size: 26px !important;
+    font-weight: bold;
+}
+
+:host ::ng-deep dx-gantt .ahead {
+    background-color: rgb(75, 255, 255);
+    color: black;
+    padding-left: 12px;
+}
+
+:host ::ng-deep dx-gantt .delayed {
+    background-color: rgb(255, 87, 87);
+    color: rgb(255, 205, 205);
+    font-weight: bold;
+    padding-left: 12px;
+}

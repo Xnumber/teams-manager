@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <changeSet id="create-acceptance-reject-type" author="clement">
+
+        <createTable tableName="acceptance_reject_type">
+
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="acceptance_reject_type_pkey"/>
+			</column>
+
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false"
+                            unique="true"
+                            uniqueConstraintName="uk_acceptance_reject_type_code"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="VARCHAR(500)"/>
+
+            <column name="sort" type="INT"
+                    defaultValueNumeric="0"/>
+
+            <column name="enabled" type="BOOLEAN"
+                    defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+    
+    <changeSet id="seed-acceptance-reject-type" author="clement">
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="OPTIMIZATION"/>
+            <column name="name" value="優化需求"/>
+            <column name="sort" valueNumeric="1"/>
+        </insert>
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="FUNCTION_ERROR"/>
+            <column name="name" value="功能異常"/>
+            <column name="sort" valueNumeric="2"/>
+        </insert>
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="UI_ISSUE"/>
+            <column name="name" value="UI問題"/>
+            <column name="sort" valueNumeric="3"/>
+        </insert>
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="PERFORMANCE"/>
+            <column name="name" value="效能問題"/>
+            <column name="sort" valueNumeric="4"/>
+        </insert>
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="REQUIREMENT_MISMATCH"/>
+            <column name="name" value="與需求不符"/>
+            <column name="sort" valueNumeric="5"/>
+        </insert>
+
+        <insert tableName="acceptance_reject_type">
+            <column name="code" value="OTHER"/>
+            <column name="name" value="其他"/>
+            <column name="sort" valueNumeric="1000"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

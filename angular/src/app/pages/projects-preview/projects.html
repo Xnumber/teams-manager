@@ -1,0 +1,218 @@
+<dx-load-panel 
+	[visible]="loadingEvents().length > 0"
+	[shading]="true"
+	[shadingColor]="'rgba(0,0,0,0.3)'"
+>
+</dx-load-panel>
+<div>
+	<h2 class="mb-1">概觀 (未完全統計)</h2>
+</div>
+<div class="flex-row">
+	<div class="me-3">
+		<h3>
+			團隊數 {{ (organizationOverview$ | async)?.teams_count || 0 }}
+		</h3>
+	</div>
+	<div class="me-3">
+		<h3>
+			總人數 {{ (organizationOverview$ | async)?.users_count || 0 }}
+		</h3>
+	</div>
+	<div class="me-3">
+		<h3>
+			總專案數 {{ (organizationOverview$ | async)?.projects_count || 0 }}
+		</h3>
+	</div>
+	<div class="me-3">
+		<h3>
+			需求工作天 {{ (organizationOverview$ | async)?.tasks_estimated_workdays || 0 }}
+		</h3>
+	</div>
+	<div class="me-3">
+		<h3>
+			可用工作天/月 {{ ((organizationOverview$ | async)?.members_count || 0 ) * 22}} 
+		</h3>
+	</div>
+</div>
+<app-project-metrics-histories></app-project-metrics-histories>
+
+
+<hr class="mt-1 mb-1">
+<div>
+	<h2 class="mb-0">專案概況</h2>
+</div>
+<div class="flex-row">
+	<div class="flex-1">
+		<dx-chart [dataSource]="projectsMilestonesInQueueChartDataSource$ | async"
+			[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '大項 ' + (projectsMilestonesInQueueCount() || 0) + ' 項', horizontalAlignment: 'left', font: { weight: 600 } }"
+			[rotated]="true"
+		>
+
+			<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip" [font]="{ size: 32 }">
+			</dxo-tooltip>
+			
+			
+			<dxi-series 
+				valueField="milestones_count_in_queue" 
+				name="待辦工作大項"
+			>
+
+			</dxi-series>
+			<dxo-argument-axis>
+				<dxo-label [overlappingBehavior]="'none'">
+				</dxo-label>
+			</dxo-argument-axis>
+		</dx-chart>
+	</div>
+	<div class="flex-1">
+		<dx-chart [dataSource]="projectsTaskInQueueChartDataSource$ | async"
+			[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '細項 ' + (projectsTaskInQueueCount() || 0) + ' 項', horizontalAlignment: 'left', font: { weight: 600 } }"
+			[rotated]="true">
+			<dxo-argument-axis>
+				<dxo-label [overlappingBehavior]="'none'">
+				</dxo-label>
+			</dxo-argument-axis>
+			<dxi-series valueField="tasks_count_in_queue" name="待辦工作"></dxi-series>
+			<dxo-tooltip 
+				[enabled]="true" 
+				[customizeTooltip]="customTooltip"
+				[font]="{ size: 32 }"
+			>
+			</dxo-tooltip>
+		</dx-chart>
+	</div>
+</div>
+
+<hr class="mt-3 mb-3">
+<div>
+	<h2 class="mb-0">團隊概況</h2>
+</div>
+<div class="d-none">
+	<dx-data-grid #dataGrid [dataSource]="teamsDataSource" [columns]="columns"
+		[editing]="{ allowUpdating: true, allowAdding: true, allowDeleting: false, mode: 'popup' }" [showBorders]="true"
+		(onOptionChanged)="onOptionChanged($event)">
+		<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+		<dxo-filter-row [visible]="true" (onOptionChanged)="onFilterRowChanged($event)">
+	
+		</dxo-filter-row>
+		<dxo-search-panel [visible]="false"></dxo-search-panel>
+	</dx-data-grid>
+</div>
+	<dx-chart [dataSource]="teamsChartDataSource$ | async" [commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }"
+		[title]="{ text: '待辦細項 ' + (teamsInQueueCount() || 0) + ' 項', horizontalAlignment: 'left', font: { weight: 600 } }" [rotated]="true" >
+	
+	
+		<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip" [font]="{ size: 32 }">
+		</dxo-tooltip>
+		<dxo-argument-axis>
+			<dxo-label [overlappingBehavior]="'none'">
+			</dxo-label>
+		</dxo-argument-axis>
+		<dxi-series valueField="tasks_count_in_queue" name="待辦工作"></dxi-series>
+	</dx-chart>
+<hr class="mt-3 mb-3">
+<div class="flex-row align-center p-2">
+	<h2 class="mb-0 me-3">專案預估概況</h2>
+	<!-- <div class="flex-3 flex-row">
+		<span>顯示 : </span>
+		<dx-tag-box
+			[value]="selectedProjectChartTypes()"
+			[dataSource]="projectChartTypes"
+			(onValueChanged)="selectedProjectChartTypes.set($event.value)"
+			valueExpr="id"
+			displayExpr="name"
+		></dx-tag-box>
+	</div> -->
+</div>
+
+
+<div class="projects-container">
+	@for (item of milestonesLeftProjects(); track $index) {
+			<!-- [class.one]="selectedProjectChartTypes().length === 1"
+			[class.three]="selectedProjectChartTypes().length === 3"
+			[class.four]="selectedProjectChartTypes().length === 4" -->
+		<div
+			class="flex-column two"
+		>
+			<app-project-estimation-histories 
+				[selectedProjectChartTypes]="['overview']"
+				[inputProjectId]="item.id"
+				[inputProjectName]="item.name" 
+				[inputShowMilestoneCharts]="false"
+
+			>
+			</app-project-estimation-histories>
+		</div>
+	}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+	<h1>專案列表</h1>
+	<dx-button
+		[text]="showProjectsGrid() ? '隱藏' : '顯示'"
+		type="default"
+		stylingMode="outlined"
+		(onClick)="toggleProjectsGrid()"
+	></dx-button>
+	<dx-button
+		text="試算"
+		type="default"
+		stylingMode="outlined"
+		(onClick)="toggleProjectsGrid()"
+	></dx-button>
+</div>
+
+@if (showProjectsGrid()) {
+	<div>
+		<dx-data-grid
+			#dataGrid 
+			[dataSource]="projectsDataSource"
+			[columns]="columns" 
+			[paging]="{ enabled: false }"
+			[editing]="{ allowUpdating: true, allowAdding: true, allowDeleting: true, mode: 'popup' }"
+			[showBorders]="true" (onOptionChanged)="onOptionChanged($event)"
+		>
+	
+			<dxo-data-grid-master-detail [enabled]="true" template="detail"></dxo-data-grid-master-detail>
+	
+			<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onProjectReorder"
+				[showDragIcons]="true"></dxo-data-grid-row-dragging>
+	
+			
+			<div *dxTemplate="let project of 'detail'">
+				<p>
+					{{ project.data.name }} - {{ project.data.description }}
+				</p>
+				<dx-data-grid 
+					[dataSource]="getMilestonesDataSource(project.data.id)" 
+					[columns]="milestoneColumns"
+					[showBorders]="true"
+				>
+					<dxo-paging [enabled]="false"></dxo-paging>
+					<dxo-filter-row [visible]="true"></dxo-filter-row>
+					<dxo-search-panel [visible]="true"></dxo-search-panel>
+	
+					<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onMilestoneReorder"
+						[showDragIcons]="true">
+					</dxo-data-grid-row-dragging>
+				</dx-data-grid>
+			</div>
+			<dxo-filter-row [visible]="true"></dxo-filter-row>
+			<dxo-search-panel [visible]="true"></dxo-search-panel>
+		</dx-data-grid>
+	</div>
+}

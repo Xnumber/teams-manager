@@ -1,0 +1,342 @@
+<dx-load-panel
+	[visible]="loading()"
+	[shadingColor]="'rgba(0,0,0,0.4)'"
+	[showIndicator]="true"
+	[showPane]="true"
+	[shading]="true"
+	[closeOnOutsideClick]="false"
+></dx-load-panel>
+
+
+@if (inputProjectId() === null) {
+	<div class="flex-row">
+		<div class="me-2">
+			<h2>
+				專案動態推估
+			</h2>
+		</div>
+		<div class="me-2 flex-row mb-2 justify-start items-center">
+			<dx-select-box
+				[(value)]="projectId"
+				[dataSource]="projectLookupDataSource"
+				placeholder="選擇專案"
+				valueExpr="id"
+				displayExpr="name"
+				(onValueChanged)="projectChanged($event)"
+			></dx-select-box>
+		</div>
+		<div class="me-1">
+			<dx-button text="更新"
+				(onClick)="updateProjectInfo()"
+			></dx-button>
+		</div>
+
+
+		
+
+	</div>
+} @else {
+	<div class="flex-row border-bottom-1 justify-between p-1">
+		<h3 class="mb-0 me-2">
+			{{ inputProjectName() }}
+		</h3>
+		
+		<dx-button
+			type="default" 
+			text="更新"
+			(onClick)="updateProjectInfo()"
+		></dx-button>
+	</div>
+}
+
+
+
+
+
+
+
+
+
+<div class="projects-charts-container">
+	@if (selectedProjectChartTypes().includes('overview')) {
+		<div class="f-300 p-1">
+			<div class="flex-row justify-between mb-1">
+				<h6 class="mb-0 f-700">
+					工作大項
+				</h6>
+				<h6 class="mb-0 f-700">
+					<!-- {{ (milestones$ | async)?.length }} -->
+					{{  (overview$ | async)?.remaining_milestones_count }}
+				</h6>
+			</div>
+			<div class="flex-row justify-between mb-1">
+				<h6 class="mb-0 f-700">
+					參與團隊
+				</h6>
+				<h6 class="mb-0 f-700">
+					{{  (overview$ | async)?.participating_teams_count }}
+				</h6>
+			</div>
+			
+			<div class="flex-row justify-between mb-1">
+				<h6 class="mb-0 f-700">
+					執行人數
+				</h6>
+				<h6 class="mb-0 f-700">
+					{{  (overview$ | async)?.executors_count }}
+				</h6>
+			</div>
+		
+			<div class="flex-row justify-between mb-1">
+				
+				
+				
+				<h6 class="mb-0 f-700">
+					人均投入工時佔比
+				</h6>
+				<h6 class="mb-0 f-700">
+					{{ participantInfo()?.avg_excecutor_time_ratio | percent }}
+				</h6>
+			</div>
+		
+			<div class="flex-row justify-between mb-1">
+				<h6 class="mb-0 f-700">
+					剩餘工作天(經工時占比調整)
+				</h6>
+				<h6 class="mb-0 f-700">
+					{{ ((participantInfo()?.sum_estimated_workdays ?? 0) / (participantInfo()?.avg_excecutor_time_ratio || 1) ) | number: '1.0-0' }}
+				</h6>
+			</div>
+			<hr>
+			<div class="flex-row justify-between mb-1">
+				<h6 class="mb-0 f-700">
+					預估下次確認
+				</h6>
+				<div>
+					<h6 class="mb-0 f-700">
+						{{ (overview$ | async)?.earliest_incomplete_demo_milestone_name || '無' }}
+					</h6>
+					<h6 class="mb-0 f-700 text-align-right">
+						{{ ((overview$ | async)?.earliest_incomplete_demo_milestone_complete_date | date: 'yyyy/MM/dd') || '無' }}
+					</h6>
+				</div>
+			</div>
+			<hr>
+			<div class="flex-row justify-between mb-1">
+				<h5 class="mb-0 f-700">
+					預估全部完成
+				</h5>
+				<div>
+					<h5 class="mb-0 f-700">
+						{{ (overview$ | async)?.latest_complete_date| date: 'yyyy/MM/dd' }}
+					</h5>
+				</div>
+			</div>
+		
+		</div>
+	}
+
+
+	
+	@if (selectedProjectChartTypes().includes('convergence')) {
+		<div
+			[class.one]="selectedProjectChartTypes().length === 1"
+			[class.two]="selectedProjectChartTypes().length === 2"
+			[class.three]="selectedProjectChartTypes().length === 3"
+			[class.four]="selectedProjectChartTypes().length === 4"
+			class="flex-column p-1"
+		>
+			<div class="flex-row justify-between chart-title">
+				<div class="f-300">
+					<h3 class="mb-0 f-300">預估下次確認</h3>
+				</div>
+				<div>
+					<div class="project-milestone-name">
+						{{ closestDemoMilestone()}}
+					</div>
+					<div>
+						{{ closestDemoMilestoneDate() | date: 'yyyy/MM/dd' }}
+					</div>
+				</div>
+			</div>	
+			<div class="flex-1">
+				<dx-chart
+					[dataSource]="projectConvergenceData | async"
+					[commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+				>
+					<dxi-series valueField="complete_date" name="預計"></dxi-series>
+					<dxi-series valueField="optimistic_estimated_complete_date" name="樂觀"></dxi-series>
+					<dxi-series valueField="pessimistic_estimated_complete_date" name="悲觀"></dxi-series>
+					<dxo-tooltip [enabled]="true"></dxo-tooltip>
+					<dxo-legend 
+						[visible]="true"
+						verticalAlignment="bottom"
+						horizontalAlignment="center"
+					></dxo-legend>
+					<dxi-value-axis
+						argumentType="date"
+						[label]="{ format: 'yyyy/MM/dd' }"
+						[visualRange]="{
+							startValue: convergenceStartDate,
+							endValue: convergenceEndDate
+						}"
+					></dxi-value-axis>
+					<dxo-argument-axis
+						[label]="{ format: 'yyyy/MM/dd'}"
+						[tickInterval]="{ days: 5 }"
+					></dxo-argument-axis>
+				</dx-chart>
+			</div>
+		</div>
+	}
+	@if (selectedProjectChartTypes().includes('left')) {
+		<div
+			[class.one]="selectedProjectChartTypes().length === 1"
+			[class.two]="selectedProjectChartTypes().length === 2"
+			[class.three]="selectedProjectChartTypes().length === 3"
+			[class.four]="selectedProjectChartTypes().length === 4"
+			class="flex-column p-1"
+		>
+			<div class="chart-title">
+				<h3 class="mb-0 f-300">剩餘工作大項</h3>
+			</div>
+			<div class="flex-1">
+				<dx-chart
+				[dataSource]="projectConvergenceData | async"
+				[commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+			>
+				<dxi-series valueField="left_milestones" name="待辦工作大項"></dxi-series>
+				<dxo-tooltip [enabled]="true"></dxo-tooltip>
+				<dxo-legend 
+					[visible]="true"
+					verticalAlignment="bottom"
+					horizontalAlignment="center"
+				></dxo-legend>
+				<dxi-value-axis
+					[tickInterval]="1"
+					[visualRange]="{
+                        startValue: leftMilestoneRangeStart,
+                        endValue: leftMilestoneRangeEnd
+                    }"
+				></dxi-value-axis>
+				<dxo-argument-axis
+					[label]="{ format: 'yyyy/MM/dd'}"
+					[tickInterval]="{ days: 5 }"
+				></dxo-argument-axis>
+			</dx-chart>
+			</div>
+		</div>
+	}
+
+
+	
+	@if (selectedProjectChartTypes().includes('delta')) {
+		<div
+			[class.one]="selectedProjectChartTypes().length === 1"
+			[class.two]="selectedProjectChartTypes().length === 2"
+			[class.three]="selectedProjectChartTypes().length === 3"
+			[class.four]="selectedProjectChartTypes().length === 4"
+			class="flex-column p-1"
+		>
+			<div class="chart-title">
+				<h3 class="mb-0 f-300">累積工作日超前/落後</h3>
+			</div>
+			<div class="flex-1">
+				<dx-chart
+				[dataSource]="cumulativeWorkingDayDeltaData | async"
+				[commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+			>
+				<dxi-series valueField="delta" name="累積工作日差異"></dxi-series>
+				<dxo-tooltip [enabled]="true"></dxo-tooltip>
+				<dxo-legend 
+					[visible]="true"
+					verticalAlignment="bottom"
+					horizontalAlignment="center"
+				></dxo-legend>
+				<dxi-value-axis
+					[tickInterval]="1"
+					[visualRange]="{
+                        startValue: cumulativeWorkingDayDeltaRangeStart,
+                        endValue: cumulativeWorkingDayDeltaRangeEnd
+					}"
+				></dxi-value-axis>
+				<dxo-argument-axis
+					[label]="{ format: 'yyyy/MM/dd'}"
+					[tickInterval]="{ days: 5 }"
+				></dxo-argument-axis>
+			</dx-chart>
+			</div>
+		</div>
+	}
+	@if (selectedProjectChartTypes().includes('list')) {
+		<div
+			[class.one]="selectedProjectChartTypes().length === 1"
+			[class.two]="selectedProjectChartTypes().length === 2"
+			[class.three]="selectedProjectChartTypes().length === 3"
+			[class.four]="selectedProjectChartTypes().length === 4"
+			class="flex-column p-1"
+		>
+			<div class="chart-title">
+				<h3 class="mb-0 f-300">工作大項</h3>
+			</div>
+			<div class="flex-1">
+				<dx-data-grid
+					[dataSource]="milestones$ | async"
+					[columns]="['name']"
+					[showBorders]="true"
+				></dx-data-grid>
+			</div>
+		</div>
+	}
+</div>
+
+
+
+
+@if(showMilestoneCharts() && inputShowMilestoneCharts()) {
+	
+	@if ((milestones$ | async)?.length > 0) {
+		<div class="flex-row ">
+			<div class="flex-3">
+				<h2>
+					相關工作大項
+				</h2>
+			</div>
+			<div class="flex-3">
+				<dx-tag-box
+					[value]="selectedMilestoneChartTypes()"
+					[dataSource]="milestoneChartTypes"
+					(onValueChanged)="selectedMilestoneChartTypes.set($event.value)"
+					valueExpr="id"
+					displayExpr="name"
+				></dx-tag-box>
+			</div>
+		</div>
+	}
+	<div>
+		<dx-radio-group
+			[value]="chosenDisplayType()"
+			[dataSource]="radioOptions"
+			valueExpr="id"
+			displayExpr="name"
+			layout="horizontal"
+			(onValueChanged)="chosenDisplayTypeChanged($event)"
+		></dx-radio-group>
+	</div>
+	<div class="milesones-container">
+		@for (item of milestones$ | async; track $index) {
+			<div
+				[class.one]="selectedMilestoneChartTypes().length === 1" 
+				[class.two]="selectedMilestoneChartTypes().length === 2" 
+				[class.three]="selectedMilestoneChartTypes().length === 3" 
+				[class.four]="selectedMilestoneChartTypes().length === 4" 
+				class="p-1">
+				<app-milestone-estimation-history 
+					[selectedeChartTypes]="selectedMilestoneChartTypes()"
+					[milestoneId]="item.id"
+					[milestoneName]="item.name">
+				</app-milestone-estimation-history>
+			</div>
+		}
+	</div>
+}

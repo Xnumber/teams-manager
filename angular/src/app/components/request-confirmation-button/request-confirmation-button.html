@@ -1,0 +1,10 @@
+<button 
+    class="request-confirm-btn" 
+    (click)="requestConfirmation()" 
+    [disabled]="disabled() || isSubmitting || !taskId">
+    {{ label() }}
+</button>
+
+@if (errorMessage) {
+    <div class="error-text">{{ errorMessage }}</div>
+}

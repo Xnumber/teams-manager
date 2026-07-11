@@ -1,0 +1,30 @@
+<h2>工作類型管理</h2>
+
+<dx-data-grid
+  [dataSource]="taskTypes"
+  [showBorders]="true"
+  [editing]="{ 
+    allowUpdating: true, 
+    allowAdding: true, 
+    allowDeleting: true, 
+    mode: 'popup' 
+  }"
+>
+  <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-search-panel [visible]="true"></dxo-search-panel>
+  
+  <dxi-column dataField="id" caption="ID" [visible]="false" [formItem]="{ visible : false}" [allowEditing]="false"></dxi-column>
+  <dxi-column dataField="name" caption="名稱"></dxi-column>
+  <dxi-column dataField="description" caption="描述"></dxi-column>
+  <dxi-column 
+    dataField="created_at" 
+    caption="建立時間" 
+    dataType="date"
+    format="yyyy/MM/dd HH:mm"
+    [formItem]="{ visible : false}"
+    [visible]="false"
+    [allowEditing]="false"
+  ></dxi-column>
+  <dxi-column dataField="concurrency_stamp" caption="版本戳記" [visible]="false" [formItem]="{ visible : false}" [allowEditing]="false"></dxi-column>
+</dx-data-grid>

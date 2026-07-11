@@ -1,0 +1,39 @@
+name: 發佈 - Alpha
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, Linux, x64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: 設定DevExtreme License
+        run: |
+          echo "export const licenseKey = '${{ secrets.DEVEXTREME_LICENSE }}'" > ./devextreme-license.ts
+      # - name: Enable pnpm
+      #   run: |
+      #     corepack enable pnpm
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Build
+        run: |
+          npm run build
+      - name: 移動檔案到伺服器的資料夾
+        run: |
+          rsync -av --delete dist/angular/browser/ /var/www/teams-manager-angular/

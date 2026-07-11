@@ -1,0 +1,12 @@
+<button
+	type="button"
+	class="complete-btn"
+	[disabled]="disabled() || isSubmitting || !taskId"
+	(click)="completeTask()"
+>
+	{{ label() }}
+</button>
+
+@if (errorMessage) {
+	<div class="error-text">{{ errorMessage }}</div>
+}

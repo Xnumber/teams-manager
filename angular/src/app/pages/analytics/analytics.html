@@ -1,0 +1,170 @@
+<!-- <app-milestone-estimation-history-and-task-list
+    [projectId]="projectId"
+    [projectName]="projectName"
+>
+</app-milestone-estimation-history-and-task-list> -->
+
+<hr>
+<app-project-estimation-histories></app-project-estimation-histories>
+<hr>
+<!-- <app-milestone-estimation-histories></app-milestone-estimation-histories> -->
+
+
+<div class="project-page">
+    <!-- <div class="mb-2">
+        <h2>專案交叉統計</h2>
+    </div>
+    <div class="flex-row mb-1">
+        <div>
+            設定組合
+        </div>
+        <div class="flex-1">
+            <dx-text-box placeholder="輸入名稱"></dx-text-box>
+        </div>
+        <div class="flex-2">
+            <dx-tag-box 
+                [items]="options"
+                placeholder="選擇專案"
+            ></dx-tag-box>
+        </div>
+        <div class="flex-2">
+            <dx-tag-box 
+                [items]="options"
+                placeholder="選擇團隊"
+            ></dx-tag-box>
+        </div>
+        <div>
+            <dx-button text="新增"></dx-button>
+        </div>
+    </div>
+    <div class="flex-row">
+        <div>選擇組合</div>
+        <div class="flex-1">
+            <dx-select-box [items]="combinations"></dx-select-box>
+        </div>
+    </div>
+    
+    <hr> -->
+
+    <!-- <div class="flex-row justify-between">
+        <div>
+            <div>
+                待辦事項預估剩餘工作天: 100天
+            </div>
+            <div>
+                耗費工作天: 100天
+            </div>
+            <div>
+                待辦事項: 15件
+            </div>
+            <div>
+                準時率: 85%
+            </div>
+            <div>
+                延誤率: 15%
+            </div>
+            <div>
+                待辦事項 {{ 100 }}
+            </div>
+            <div>
+                暫停事項 {{ 100 }}
+            </div>
+        </div>
+        <div>
+            <div>下次期望發布日: 2024-12-31 </div>
+            <div>下次預估發布日: 2024-12-31 </div>
+            <div>
+                平均50%延遲發布日: 2024-12-31
+            </div>
+            <div>
+                平均50%超前發布日: 2024-12-31
+            </div>
+        </div>
+    </div>
+
+    <hr> -->
+    <!-- <div class="flex-row">
+        <div class="flex-1">
+            <h3>代辦事項燃盡圖</h3>
+            <dx-chart
+                [dataSource]="todoBurndown" palette="Violet"
+                [commonSeriesSettings]="{ argumentField: 'day', type: 'area' }" style="height: 300px; width: 100%;">
+                <dxi-series valueField="value" name="剩餘待辦數"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend [visible]="false"></dxo-legend>
+            </dx-chart>
+        </div>
+        <div class="flex-1">
+            <h3>預估/實際工作天燃盡圖</h3>
+            <dx-chart  [dataSource]="compareBurndown" [commonSeriesSettings]="{ argumentField: 'day', type: 'area' }"
+                style="height: 300px; width: 100%;">
+                <dxi-series valueField="actual" name="實際工時"></dxi-series>
+                <dxi-series valueField="predicted" name="預估工時"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend [visible]="false"></dxo-legend>
+            </dx-chart>
+        </div>
+        <div class="flex-1">
+            <h3>超前/落後工作百分比</h3>
+            <dx-chart                
+                [dataSource]="progressCompare" [commonSeriesSettings]="{ argumentField: 'day', type: 'area' }"
+                style="height: 300px; width: 100%;">
+                <dxi-series valueField="progress" name="超前/落後"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend [visible]="false"></dxo-legend>
+
+                <dxi-value-axis
+                    [title]="{ text: '%'}"
+                >
+                </dxi-value-axis>
+                <dxi-chart-value-axis>
+                    
+                    <dxi-chart-constant-line [value]="0"></dxi-chart-constant-line>
+                </dxi-chart-value-axis>
+
+            </dx-chart>
+        </div>
+    </div> -->
+    <!-- <div class="flex-row">
+        <div class="flex-1">
+            <h3>
+                團隊進度比較圖
+            </h3>
+            <app-team-progress-compare></app-team-progress-compare>
+        </div>
+        <div class="flex-1">
+            <h3>
+                成員進度比較圖
+            </h3>
+            <app-member-progress-compare></app-member-progress-compare>
+        </div>
+    </div> -->
+    <!-- <div class="flex-row">
+        <div class="flex-1">
+            <h3>
+                預估收斂發布日比較圖
+            </h3>
+            <dx-chart
+                [dataSource]="convergenceData"
+                [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+                style="height: 300px; width: 100%;"
+            >
+                <dxi-series valueField="a" name="A"></dxi-series>
+                <dxi-series valueField="b" name="B"></dxi-series>
+                <dxi-series valueField="c" name="C"></dxi-series>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                <dxo-legend [visible]="true"></dxo-legend>
+            </dx-chart>
+        </div>
+         <div class="flex-1">
+            2
+         </div>
+    </div> -->
+    <!-- <h2>
+        超前/落後工作百分比折線圖
+    </h2>
+    <app-line
+        [data]="data2"
+    >
+    </app-line> -->
+</div>

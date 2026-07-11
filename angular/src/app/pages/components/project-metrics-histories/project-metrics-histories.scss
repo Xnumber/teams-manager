@@ -1,0 +1,41 @@
+.chartHeader {
+    word-break: keep-all;
+    &__total {
+        margin-right: 6px;
+        color: #3C1642;
+        user-select: none;
+    }
+    
+    &__added {
+        color: #086375;
+        user-select: none;
+        .dx-icon-add {
+            margin-right: 6px;
+            &:before {
+                font-size:26px !important; 
+            }
+        }
+        
+        
+        h3 {
+            // text-decoration:underline;
+        }
+    }
+    
+    
+    &__completed {
+        user-select: none;
+        color: #1DD3B0;
+        margin-right: 6px;
+
+        .dx-icon-todo {
+            margin-right: 6px;
+            &:before {
+                font-size:26px !important; 
+            }
+        }
+        h3 {
+            // text-decoration:underline;
+        }
+    }
+}

@@ -1,0 +1,31 @@
+
+<dx-select-box
+    [(value)]="milestoneId"
+    [dataSource]="milestoneLookupDataSource"
+    placeholder="選擇工作大項"
+    valueExpr="id"
+    displayExpr="name"
+    (onValueChanged)="mileStoneChanged($event)"
+></dx-select-box>
+
+
+<dx-button text="更新"
+    (onClick)="updateMileStoneInfo()"
+></dx-button>
+
+<dx-chart
+    [dataSource]="milestoneConvergenceData | async"
+    [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+    style="height: 300px; width: 100%;"
+>
+    <dxi-series valueField="complete_date" name="預計"></dxi-series>
+    <dxi-series valueField="optimistic_estimated_complete_date" name="樂觀"></dxi-series>
+    <dxi-series valueField="pessimistic_estimated_complete_date" name="悲觀"></dxi-series>
+    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+    <dxo-legend [visible]="true"></dxo-legend>
+    <dxi-value-axis
+        argumentType="date"
+        [label]="{ format: 'yyyy/MM/dd'}"
+        [tickInterval]="{ days: 3 }"
+    ></dxi-value-axis>
+</dx-chart>

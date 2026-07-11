@@ -1,0 +1,222 @@
+
+
+<dx-toast
+  [visible]="toastVisible()"
+  [message]="toastMessage()"
+  [type]="toastType()"
+  [displayTime]="10000"
+  (onHidden)="toastVisible.set(false)"
+></dx-toast>
+
+<div class="flex-row justify-between mb-2">
+  <div class="flex-1 me-2 flex-row">
+    <h3 class="me-2 mb-0">計畫</h3>
+    <!-- <dx-tag-box
+      [dataSource]="projects"
+      displayExpr="name"
+      (onValueChanged)="onProjectChanged($event)"
+      valueExpr="id"
+      placeholder="Select a project">
+    </dx-tag-box> -->
+    <dx-select-box
+      [dataSource]="plans"
+      displayExpr="name"
+      (onValueChanged)="onPlanChanged($event)"
+      valueExpr="id"
+      placeholder="選擇一個計劃">
+    </dx-select-box>
+  </div>
+
+</div>
+
+
+
+
+
+
+<div>
+  <div class="chart-title">
+      <h3>預估完成歷史</h3>
+  </div>
+  <dx-chart
+      [dataSource]="planHistory$ | async"
+      [commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+      style="height: 300px; width: 100%;"
+  >
+      <dxi-series valueField="complete_date" name="預計"></dxi-series>
+      <dxi-series valueField="optimistic_estimated_complete_date" name="樂觀"></dxi-series>
+      <dxi-series valueField="pessimistic_estimated_complete_date" name="悲觀"></dxi-series>
+      <dxo-tooltip [enabled]="true"></dxo-tooltip>
+      <dxo-legend
+          verticalAlignment="bottom"
+          horizontalAlignment="center"
+          [visible]="true"
+      ></dxo-legend>
+      <dxi-value-axis
+          argumentType="date"
+          [label]="{ format: 'yyyy/MM/dd' }"
+          [visualRange]="{
+              startValue: convergenceStartDate,
+              endValue: convergenceEndDate
+          }"
+      ></dxi-value-axis>
+        <dxo-argument-axis
+          [label]="{ format: 'yyyy/MM/dd'}"
+          [tickInterval]="{ days: 5 }"
+      ></dxo-argument-axis>
+  </dx-chart>
+</div>
+<div>
+  <h3>
+    預計完成日 {{ latestTaskEnd() | date: "yyyy/MM/dd" }}
+  </h3>
+</div>
+
+
+<div class="flex-row">
+    <div class="chart-title me-2">
+        <h5 class="mb-0">時間表</h5>
+    </div>
+    <!-- <div class="me-1">
+      <dx-check-box
+        text="校正"
+        [value]="isCorrected()"
+        (onValueChanged)="onIsCorrectedChanged($event)"
+      >
+      </dx-check-box>
+    </div> -->
+    <div class="me-1">
+      <dx-button
+        icon="add"
+        type="default"
+        (onClick)="zoomIn()">
+      </dx-button>
+    </div>
+    <div>
+      <dx-button
+        icon="minus"
+        type="default"
+        (onClick)="zoomOut()">
+      </dx-button>
+    </div>
+  </div>
+<dx-gantt
+  #gantt
+  scaleType="months"
+  height="calc(100vh - 100px)"
+  dateFormat="yyyy/MM/dd"
+  taskTooltipContentTemplate="taskTooltip"
+>
+  <div *dxTemplate="let task of 'taskTooltip'" class="gantt-tooltip-container">
+    <div class="gantt-tooltip">
+      <div class="gantt-tooltip-title">
+          <span>
+            {{ task.title }}
+          </span>
+      </div>
+      <div class="gantt-tooltip-date">開始：{{ task.start | date: "yyyy/MM/dd" }}</div>
+      <div class="gantt-tooltip-date">結束：{{ task.end | date: "yyyy/MM/dd" }}</div>
+      <!-- {{ task | json }} -->
+      <!-- @if (task.progress !== undefined) {
+        <div class="gantt-tooltip-progress">進度：{{ task.progress }}%</div>
+      } -->
+    </div>
+  </div>
+  <!-- taskContentTemplate="taskContentTemplate" -->
+  <!-- <dxo-editing [enabled]="true" > -->
+    <!-- [allowDependencyAdding]="false" 
+    [allowDependencyDeleting]="false"
+    [allowResourceAdding]="false" 
+    [allowResourceDeleting]="false" 
+    [allowTaskAdding]="false" 
+    [allowTaskDeleting]="false"
+    [allowTaskResourceUpdating]="false" 
+    [allowTaskUpdating]="false" -->
+  <!-- </dxo-editing> -->
+  <!-- <dxo-gantt-tasks [dataSource]="tasks"></dxo-gantt-tasks> -->
+  
+  
+  
+  
+  <dxo-gantt-tasks 
+    [dataSource]="data$ | async"
+    [colorExpr]="'color'"
+  >
+    </dxo-gantt-tasks>
+  <dxo-gantt-dependencies [dataSource]="dependencies"></dxo-gantt-dependencies>
+  <dxo-gantt-resources [dataSource]="resources"></dxo-gantt-resources>
+  <dxo-gantt-resource-assignments [dataSource]="resourceAssignments"></dxo-gantt-resource-assignments>
+
+  <dxi-gantt-column 
+    [allowSorting]="false" 
+    [allowFiltering]="true" dataField="title" caption="項目" [width]="300"
+    cellTemplate="item"
+  >
+  </dxi-gantt-column>
+  <div *dxTemplate="let data of 'item'" [class.ahead]="data.data.ahead" [class.delayed]="data.data.delayed">
+    {{ data.data.title }}
+  </div>
+  <dxi-gantt-column [allowSorting]="false" dataField="start" caption="開始日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
+  <dxi-gantt-column [allowSorting]="false" dataField="end" caption="終了日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
+
+  <dxo-gantt-toolbar>
+    <dxi-gantt-item name="undo"></dxi-gantt-item>
+    <dxi-gantt-item name="redo"></dxi-gantt-item>
+    <dxi-gantt-item name="separator"></dxi-gantt-item>
+    <dxi-gantt-item name="collapseAll"></dxi-gantt-item>
+    <dxi-gantt-item name="expandAll"></dxi-gantt-item>
+    <dxi-gantt-item name="separator"></dxi-gantt-item>
+    <dxi-gantt-item name="addTask"></dxi-gantt-item>
+    <dxi-gantt-item name="deleteTask"></dxi-gantt-item>
+    <dxi-gantt-item name="separator"></dxi-gantt-item>
+    <dxi-gantt-item name="zoomIn"></dxi-gantt-item>
+    <dxi-gantt-item name="zoomOut"></dxi-gantt-item>
+  </dxo-gantt-toolbar>
+
+  <dxo-gantt-validation [autoUpdateParentTasks]="true"></dxo-gantt-validation>
+  <dxo-gantt-editing [enabled]="false"></dxo-gantt-editing>
+      <!-- /* class="task"
+      [style.background]="item.taskData.color"
+      [style.width.px]="item.taskSize.width" */ -->
+    <!-- <div *dxTemplate="let item of 'taskContentTemplate'" class="task">
+      123  {{ item.taskData.title }}
+    </div> -->
+</dx-gantt>
+
+<!-- <div class="mb-2">
+  @if (delayedTasks().length > 0) {
+    <h3 class="mb-1">
+      延遲的工作 {{ totalDelayedDays() }} 天
+    </h3>
+    @for (item of delayedTasks(); track $index) {
+      <div>
+        <div>
+          <span class="delayed-task-title">{{ item.name }}</span>
+        </div>
+        <div>
+         <span class="delayed-scheduled-date">
+           {{ item.scheduled_end_date | date: "yyyy/MM/dd" }} 
+         </span> 
+          ~ <span class="delayed-days"> {{ item.delayDays }} </span> 天
+        </div>
+      </div>
+    } 
+  
+  }
+</div> -->
+
+
+
+
+
+
+<div class="mb-2"></div>
+<h3>計畫列表</h3>
+<dx-data-grid
+  [dataSource]="plansDataSource"
+  [columns]="planColumns"
+  [editing]="{ allowAdding: true, allowUpdating: true, mode: 'popup' }"
+>
+  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+  
+</dx-data-grid>

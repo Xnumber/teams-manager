@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">   
+    <changeSet author="clement" id="20260602-1-change-task-acceptance-records-table">
+        <createTable tableName="task_acceptance_records">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_acceptance_record_pkey"/>
+            </column>
+
+            <column name="task_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="acceptor_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="requested_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="accepted" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="reject_type_id" type="UUID"/>
+
+            <column name="reject_reason" type="TEXT"/>
+
+            <column name="developer_response_type_id" type="UUID"/>
+
+            <column name="acceptor_comment" type="TEXT"/>
+
+            <column name="developer_comment" type="TEXT"/>
+
+            <column name="reviewed_at" type="TIMESTAMP WITH TIME ZONE"/>
+
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="task_acceptance_records"
+            baseColumnNames="task_id"
+            referencedTableName="tasks"
+            referencedColumnNames="id"
+            constraintName="fk_task_acceptance_record_task"/>
+        <addForeignKeyConstraint
+            baseTableName="task_acceptance_records"
+            baseColumnNames="acceptor_id"
+            referencedTableName="users"
+            referencedColumnNames="id"
+            constraintName="fk_task_acceptance_record_acceptor"/>
+        <addForeignKeyConstraint
+            baseTableName="task_acceptance_records"
+            baseColumnNames="reject_type_id"
+            referencedTableName="acceptance_reject_type"
+            referencedColumnNames="id"
+            constraintName="fk_task_acceptance_record_reject_type"/>
+        <addForeignKeyConstraint
+            baseTableName="task_acceptance_records"
+            baseColumnNames="developer_response_type_id"
+            referencedTableName="acceptance_response_types"
+            referencedColumnNames="id"
+            constraintName="fk_task_acceptance_record_response_type"/>
+    </changeSet> 
+</databaseChangeLog>

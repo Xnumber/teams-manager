@@ -1,0 +1,219 @@
+{
+    "name": "teams_manager",
+    "rdbms": "postgresql",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dbname": "teams_manager",
+    "user": "clement",
+    "passwd": "abc",
+    "tables": [
+        "tenants",
+        "teams",
+        "users",
+        "projects",
+        "milestones",
+        "tasks",
+        "mentors_tasks",
+        "executors_tasks",
+        "task_types",
+        "task_status",
+        "roles",
+        "repositories",
+        "pull_request_sync_checkpoints",
+        "pull_requests",
+        "git_user_links",
+        "commits",
+        "milestone_estimation_histories",
+        "project_estimation_histories",
+        "task_acceptance_records",
+        "task_acceptor",
+        "milestone_acceptance_records",
+        "milestone_acceptor",
+        "acceptance_reject_type",
+        "acceptance_response_types",
+        "user_project_settings",
+        "project_metrics_history",
+        "work_item_dependencies",
+        "plans",
+        "plans_projects",
+        "plan_estimation_histories"
+    ],
+    "relationships": {
+        "enabled": false,
+        "items": [
+            {
+                "type": "has many",
+                "original_table_name": "task_status",
+                "original_table_alias": "task_status",
+                "original_key": "id",
+                "target_table_name": "tasks",
+                "target_table_alias": "task",
+                "target_key": "status_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "task_types",
+                "original_table_alias": "task_type",
+                "original_key": "id",
+                "target_table_name": "tasks",
+                "target_table_alias": "task",
+                "target_key": "task_type_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "tenants",
+                "original_table_alias": "tenant",
+                "original_key": "id",
+                "target_table_name": "users",
+                "target_table_alias": "user",
+                "target_key": "tenant_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "projects",
+                "original_table_alias": "project",
+                "original_key": "id",
+                "target_table_name": "tasks",
+                "target_table_alias": "task",
+                "target_key": "project_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "many to many",
+                "original_table_name": "tasks",
+                "original_table_alias": "",
+                "original_key": "id",
+                "pivot_table": {
+                    "table_name": "mentors_tasks",
+                    "original_key": "task_id",
+                    "target_key": "user_id"
+                },
+                "target_table_name": "users",
+                "target_table_alias": "",
+                "target_key": "id",
+                "enable_reverse": true
+            },
+            {
+                "type": "many to many",
+                "original_table_name": "tasks",
+                "original_table_alias": "",
+                "original_key": "id",
+                "pivot_table": {
+                    "table_name": "executors_tasks",
+                    "original_key": "task_id",
+                    "target_key": "user_id"
+                },
+                "target_table_name": "users",
+                "target_table_alias": "",
+                "target_key": "id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "tenants",
+                "original_table_alias": "tenant",
+                "original_key": "id",
+                "target_table_name": "teams",
+                "target_table_alias": "team",
+                "target_key": "tenant_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "teams",
+                "original_table_alias": "team",
+                "original_key": "id",
+                "target_table_name": "tasks",
+                "target_table_alias": "task",
+                "target_key": "team_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "projects",
+                "original_table_alias": "project",
+                "original_key": "id",
+                "target_table_name": "milestones",
+                "target_table_alias": "milestone",
+                "target_key": "project_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "teams",
+                "original_table_alias": "team",
+                "original_key": "id",
+                "target_table_name": "milestones",
+                "target_table_alias": "milestone",
+                "target_key": "team_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "tenants",
+                "original_table_alias": "tenant",
+                "original_key": "id",
+                "target_table_name": "milestones",
+                "target_table_alias": "milestone",
+                "target_key": "tenant_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "projects",
+                "original_table_alias": "project",
+                "original_key": "id",
+                "target_table_name": "project_estimation_histories",
+                "target_table_alias": "project_estimation_history",
+                "target_key": "project_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "milestones",
+                "original_table_alias": "milestone",
+                "original_key": "id",
+                "target_table_name": "milestone_estimation_histories",
+                "target_table_alias": "milestone_estimation_history",
+                "target_key": "milestone_id",
+                "enable_reverse": true
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+            {
+                "type": "has many",
+                "original_table_name": "users",
+                "original_table_alias": "user",
+                "original_key": "id",
+                "target_table_name": "user_project_settings",
+                "target_table_alias": "user_project_setting",
+                "target_key": "user_id",
+                "enable_reverse": true
+            },
+            {
+                "type": "has many",
+                "original_table_name": "projects",
+                "original_table_alias": "project",
+                "original_key": "id",
+                "target_table_name": "user_project_settings",
+                "target_table_alias": "user_project_setting",
+                "target_key": "project_id",
+                "enable_reverse": true
+            }
+        ]
+    }
+}

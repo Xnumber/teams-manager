@@ -1,0 +1,320 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="clement (generated)" id="1777619304597-1">
+        <createTable tableName="tenants">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tenants_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-2">
+        <createTable tableName="teams">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="teams_pkey"/>
+            </column>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-3">
+        <createTable tableName="users">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-4">
+        <createTable tableName="projects">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="projects_pkey"/>
+            </column>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column defaultValueNumeric="0" name="test_count" type="INTEGER"/>
+            <column defaultValueNumeric="0" name="test_pass_count" type="INTEGER"/>
+            <column defaultValueNumeric="0" name="test_auto_count" type="INTEGER"/>
+            <column defaultValueNumeric="0" name="available_developer_count" type="INTEGER"/>
+            <column defaultValueComputed="0.00" name="unit_test_coverage" type="numeric(5, 2)"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-5">
+        <createTable tableName="milestones">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="milestones_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="project_id" type="UUID"/>
+            <column name="project_name" type="VARCHAR(100)"/>
+            <column name="team_id" type="UUID"/>
+            <column name="team_name" type="VARCHAR(100)"/>
+            <column name="tenant_id" type="UUID"/>
+            <column name="tenant_name" type="VARCHAR(100)"/>
+            <column name="start_date" type="date"/>
+            <column name="end_date" type="date"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="creator_id" type="UUID"/>
+            <column name="creator_name" type="VARCHAR(100)"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remark" type="VARCHAR(2000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-6">
+        <createTable tableName="task_types">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_types_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_id" type="UUID"/>
+            <column name="team_name" type="VARCHAR(100)"/>
+            <column name="description" type="TEXT"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-7">
+        <createTable tableName="task_status">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_status_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-8">
+        <createTable tableName="tasks">
+            <column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tasks_pkey"/>
+            </column>
+            <column name="creator_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant_id" type="UUID"/>
+            <column name="tenant_name" type="VARCHAR(100)"/>
+            <column name="project_id" type="UUID"/>
+            <column name="project_name" type="VARCHAR(100)"/>
+            <column name="task_type_id" type="UUID"/>
+            <column name="task_type_name" type="VARCHAR(100)"/>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="excecutor_time_ratio" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column defaultValue="gen_random_uuid()" name="concurrency_stamp" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="remark" type="VARCHAR(2000)"/>
+            <column name="scheduled_start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scheduled_end_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scheduled_completion_date" type="date"/>
+            <column name="completion_date" type="date"/>
+            <column defaultValueNumeric="0" name="progress" type="numeric(3, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="completed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_DATE" name="status_last_changed" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="result_description" type="VARCHAR(500)"/>
+            <column name="team_id" type="UUID"/>
+            <column name="team_name" type="VARCHAR(100)"/>
+            <column name="milestone_id" type="UUID"/>
+            <column name="milestone_name" type="VARCHAR(100)"/>
+            <column defaultValueNumeric="0" name="estimated_working_days" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="delayed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-9">
+        <addUniqueConstraint columnNames="name" constraintName="tenants_name_key" tableName="tenants"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-10">
+        <addUniqueConstraint columnNames="name" constraintName="teams_name_key" tableName="teams"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-11">
+        <addUniqueConstraint columnNames="email" constraintName="users_email_key" tableName="users"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-12">
+        <addUniqueConstraint columnNames="username" constraintName="users_username_key" tableName="users"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-13">
+        <addUniqueConstraint columnNames="name" constraintName="projects_name_key" tableName="projects"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-14">
+        <addUniqueConstraint columnNames="name" constraintName="task_types_name_key" tableName="task_types"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-15">
+        <addUniqueConstraint columnNames="name" constraintName="task_status_name_key" tableName="task_status"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-16">
+        <createTable tableName="executors_tasks">
+            <column name="task_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="executors_tasks_pkey"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="executors_tasks_pkey"/>
+            </column>
+            <column name="user_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-17">
+        <createTable tableName="mentors_tasks">
+            <column name="task_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mentors_tasks_pkey"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mentors_tasks_pkey"/>
+            </column>
+            <column name="user_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-18">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="executors_tasks" constraintName="executors_tasks_task_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tasks" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="executors_tasks" constraintName="executors_tasks_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-20">
+        <addForeignKeyConstraint baseColumnNames="milestone_id" baseTableName="tasks" constraintName="fk_milestone" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="milestones" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-21">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="milestones" constraintName="fk_project" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="projects" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-22">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="tasks" constraintName="fk_project" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="projects" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-23">
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="tasks" constraintName="fk_task_status" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="task_status" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-24">
+        <addForeignKeyConstraint baseColumnNames="task_type_id" baseTableName="tasks" constraintName="fk_task_type" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="task_types" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-25">
+        <addForeignKeyConstraint baseColumnNames="team_id" baseTableName="milestones" constraintName="fk_team" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="teams" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-26">
+        <addForeignKeyConstraint baseColumnNames="team_id" baseTableName="task_types" constraintName="fk_team" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="teams" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-27">
+        <addForeignKeyConstraint baseColumnNames="team_id" baseTableName="tasks" constraintName="fk_team" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="teams" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-28">
+        <addForeignKeyConstraint baseColumnNames="tenant_id" baseTableName="milestones" constraintName="fk_tenant" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tenants" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-29">
+        <addForeignKeyConstraint baseColumnNames="tenant_id" baseTableName="projects" constraintName="fk_tenant" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tenants" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-30">
+        <addForeignKeyConstraint baseColumnNames="tenant_id" baseTableName="tasks" constraintName="fk_tenant" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tenants" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-31">
+        <addForeignKeyConstraint baseColumnNames="tenant_id" baseTableName="teams" constraintName="fk_tenant" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tenants" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-32">
+        <addForeignKeyConstraint baseColumnNames="tenant_id" baseTableName="users" constraintName="fk_tenant" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tenants" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-33">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="mentors_tasks" constraintName="mentors_tasks_task_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tasks" validate="true"/>
+    </changeSet>
+    <changeSet author="clement (generated)" id="1777619304597-34">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="mentors_tasks" constraintName="mentors_tasks_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

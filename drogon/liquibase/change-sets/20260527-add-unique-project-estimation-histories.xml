@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <changeSet author="clement" id="20260527-1-add-unique-project-estimation-histories-project-date">
+        <preConditions onFail="HALT" onError="HALT">
+            <and>
+                <tableExists tableName="project_estimation_histories"/>
+                <columnExists tableName="project_estimation_histories" columnName="project_id"/>
+                <columnExists tableName="project_estimation_histories" columnName="estimation_date"/>
+                <sqlCheck expectedResult="0">
+                    SELECT COUNT(*)
+                    FROM (
+                        SELECT project_id, estimation_date, COUNT(*) AS c
+                        FROM project_estimation_histories
+                        GROUP BY project_id, estimation_date
+                        HAVING COUNT(*) > 1
+                    ) t
+                </sqlCheck>
+            </and>
+        </preConditions>
+
+        <addUniqueConstraint
+            tableName="project_estimation_histories"
+            columnNames="project_id,estimation_date"
+            constraintName="uq_project_estimation_histories_project_date"/>
+
+        <rollback>
+            <dropUniqueConstraint
+                tableName="project_estimation_histories"
+                constraintName="uq_project_estimation_histories_project_date"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

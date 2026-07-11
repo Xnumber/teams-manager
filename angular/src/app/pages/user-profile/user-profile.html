@@ -1,0 +1,16 @@
+<h2>{{ userName() }}</h2>
+<nav class="breadcrumb mb-2">
+  <!-- <a routerLink="/user-profile" style="color:#1976d2; text-decoration:none; font-weight:600;">個人首頁</a> -->
+  <!-- <span class="breadcrumb-sep">/</span> -->
+  <a routerLink="/user-profile" style="color:#1976d2; text-decoration:none; font-weight:600;">統計</a>
+  
+  <span class="breadcrumb-sep">/</span>
+  <a routerLink="/user-profile/completed-tasks" routerLinkActive="active" style="color:#1976d2; text-decoration:none; font-weight:600;">完成任務</a>
+  <span class="breadcrumb-sep">/</span>
+  <a routerLink="/user-profile/incomplete-tasks" routerLinkActive="active" style="color:#1976d2; text-decoration:none; font-weight:600;">未完成任務</a>
+  <span class="breadcrumb-sep">/</span>
+  <a routerLink="/user-profile/settings" routerLinkActive="active" style="color:#1976d2; text-decoration:none; font-weight:600;">設定</a>
+  <span class="breadcrumb-sep">/</span>
+  <a routerLink="/user-profile/project-settings" routerLinkActive="active" style="color:#1976d2; text-decoration:none; font-weight:600;">專案設定</a>
+</nav>
+<router-outlet></router-outlet>

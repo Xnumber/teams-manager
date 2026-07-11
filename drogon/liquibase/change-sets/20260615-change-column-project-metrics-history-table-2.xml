@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <changeSet author="clement"
+            id="20260616-2-project-metrics-history-add-project-id">
+        <dropUniqueConstraint
+            tableName="project_metrics_history"
+            constraintName="uq_project_metrics_history_id_date"/>
+
+        <addColumn tableName="project_metrics_history">
+            <column name="project_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint
+            baseTableName="project_metrics_history"
+            baseColumnNames="project_id"
+            referencedTableName="projects"
+            referencedColumnNames="id"
+            constraintName="fk_project_metrics_history_project"/>
+        <addUniqueConstraint
+            tableName="project_metrics_history"
+            columnNames="project_id,date"
+            constraintName="uq_project_metrics_history_project_id_date"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,67 @@
+h2 {
+    margin: 0;
+}
+
+dx-data-grid {
+    margin-bottom: 20px;
+}
+
+
+.tasks {
+    display: flex;
+    gap: 30px;
+    border: 1px solid #363636;
+    padding: 20px;
+
+
+    div {
+        border: 1px solid #363636;
+        padding: 20px;
+    }
+
+    &-all {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &-all-grid {
+        flex: 1;
+        overflow: scroll;
+    }
+
+
+    &-member {
+        flex: 1;
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        >div {
+            flex: 1;
+        }
+    }
+}
+
+
+
+
+::ng-deep {
+    @for $i from 0 through 100 {
+        .dx-row.dx-data-row.dx-column-lines.progress-#{$i} {
+            position: relative;
+            td:nth-child(1)::before {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                display: inline-block;
+                height: 6px;
+                background-color: rgb(75, 159, 255);
+                width: $i * 1%;
+            }
+        }
+    }
+}

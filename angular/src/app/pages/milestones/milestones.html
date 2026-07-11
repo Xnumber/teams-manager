@@ -1,0 +1,69 @@
+<dx-data-grid #grid [dataSource]="milestonesDataSource" [columns]="columns"
+    [editing]="{ allowUpdating: true, allowAdding: true, allowDeleting: true, mode: 'popup' }" [showBorders]="true"
+    (onInitNewRow)="onInitNewRow($event)"
+    [editing]="{ mode: 'popup', popup: { width: '100vw', height: '100vh'} , allowUpdating: true, allowAdding: true }"
+    [syncLookupFilterValues]="false" (onRowExpanded)="onRowExpanded($event)"
+    (onEditorPreparing)="onEditorPreparing($event)">
+    <dxo-toolbar>
+        <dxi-item location="before">
+            <div class="flex-row">
+                <div class="me-2">
+                    <h3 class="mb-0 mt-0">
+                        工作大項
+                    </h3>
+                </div>
+                <div>
+                    <dx-radio-group [value]="chosenDisplayType()" [dataSource]="radioOptions" valueExpr="id"
+                        displayExpr="name" layout="horizontal"
+                        (onValueChanged)="chosenDisplayTypeChanged($event)"></dx-radio-group>
+                </div>
+            </div>
+        </dxi-item>
+        <app-complete-milestone-button *dxTemplate="let data of 'complete'" [milestoneId]="data.data.id"
+            [completed]="data.data.completed" (onCompleted)="milestonesDataSource.reload()"></app-complete-milestone-button>
+        <dxi-item name="addRowButton" location="after">
+        </dxi-item>
+        <dxi-item name="searchPanel" location="after">
+        </dxi-item>
+    </dxo-toolbar>
+    <div *dxTemplate="let cellInfo of 'dependenciesEditCellTemplate'" class="dependencies-edit-cell">
+        <app-dependencies-edit-cell
+            [selfId]="cellInfo.data?.id"
+            [selfDependencyType]="'TASK'"
+            [value]="cellInfo.data?.dependencies"
+            (valueChanged)="cellInfo.setValue($event)"
+        ></app-dependencies-edit-cell>
+            <!-- (valueChanged)="onDependenciesChanged($event, cellInfo.data?.id)" -->
+    </div>
+
+
+
+    <!-- <dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onMilestoneReorder"
+        [showDragIcons]="true">
+    </dxo-data-grid-row-dragging> -->
+    <dxo-data-grid-master-detail [enabled]="true" template="detail"></dxo-data-grid-master-detail>
+
+
+    <div *dxTemplate="let detailData of 'detail'">
+        <dx-data-grid #grid [dataSource]="tasksDataSourceService.createTasksFilterDataSource(detailData.data.id)"
+            [columns]="taskColumns" [showBorders]="true"
+            [editing]="{ mode: 'popup', popup: { width: '100vw', height: '100vh'}, allowUpdating: true, allowAdding: true, allowDeleting: true }"
+            [allowColumnResizing]="true"
+            (onInitNewRow)="onInitNewTaskRow($event, detailData.data.id, detailData.data.project_id)">
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            <div *dxTemplate="let data of 'descriptionCellTemplate'">
+                <div class="description-cell">
+                    <div class="description-text" [innerHTML]="data.value | changeLine"></div>
+                </div>
+            </div>
+            <app-complete-task-button *dxTemplate="let data of 'completeButtonTemplate'" [taskId]="data.data.id"
+                [completed]="data.data.completed" (onCompleted)="grid.instance.refresh()">
+            </app-complete-task-button>
+            <dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onTasksReorder" [showDragIcons]="true">
+            </dxo-data-grid-row-dragging>
+        </dx-data-grid>
+    </div>
+    <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-search-panel [visible]="true"></dxo-search-panel>
+</dx-data-grid>

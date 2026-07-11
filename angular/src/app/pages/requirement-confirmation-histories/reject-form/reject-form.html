@@ -1,0 +1,35 @@
+<dx-popup 
+    [visible]="visible()"
+    (onHiding)="cancel()"
+>
+    <div *dxTemplate="let data of 'content'">
+        <h2 class="mb-1">{{ taskName() }}</h2>
+        <p>{{ taskDescription() }}</p>
+        <dx-form
+            [items]="formProperties.items ?? []"
+            [formData]="formData"
+        >
+        </dx-form>
+    </div>
+
+    <dxi-popup-toolbar-item
+        widget="dxButton"
+        location="after"
+        toolbar="bottom"
+        [options]="{
+            text: '拒絕',
+            onClick: reject
+        }
+    ">
+    </dxi-popup-toolbar-item>
+    <dxi-popup-toolbar-item
+        widget="dxButton"
+        location="after"
+        toolbar="bottom"
+        [options]="{
+            text: '取消',
+            onClick: cancel
+        }
+    ">
+    </dxi-popup-toolbar-item>
+</dx-popup>

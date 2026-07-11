@@ -1,0 +1,76 @@
+
+<div>
+	<div>
+		<h1>專案設定</h1>
+	</div>
+	<p>
+		平均工時占比對應到待辦工作事項的參與者投入時間百分比。
+	</p>
+	<p>
+		此專案設定後，包含新增或編輯，將會依照指定專案內的平均工時占比，設定指定專案的所有工作的參與者投入時間百分比。
+	</p>
+	<p>
+		個別工作事項，可另外自訂參與者投入時間百分比。
+	</p>
+	<div class="content">
+		<dx-data-grid 
+            #dataGrid 
+            [dataSource]="projectSettingsDataSource" 
+            [columns]="columns" 
+            [paging]="{ enabled: false }"
+			[editing]="{ allowAdding: true, allowUpdating: true, mode: 'popup' }"
+			[errorRowEnabled]="true"
+        >
+			<!-- [showBorders]="true" (onOptionChanged)="onOptionChanged($event)" -->
+			<!-- <dxo-data-grid-master-detail [enabled]="true" template="detail"></dxo-data-grid-master-detail> -->
+
+			<!-- <dxo-data-grid-row-dragging 
+                [allowReordering]="true" 
+                [onReorder]="onProjectReorder"
+				[showDragIcons]="true">
+            </dxo-data-grid-row-dragging> -->
+
+			<!-- <div *dxTemplate="let project of 'detail'">
+				<dx-data-grid [dataSource]="getMilestonesDataSource(project.data.id)" [columns]="milestoneColumns"
+					[showBorders]="true">
+					<dxo-paging [enabled]="false"></dxo-paging>
+					<dxo-filter-row [visible]="true"></dxo-filter-row>
+					<dxo-search-panel [visible]="true"></dxo-search-panel>
+
+					<dxo-data-grid-row-dragging [allowReordering]="true" [onReorder]="onMilestoneReorder"
+						[showDragIcons]="true">
+					</dxo-data-grid-row-dragging>
+				</dx-data-grid>
+			</div> -->
+			<!-- <dxo-filter-row [visible]="true"></dxo-filter-row> -->
+			<!-- <dxo-search-panel [visible]="true"></dxo-search-panel> -->
+		</dx-data-grid>
+		<!-- <div class="flex-row">
+			<div class="flex-1">
+				<dx-chart [dataSource]="projectsChartDataSource$ | async"
+					[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '專案待辦工作數' }"
+					[rotated]="true">
+					<dxi-series valueField="tasks_count_in_queue" name="待辦任務"></dxi-series>
+
+
+
+					<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+					</dxo-tooltip>
+
+				</dx-chart>
+
+			</div>
+			<div class="flex-1">
+				<dx-chart [dataSource]="projectsChartDataSource$ | async"
+					[commonSeriesSettings]="{ argumentField: 'name', type: 'bar' }" [title]="{ text: '專案待辦工作大項數' }"
+					[rotated]="true">
+					
+					<dxo-tooltip [enabled]="true" [customizeTooltip]="customTooltip">
+					</dxo-tooltip>
+					<dxi-series valueField="milestones_count_in_queue" name="待辦工作大項"></dxi-series>
+				</dx-chart>
+			</div>
+
+		</div> -->
+	</div>
+</div>

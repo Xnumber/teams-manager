@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/secure
+        http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    <include file="change-sets/db.changelog-init.xml"/>
+    <include file="change-sets/20260501-create-roles-table.xml"/>
+    <include file="change-sets/20260501-create-task-status-change-column.xml"/>
+    <include file="change-sets/20260502-create-task-status-seed.xml"/>
+    <include file="change-sets/20260509-create-commits-table.xml"/>
+    <include file="change-sets/20260509-create-pull-requests-table.xml"/>
+    <include file="change-sets/20260510-create-pull-request-sync-checkpoints-table.xml"/>
+    <include file="change-sets/20260510-create-repositories-table.xml"/>
+    <include file="change-sets/20260510-create-git-user-links-table.xml"/>
+    <include file="change-sets/20260515-create-project-estimation-histories-table.xml"/>
+    <include file="change-sets/20260515-create-milestone-estimation-histories-table.xml"/>
+    <include file="change-sets/20260517-create-bussiness-calendar-table.xml"/>
+    <include file="change-sets/20260520-change-column-projects-table.xml"/>
+    <include file="change-sets/20260520-change-column-milestones-table.xml"/>
+    <include file="change-sets/20260520-change-column-project-estimation-histories-table.xml"/>
+    <include file="change-sets/20260520-change-column-milestone-estimation-histories-table.xml"/>
+    <include file="change-sets/20260520-change-column-tasks-table.xml"/>
+    <include file="change-sets/20260524-create-task-approvers-table.xml"/>
+    <include file="change-sets/20260525-create-work-requests-table.xml"/>
+    <include file="change-sets/20260526-change-column-milestones-table.xml"/>
+    <include file="change-sets/20260526-change-column-milestone-estimation-histories-table.xml"/>
+    <include file="change-sets/20260527-change-column-milestones-project-id-not-null.xml"/>
+    <include file="change-sets/20260527-add-unique-project-estimation-histories.xml"/>
+    <include file="change-sets/20260527-change-column-project-estimation-histories-table.xml"/>
+    <include file="change-sets/20260527-change-column-milestones-table.xml"/>
+    <include file="change-sets/20260528-change-column-milestone-estimation-histories-table.xml"/>
+    <include file="change-sets/20260608-create-user-project-settings-table.xml"/>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+    <include file="change-sets/20260602-create-acceptance-reject-type-table.xml"/>
+    <include file="change-sets/20260602-create-acceptance-response-type-table.xml"/>
+    <include file="change-sets/20260602-create-milestone-acceptor-table.xml"/>
+    <include file="change-sets/20260602-create-task-acceptor-table.xml"/>
+    <include file="change-sets/20260602-create-milestone-acceptance-records-table.xml"/>
+    <include file="change-sets/20260602-create-task-acceptance-records-table.xml"/>
+    <include file="change-sets/20260604-change-column-milestones-table.xml"/>
+    <include file="change-sets/20260604-change-column-tasks-table.xml"/>
+    <include file="change-sets/20260612-create-project-metrics-history-table.xml"/>
+    <include file="change-sets/20260615-change-column-project-metrics-history-table.xml"/>
+    <include file="change-sets/20260615-change-column-project-metrics-history-table-2.xml"/>
+    <include file="change-sets/20260619-change-column-milestones-table.xml"/>
+    <include file="change-sets/20260624-create-work-item-dependencies-table.xml"/>
+    <include file="change-sets/20260628-change-column-tasks-table.xml"/>
+    <include file="change-sets/20260630-create-plans-table.xml"/>
+    <include file="change-sets/20260705-create-plan-estimation-histories-table.xml"/>
+</databaseChangeLog>

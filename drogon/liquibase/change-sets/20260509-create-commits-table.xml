@@ -1,0 +1,77 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    
+	<changeSet author="clement" id="20260509-1-create-commits-table">
+		<createTable tableName="commits">
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="commits_pkey"/>
+			</column>
+			<column name="html_url" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="commit_sha" type="VARCHAR(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="user_id" type="UUID">
+			</column>
+			<column name="user_name" type="VARCHAR(255)">
+			</column>
+			<column name="github_author_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="github_author_login" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="message" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="github_repository_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="github_repository_name" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="committed_at" type="TIMESTAMPTZ">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="project_id" type="UUID">
+				<constraints nullable="true"/>
+			</column>
+			<column name="milestone_id" type="UUID">
+				<constraints nullable="true"/>
+			</column>
+			<column name="task_id" type="UUID">
+				<constraints nullable="true"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint
+			baseTableName="commits"
+			baseColumnNames="project_id"
+			referencedTableName="projects"
+			referencedColumnNames="id"
+			constraintName="fk_commits_project"/>
+		<addForeignKeyConstraint
+			baseTableName="commits"
+			baseColumnNames="milestone_id"
+			referencedTableName="milestones"
+			referencedColumnNames="id"
+			constraintName="fk_commits_milestone"/>
+		<addForeignKeyConstraint
+			baseTableName="commits"
+			baseColumnNames="task_id"
+			referencedTableName="tasks"
+			referencedColumnNames="id"
+			constraintName="fk_commits_task"/>
+		</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,227 @@
+<h2>報表</h2>
+<div class="mb-2">
+    <dx-form [colCount]="4" [items]="items">
+    </dx-form>
+</div>
+
+<div class="flex-row align-start">
+    
+
+    <div>
+        <div>
+            <h3>
+                總負載: {{ teamWorkLoad() | number:'1.0-2' }}
+            </h3>
+        </div>
+        <div>
+            <h3>
+                總貢獻: {{ teamContribution() | number:'1.0-2' }}
+            </h3>
+        </div>
+    </div>
+    <div>
+        <div>
+            <h3>
+                平均負載: {{ avgWorkLoad() | number:'1.0-2' }}
+            </h3>
+        </div>
+        <div>
+            <h3>
+                平均貢獻: {{ avgContribution() | number:'1.0-2' }}
+            </h3>
+        </div>
+    </div>
+    <div class="flex-row">
+        <h3>
+            公司營利:
+        </h3>
+        <dx-number-box [value]="profit()" valueChangeEvent="keyup" [min]="0"
+            (onValueChanged)="profit.set($event.value)"></dx-number-box>
+    </div>
+</div>
+
+
+<dx-data-grid [dataSource]="statisticsResult() || []" [showBorders]="true">
+    <dxi-column dataField="username" caption="使用者名稱"></dxi-column>
+    <dxi-column dataField="participated_projects_count" caption="參與專案數"></dxi-column>
+    <dxi-column dataField="participated_repository_count" width="150" caption="參與GitHub倉庫數"></dxi-column>
+    <dxi-column dataField="tasks_count" width="65" [visible]="false" caption="工作數"></dxi-column>
+    <dxi-column dataField="pull_request_count" [visible]="false" width="65" caption="PRs"></dxi-column>
+    <dxi-column dataField="commit_count" width="75"  [visible]="false" caption="Commits"></dxi-column>
+    <dxi-column dataField="task_workload" width="75"  [visible]="false" caption="工作負載"></dxi-column>
+    <dxi-column dataField="task_contribution" width="75"  [visible]="false" caption="工作貢獻"></dxi-column>
+    <dxi-column dataField="github_workload" caption="GitHub 負載"  [visible]="false" dataType="number"
+        cellTemplate="github_workload"></dxi-column>
+    <dxi-column dataField="github_contribution" width="120" [visible]="false" caption="GitHub 貢獻"></dxi-column>
+    <dxi-column dataField="total_workload" caption="總負載" cellTemplate="work_load"></dxi-column>
+    <dxi-column dataField="total_contribution" caption="總貢獻度" cellTemplate="work_contribution"></dxi-column>
+    <dxi-column name="avg_workload_compare" caption="平均負載相比" cellTemplate="avg_workload_compare"></dxi-column>
+    <dxi-column name="avg_contribution_compare" caption="平均貢獻相比" cellTemplate="avg_contribution_compare"></dxi-column>
+    <dxi-column caption="工作繁重度係數" name="workload_coefficient" visible="false" cellTemplate="workload_coefficient"></dxi-column>
+    <dxi-column caption="績效係數" name="performance_coefficient" visible="false" cellTemplate="performance_coefficient"></dxi-column>
+    <dxi-column caption="公司營利" name="company_profit" visible="false" cellTemplate="company_profit"></dxi-column>
+    <div *dxTemplate="let data of 'work_load'">
+        {{ data.data.total_workload | number:'1.0-2' }} ({{ 100* (data.data.total_workload / teamWorkLoad()) |
+        number:'1.0-2' }} %)
+    </div>
+    <div *dxTemplate="let data of 'work_contribution'">
+        {{ data.data.total_contribution | number:'1.0-2' }} ({{ 100* (data.data.total_contribution / teamContribution())
+        | number:'1.0-2' }} %)
+    </div>
+    <div *dxTemplate="let data of 'github_workload'">
+        {{ data.data.github_workload | number:'1.0-2' }}
+    </div>
+
+
+    <div *dxTemplate="let data of 'company_profit'">
+        {{ getProfitWeightByProfit(profit()) | number:'1.0-2' }}
+    </div>
+    
+    
+    
+    <div *dxTemplate="let data of 'avg_workload_compare'">
+        {{  (data.data.total_workload / avgWorkLoad() - 1 ) * 100 | number:'1.0-2' }} %
+    </div>
+    <div *dxTemplate="let data of 'avg_contribution_compare'">
+        {{  (data.data.total_contribution / avgContribution() - 1 ) * 100 | number:'1.0-2' }} %
+    </div>
+
+    <div *dxTemplate="let data of 'workload_coefficient'">
+        {{ getWorkLoadCoefficient((data.data.total_workload / avgWorkLoad() - 1 )) | number:'1.0-2' }}
+    </div>
+    <div *dxTemplate="let data of 'performance_coefficient'">
+        {{ getPerformanceCoefficient((data.data.total_contribution / avgContribution() - 1 )) | number:'1.0-2' }}
+    </div>
+
+    <dxo-data-grid-master-detail [enabled]="true" template="detail"></dxo-data-grid-master-detail>
+    <div *dxTemplate="let data of 'detail'">
+        <div class="flex-row align-start">
+            <div class="flex-1">
+                <div class="flex-row align-start">
+                    <div>
+                        <h5>
+                            工作數量 {{ data.data.tasks_count }}
+                        </h5>
+                    </div>
+                    <div>
+                        <div>
+                            工作負載 {{ data.data.task_workload | number:'1.0-2' }}
+                        </div>
+                        <div>
+                            工作貢獻 {{ data.data.task_contribution | number:'1.0-2' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-3 flex-row align-start">
+                <div>
+                    <div>
+                        <h5>
+                            PRs {{ data.data.pull_request_count }}
+                        </h5>
+                    </div>
+                    <div>
+                        <h5>
+                            Commits {{ data.data.commit_count }}
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        Github 負載 {{ data.data.github_workload | number:'1.0-2' }}
+                    </div>
+                    <div>
+                        Github 貢獻 {{ data.data.github_contribution | number:'1.0-2' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dx-data-grid>
+
+<h2>
+    說明
+</h2>
+
+<dx-tab-panel width="100%">
+    <dxi-item title="專案">
+        <div class="description p-2" *dxTemplate>
+            <div class="flex-row align-start">
+                <div class="flex-1">
+                    <div>
+                        <h5>
+                            參與專案數與附載加權表
+                        </h5>
+                    </div>
+                    <ul>
+                        <li>1 個專案: 1 倍</li>
+                        <li>2 個專案: 1.3 倍</li>
+                        <li>3 個專案: 1.6 倍</li>
+                        <li>4 個專案: 1.9 倍</li>
+                        <li>5 個專案: 2.2 倍</li>
+                        <li>6 個專案: 2.5 倍</li>
+                        <li>7 個專案: 2.8 倍</li>
+                        <li>8 個專案: 3.1 倍</li>
+                        <li>9 個專案: 3.4 倍</li>
+                        <li>10 個專案: 3.7 倍</li>
+                    </ul>
+                </div>
+                <div class="flex-2">
+                    <div>
+                        <h5>
+                            工作負載與貢獻度說明
+                        </h5>
+                    </div>
+                    <ul>
+                        <li>工作負載 = 工作數量 x 10 x 加權數</li>
+                        <li>工作貢獻度 = 工作數量 x 20</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dxi-item>
+    <dxi-item title="GitHub">
+        <div class="description p-2" *dxTemplate>
+            <div class="flex-row align-start">
+                <div class="flex-1">
+                    <div>
+                        <h5>
+                            參與 GitHub 倉庫數與附載加權表
+                        </h5>
+                    </div>
+                    <ul>
+                        <li>1 個倉庫: 1 倍</li>
+                        <li>2 個倉庫: 1.3 倍</li>
+                        <li>3 個倉庫: 1.6 倍</li>
+                        <li>4 個倉庫: 1.9 倍</li>
+                        <li>5 個倉庫: 2.2 倍</li>
+                        <li>6 個倉庫: 2.5 倍</li>
+                        <li>7 個倉庫: 2.8 倍</li>
+                        <li>8 個倉庫: 3.1 倍</li>
+                        <li>9 個倉庫: 3.4 倍</li>
+                        <li>10 個倉庫: 3.7 倍</li>
+                    </ul>
+                </div>
+                <div class="flex-2">
+                    <div>
+                        <h5>
+                            GitHub 貢獻度說明
+                        </h5>
+                    </div>
+                    <ul>
+                        <li>GitHub 負載 = (PRs + Commits) x 加權數</li>
+                        <li>GitHub 貢獻 = PRs x 10 + Commits</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </dxi-item>
+</dx-tab-panel>
+
+
+
+
+<dx-load-panel [visible]="isLoadingStatistics()" [message]="'報表生成中...'" [showIndicator]="true" [showPane]="true"
+    [shadingColor]="'rgba(0,0,0,0.4)'">
+</dx-load-panel>

@@ -1,0 +1,85 @@
+
+.breadcrumb {
+	display: flex;
+	align-items: center;
+	font-size: 1rem;
+	font-weight: 500;
+}
+.breadcrumb a {
+	color: #1976d2;
+	text-decoration: none;
+	font-weight: 600;
+	transition: color 0.2s;
+}
+.breadcrumb a.active, .breadcrumb a:active, .breadcrumb a:focus {
+	color: #1565c0;
+}
+.breadcrumb-sep {
+	margin: 0 0.5rem;
+	color: #b0b8c1;
+	font-size: 1.1em;
+}
+// User Profile Page 美化樣式
+
+:host {
+	display: block;
+	padding: 2rem 0;
+	background: #f7f8fa;
+	min-height: 100vh;
+
+	padding: 20px;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #2d3a4b;
+	margin-bottom: 1rem;
+	letter-spacing: 1px;
+}
+
+.profile-container {
+	display: flex;
+	gap: 2rem;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.profile-card {
+	background: #fff;
+	border-radius: 1rem;
+	box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+	padding: 2rem 2.5rem;
+	min-width: 260px;
+	flex: 1 1 320px;
+	max-width: 400px;
+	margin-bottom: 2rem;
+	transition: box-shadow 0.2s;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&:hover {
+		box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12);
+	}
+}
+
+.profile-card h2 {
+	font-size: 1.2rem;
+	color: #1976d2;
+	margin-bottom: 1rem;
+	font-weight: 600;
+}
+
+.profile-card h3 {
+	font-size: 1rem;
+	color: #3a4a5d;
+	margin: 0.5rem 0 0.2rem 0;
+	font-weight: 500;
+}
+
+.profile-card div {
+	font-size: 1.5rem;
+	color: #1976d2;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}

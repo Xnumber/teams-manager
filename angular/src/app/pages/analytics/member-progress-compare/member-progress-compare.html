@@ -1,0 +1,28 @@
+<dx-chart
+  id="chart"
+  title="全員進度比較圖"
+  [dataSource]="grossProductData"
+  (onPointClick)="onPointClick($event)"
+>
+  <dxi-chart-series valueField="year2018" name="2018"></dxi-chart-series>
+  <dxi-chart-series valueField="year2017" name="2017"></dxi-chart-series>
+  <dxi-chart-series valueField="year2016" name="2016"></dxi-chart-series>
+  <dxo-chart-common-series-settings
+    argumentField="state"
+    type="bar"
+    hoverMode="allArgumentPoints"
+    selectionMode="allArgumentPoints"
+  >
+    <dxo-chart-label
+      [visible]="true"
+      [format]="{
+        type: 'fixedPoint',
+        precision: 0
+      }"
+    >
+    </dxo-chart-label>
+  </dxo-chart-common-series-settings>
+  <dxo-chart-legend verticalAlignment="bottom" horizontalAlignment="center">
+  </dxo-chart-legend>
+  <!-- <dxo-chart-export [enabled]="true"></dxo-chart-export> -->
+</dx-chart>

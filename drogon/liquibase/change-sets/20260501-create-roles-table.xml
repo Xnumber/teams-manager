@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+    
+	<changeSet author="clement" id="20260501-1-create-roles-table">
+		<createTable tableName="roles">
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="roles_pkey"/>
+			</column>
+			<column name="name" type="VARCHAR(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="TEXT"/>
+		</createTable>
+	</changeSet>
+
+
+	<changeSet author="clement" id="20260501-2-seed-roles">
+		<insert tableName="roles">
+			<column name="name" value="owner"/>
+			<column name="description" value="owner role"/>
+		</insert>
+		<insert tableName="roles">
+			<column name="name" value="admin"/>
+			<column name="description" value="admin role"/>
+		</insert>
+		<insert tableName="roles">
+			<column name="name" value="member"/>
+			<column name="description" value="member role"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>

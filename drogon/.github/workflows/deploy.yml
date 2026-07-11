@@ -1,0 +1,28 @@
+name: 發佈 - Alpha
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, Linux, x64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build C++ code
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+      - name: 移動檔案到伺服器的資料夾
+        run: |
+          rsync -av build/teams-manager /var/www/teams-manager/
+      - name: Migration Database
+        run: |
+          echo "${{ secrets.LIQUIBASE_PROPS }}" > liquibase/liquibase.properties
+          cd liquibase
+          liquibase update
+      - name: Restart Service
+        run: systemctl --user restart teams-manager.service

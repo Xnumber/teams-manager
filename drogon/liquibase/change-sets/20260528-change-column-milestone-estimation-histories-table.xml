@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+	<changeSet author="clement" id="20260527-1-change-column-milestone-estimation-histories-table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="milestone_estimation_histories" columnName="left_tasks"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="milestone_estimation_histories">
+            <column name="left_tasks" type="INT" defaultValue="0">
+                 <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addUniqueConstraint
+            tableName="milestone_estimation_histories"
+            columnNames="milestone_id,estimation_date"
+            constraintName="uq_milestone_estimation_histories_milestone_date"/>
+        <rollback>
+            <dropColumn tableName="milestone_estimation_histories" columnName="left_tasks"/>
+            <dropUniqueConstraint
+                tableName="milestone_estimation_histories"
+                constraintName="uq_milestone_estimation_histories_milestone_date"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

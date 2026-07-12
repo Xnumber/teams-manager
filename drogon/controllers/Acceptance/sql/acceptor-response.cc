@@ -6,8 +6,9 @@ const char* acceptorResponseAcceptanceRequestSql = R"SQL(
 		WHERE task_id = $1
 		  AND user_id = $2
 		  AND request_id = $3
-	)
-	INSERT INTO task_acceptance_records (
+	),
+	ins AS (
+		INSERT INTO task_acceptance_records (
 		task_id,
 		acceptor_id,
 		request_id,
@@ -33,5 +34,19 @@ const char* acceptorResponseAcceptanceRequestSql = R"SQL(
 		now(),
 		now()
 	)
-	RETURNING id, task_id, acceptor_id, request_id, requested_at, accepted, reject_type_id, reject_reason, acceptor_comment, reviewed_at, created_at, updated_at;
+	RETURNING id, task_id, acceptor_id, request_id, requested_at, accepted, reject_type_id, reject_reason, acceptor_comment, reviewed_at, created_at, updated_at
+	),
+	-- If the incoming accepted is true and all acceptors for the task are true,
+	-- mark the task as completed (set completion_date and progress).
+	maybe_complete AS (
+		UPDATE tasks
+		SET completed = true,
+			completion_date = current_date,
+			progress = 1
+		WHERE id = $1
+		  AND $4 = true
+		  AND (SELECT bool_and(accepted) FROM task_acceptor WHERE task_id = $1) = true
+		RETURNING id
+	)
+	SELECT * FROM ins;
 )SQL";

@@ -26,9 +26,10 @@ const char *getTasksSql = R"(
     JOIN plans_projects pp ON t.project_id = pp.project_id
     LEFT JOIN milestones m ON m.id = t.milestone_id
     LEFT JOIN projects p ON p.id = t.project_id
+    LEFT JOIN plans pl ON pl.id = pp.plan_id
     WHERE pp.plan_id = $1
-    AND pp.start_date <= t.created_at
-    AND pp.end_date >= t.created_at
+    AND pl.start_date::date <= t.created_at
+    AND pl.end_date::date >= t.created_at
     ORDER BY p.id, p.priority, m.priority, t.priority;
 )";
 

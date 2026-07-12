@@ -8,7 +8,7 @@ void processAheadTask(
 {
     // Json::Value currentAheadTask;
     float accumulatedAheadDays = 0;
-
+    bool isAnyAheadTask = false;
     for (int i = 0; i < ganttData.size(); ++i)
     {
         float aheadDays = 0;
@@ -24,15 +24,8 @@ void processAheadTask(
             (taskEnd > todayDate) &&
             ganttData[i]["workItemType"].as<std::string>() == "TASK")
         {
-            // if (
-            //     !currentAheadTask.isNull() &&
-            //     currentAheadTask["parentId"].as<std::string>() == ganttData[i]["parentId"].as<std::string>()
-            // ) {
-            // ganttData[i]["delayed"] = true;
+            isAnyAheadTask = true;
             aheadTasks.append(ganttData[i]);
-            // newGanttData.append(ganttData[i]);
-            // continue;
-            // } else {
             ganttData[i]["ahead"] = true;
 
             float aheadDays = date_utils::daysBetweenWorkDays(todayDate, taskEnd);
@@ -41,6 +34,7 @@ void processAheadTask(
             {
                 aheadDays = estimatedWorkdays;
                 ganttData[i]["end"] = ganttData[i]["start"];
+                ganttData[i]["estimatedWorkdays"] = 1;
                 // LOG_DEBUG << "todayDate " << todayDate;
                 // LOG_DEBUG << "taskEnd " << taskEnd;
                 // LOG_DEBUG << "aheadDays " << aheadDays;
@@ -56,7 +50,8 @@ void processAheadTask(
             }
             else
             {
-                ganttData[i]["end"] = date_utils::minusWorkdays(taskEnd, aheadDays, 1);
+                // ganttData[i]["end"] = date_utils::minusWorkdays(taskEnd, aheadDays, 1);
+                ganttData[i]["estimatedWorkdays"] = estimatedWorkdays - aheadDays;
             }
 
             ganttData[i]["aheadDays"] = aheadDays;
@@ -73,36 +68,55 @@ void processAheadTask(
 
     // 如果前一個parentId跟後一個的一樣，但是前一個end跟後一個start，不小於等於1的話
     // 則將後一個start設定成前一個end的日期加一天
-    for (int i = 2; i < ganttData.size(); ++i)
+    
+    if (isAnyAheadTask)
     {
-        std::string previousEnd = ganttData[i - 1]["end"].asString();
-        std::string currentStart = ganttData[i]["start"].asString();
-        std::string currentEnd = ganttData[i]["end"].asString();
-        float gap = date_utils::daysBetweenWorkDays(previousEnd, currentStart);
-        if (
-            ganttData[i - 1]["parentId"] == ganttData[i]["parentId"] &&
-            ganttData[i - 1]["workItemType"] == "TASK" &&
-            ganttData[i]["workItemType"] == "TASK" &&
-            gap > 1)
+        for (int i = 1; i < ganttData.size(); ++i)
         {
-            LOG_DEBUG << "title" << ganttData[i - 1]["title"].asString();
-            LOG_DEBUG << "title" << ganttData[i]["title"].asString();
-            LOG_DEBUG << "previousEnd" << previousEnd;
-            LOG_DEBUG << "currentStart" << currentStart;
-            LOG_DEBUG << "====== gap" << gap;
-            ganttData[i]["start"] = date_utils::addWorkdays(previousEnd, 1, 1);
-            ganttData[i]["end"] = date_utils::minusWorkdays(currentEnd, gap - 2, 1);
-        }
-        // else {
+            std::string previousEnd = ganttData[i - 1]["end"].asString();
 
-        //     LOG_DEBUG << "====== ";
-        //     LOG_DEBUG << "title" <<  ganttData[i - 1]["title"].asString();
-        //     LOG_DEBUG << "title" <<  ganttData[i]["title"].asString();
-        //     LOG_DEBUG << "====== previousEnd";
-        //     LOG_DEBUG << "previousEnd" <<  previousEnd;
-        //     LOG_DEBUG << "currentStart" <<  currentStart;
-        // }
+            if (previousEnd.empty()) {
+                previousEnd = date_utils::getTodayDate();
+                previousEnd = date_utils::minusWorkdays(previousEnd, 1, 1);
+            }
+            std::string currentStart = ganttData[i]["start"].asString();
+            // std::string currentEnd = ganttData[i]["end"].asString();
+            float estimatedWorkdays = ganttData[i]["estimatedWorkdays"].asFloat();
+            float executorTimeRatio = ganttData[i]["executorTimeRatio"].asFloat();
+            // float gap = date_utils::daysBetweenWorkDays(previousEnd, currentStart);
+            // ganttData[i - 1]["parentId"] == ganttData[i]["parentId"] &&
+            if (ganttData[i]["workItemType"] == "TASK") {
+                LOG_DEBUG << "title" << ganttData[i - 1]["title"].asString();
+                LOG_DEBUG << "title" << ganttData[i]["title"].asString();
+                LOG_DEBUG << "previousEnd" << previousEnd;
+                LOG_DEBUG << "currentStart" << currentStart;
+                // LOG_DEBUG << "====== gap" << gap;
+    
+                if(!ganttData[i]["scheduled_start_date"].asString().empty()){
+                    ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
+                } else {
+                    ganttData[i]["start"] = date_utils::addWorkdays(previousEnd, 1, 1);
+                }
+
+                ganttData[i]["end"] = date_utils::addWorkdays(
+                    currentStart, 
+                    estimatedWorkdays,
+                    executorTimeRatio
+                );
+            }
+            // else {
+    
+            //     LOG_DEBUG << "====== ";
+            //     LOG_DEBUG << "title" <<  ganttData[i - 1]["title"].asString();
+            //     LOG_DEBUG << "title" <<  ganttData[i]["title"].asString();
+            //     LOG_DEBUG << "====== previousEnd";
+            //     LOG_DEBUG << "previousEnd" <<  previousEnd;
+            //     LOG_DEBUG << "currentStart" <<  currentStart;
+            // }
+        }
     }
+    
+    
 }
 // if (
 //     ganttData[i]["isFirstAHeadTaskEndInParent"].asBool() &&

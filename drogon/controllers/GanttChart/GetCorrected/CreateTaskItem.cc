@@ -1,9 +1,13 @@
 #include "utils.h"
 
-Json::Value createBasicTaskGanttItem(const drogon::orm::Row &taskRawData, const std::string &startDate, const std::string &endDate)
-{
+Json::Value createBasicTaskGanttItem(
+    const drogon::orm::Row &taskRawData, 
+    const std::string &startDate, 
+    const std::string &endDate
+) {
     Json::Value item;
     item["start"] = startDate;
+    item["scheduled_start_date"] = taskRawData["scheduled_start_date"].isNull() ? "" : taskRawData["scheduled_start_date"].as<std::string>();
     item["end"] = endDate;
     item["id"] = taskRawData["id"].as<std::string>();
     item["parentId"] = taskRawData["milestone_id"].as<std::string>();

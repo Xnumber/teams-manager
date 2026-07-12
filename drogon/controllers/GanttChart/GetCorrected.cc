@@ -16,7 +16,7 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
 {
 
     // Your implementation here
-    LOG_DEBUG << "Teams get called";
+    LOG_DEBUG << "GetCorrectedGanttChartData called";
     std::string planIdStr = req->getParameter("plan_id");
 
     if (planIdStr.empty())
@@ -128,11 +128,11 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 aheadTasks
             );
 
-            processDelayedTask(
-                ganttData, 
-                todayDate, 
-                delayedTasks
-            );
+            // processDelayedTask(
+            //     ganttData, 
+            //     todayDate, 
+            //     delayedTasks
+            // );
 
             
             correctDatesByDependencies(
@@ -187,6 +187,10 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
         }
 
         std::string latestTaskEndDate = findLatestTaskEndDate(ganttData);
+        if (latestTaskEndDate.empty())
+        {
+            latestTaskEndDate = todayDate;
+        }
 
         Json::Value ret;
         ret["data"] = ganttData;

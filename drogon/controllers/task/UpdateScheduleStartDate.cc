@@ -12,16 +12,52 @@ using namespace drogon_model::teams_manager;
  * 更新任务的計畫開始日期
  * @param req HttpRequestPtr
  * @param callback 回调函数
- * @param taskId 工作任務ID
  */
 void TaskCtrl::updateScheduledStartDate(const HttpRequestPtr &req,
-                std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId)
+                std::function<void(const HttpResponsePtr &)> &&callback)
 {
-    LOG_DEBUG << "Task updateScheduledStartDate called: " << taskId;
+    LOG_DEBUG << "Task updateScheduledStartDate called";
     try
     {
-        auto json = req->getJsonObject();
+        const std::shared_ptr<Json::Value> json = req->getJsonObject();
+        if (!json)
+        {
+            Json::Value error;
+            error["result"] = "error";
+            error["message"] = "Invalid JSON body";
+            auto resp = HttpResponse::newHttpJsonResponse(error);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+
+        std::string taskId = json->get("task_id", "").asString();
+        std::string scheduledStartDate = json->get("scheduled_start_date", "").asString();
+
         DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");
+
+        if (taskId.empty())
+        {
+            Json::Value error;
+            error["result"] = "error";
+            error["message"] = "task_id is required";
+            auto resp = HttpResponse::newHttpJsonResponse(error);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+
+        if (scheduledStartDate.empty())
+        {
+            Json::Value error;
+            error["result"] = "error";
+            error["message"] = "scheduled_start_date is required";
+            auto resp = HttpResponse::newHttpJsonResponse(error);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+
         clientPtr->execSqlAsync(
             updateTaskStartDateSql,
             [callback](const Result &r) {
@@ -39,7 +75,7 @@ void TaskCtrl::updateScheduledStartDate(const HttpRequestPtr &req,
                 resp->setStatusCode(k500InternalServerError);
                 callback(resp);
             },
-            json->get("scheduled_start_date", "").asString(),
+            scheduledStartDate,
             taskId
         );
     }

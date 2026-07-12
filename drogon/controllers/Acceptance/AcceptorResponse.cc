@@ -35,6 +35,7 @@ void AcceptanceCtrl::acceptorResponse(const HttpRequestPtr &req,
 		std::string task_id = (*json)["task_id"].asString();
 		std::string acceptor_id = (*json)["acceptor_id"].asString();
 		bool accepted = (*json)["accepted"].asBool();
+		std::optional<std::string> request_id = optStr(json, "request_id");
 		std::optional<std::string> reject_type_id = optStr(json, "reject_type_id");
 		std::optional<std::string> reject_reason = optStr(json, "reject_reason");
 		std::optional<std::string> acceptor_comment = optStr(json, "acceptor_comment");
@@ -84,13 +85,14 @@ void AcceptanceCtrl::acceptorResponse(const HttpRequestPtr &req,
 				resp->setStatusCode(k500InternalServerError);
 				callback(resp);
 			},
-			task_id,
-			acceptor_id,
-			accepted,
-			reject_type_id,
-			reject_reason,
-			acceptor_comment,
-			reviewed_at
+				task_id,
+				acceptor_id,
+				request_id,
+				accepted,
+				reject_type_id,
+				reject_reason,
+				acceptor_comment,
+				reviewed_at
 		);
 	}
 	catch (const std::exception &e)

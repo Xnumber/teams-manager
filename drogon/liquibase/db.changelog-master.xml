@@ -57,4 +57,5 @@
     <include file="change-sets/20260705-create-plan-estimation-histories-table.xml"/>
     <include file="change-sets/20260712-create-plan-metrics-history-table.xml"/>
     <include file="change-sets/20260712-create-task-acceptance-requests-table.xml"/>
+    <include file="change-sets/20260712-change-task-acceptor-table.xml"/>
 </databaseChangeLog>

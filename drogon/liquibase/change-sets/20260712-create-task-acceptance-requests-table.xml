@@ -57,4 +57,11 @@
             defaultValueComputed="now()"
         />
     </changeSet>    
+    <changeSet author="clement" id="20260712-3-create-task-acceptance-requests-table">
+        <addDefaultValue 
+            tableName="task_acceptance_requests" 
+            columnName="created_at" 
+            defaultValueComputed="now()"
+        />
+    </changeSet>    
 </databaseChangeLog>

@@ -1,0 +1,1 @@
+const char* updateTaskEndDateSql = "UPDATE tasks SET scheduled_end_date = $1 WHERE id = $2";

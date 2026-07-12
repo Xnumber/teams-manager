@@ -5,20 +5,20 @@
 #include "sql/sql.h"
 #include "plugins/RequestContext/RequestContext.h"
 #include "models/PlansProjects.h"
+#include <optional>
+#include "utils/optStr.h"
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::teams_manager;
 
-/**
- * 新增請求確認。
- */
-void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
+
+void AcceptanceCtrl::acceptorResponse(const HttpRequestPtr &req,
 								   std::function<void(const HttpResponsePtr &)> &&callback)
 {
-    LOG_DEBUG << "Acceptance request create called";
+    LOG_DEBUG << "Acceptance request acceptor response called";
 	try
 	{
-        DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");
+		DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");
 		std::shared_ptr<Json::Value> json = req->getJsonObject();
 
 		if (!json)
@@ -31,30 +31,24 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 			callback(resp);
 			return;
 		}
-		std::string user_id = RequestContext::getUserId();
-		std::string task_id = (*json)["task_id"].asString();
 
-		// serialize acceptors array to JSON string for SQL jsonb parameter
-		std::string acceptorsJson;
-		if (json->isMember("acceptors") && (*json)["acceptors"].isArray())
-		{
-			Json::StreamWriterBuilder writerBuilder;
-			acceptorsJson = Json::writeString(writerBuilder, (*json)["acceptors"]);
-		}
-		else
-		{
-			acceptorsJson = "[]";
-		}
+		std::string task_id = (*json)["task_id"].asString();
+		std::string acceptor_id = (*json)["acceptor_id"].asString();
+		bool accepted = (*json)["accepted"].asBool();
+		std::optional<std::string> reject_type_id = optStr(json, "reject_type_id");
+		std::optional<std::string> reject_reason = optStr(json, "reject_reason");
+		std::optional<std::string> acceptor_comment = optStr(json, "acceptor_comment");
+		std::optional<std::string> reviewed_at = optStr(json, "reviewed_at");
 
 		clientPtr->execSqlAsync(
-			createTaskAcceptanceRequestSql,
+			acceptorResponseAcceptanceRequestSql,
 			[callback](const Result &r)
 			{
 				if (r.empty())
 				{
 					Json::Value err;
 					err["result"] = "error";
-					err["message"] = "Create Request failed";
+					err["message"] = "Acceptor Response failed";
 					auto resp = HttpResponse::newHttpJsonResponse(err);
 					resp->setStatusCode(k500InternalServerError);
 					callback(resp);
@@ -70,30 +64,10 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 				{
 					const auto &field = row[i];
 					const std::string colName = r.columnName(i);
-					if (colName == "acceptors")
-					{
-						Json::Value parsed;
-						Json::CharReaderBuilder readerBuilder;
-						std::string errs;
-						std::string s = field.as<std::string>();
-						std::istringstream iss(s);
-						if (!Json::parseFromStream(readerBuilder, iss, &parsed, &errs))
-						{
-							data[colName] = Json::Value::null;
-						}
-						else
-						{
-							data[colName] = parsed;
-						}
-					}
-					else if (field.isNull())
-					{
+					if (field.isNull())
 						data[colName] = Json::Value::null;
-					}
 					else
-					{
 						data[colName] = field.as<std::string>();
-					}
 				}
 				ret["data"] = data;
 
@@ -102,17 +76,21 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 			},
 			[callback](const DrogonDbException &e)
 			{
-				LOG_ERROR << "Acceptance Request Error: " << e.base().what();
+				LOG_ERROR << "Acceptance Acceptor Response Error: " << e.base().what();
 				Json::Value err;
 				err["result"] = "error";
-				err["message"] = std::string("Create failed: ") + e.base().what();
+				err["message"] = std::string("Acceptor Response failed: ") + e.base().what();
 				auto resp = HttpResponse::newHttpJsonResponse(err);
 				resp->setStatusCode(k500InternalServerError);
 				callback(resp);
 			},
-			user_id,
 			task_id,
-			acceptorsJson
+			acceptor_id,
+			accepted,
+			reject_type_id,
+			reject_reason,
+			acceptor_comment,
+			reviewed_at
 		);
 	}
 	catch (const std::exception &e)

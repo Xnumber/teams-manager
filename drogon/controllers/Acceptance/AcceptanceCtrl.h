@@ -14,6 +14,8 @@ class AcceptanceCtrl : public drogon::HttpController<AcceptanceCtrl>
     // METHOD_ADD(BussinesCalendarCtrl::your_method_name, "/{1}/{2}/list", Get); // path is /BussinesCalendarCtrl/{arg1}/{arg2}/list
     ADD_METHOD_TO(AcceptanceCtrl::list, "/acceptances", Get); // path is /import-business-calendar
     ADD_METHOD_TO(AcceptanceCtrl::createRequest, "/acceptances", Post); // path is /import-business-calendar
+    ADD_METHOD_TO(AcceptanceCtrl::acceptorResponse, "/acceptances/response", Post); // path is /import-business-calendar
+    ADD_METHOD_TO(AcceptanceCtrl::acceptorReviewList, "/acceptances/review-list", Get); // path is /import-business-calendar
 
     METHOD_LIST_END
     // your declaration of processing function maybe like this:
@@ -21,4 +23,6 @@ class AcceptanceCtrl : public drogon::HttpController<AcceptanceCtrl>
     // void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
     void createRequest(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void list(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void acceptorResponse(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void acceptorReviewList(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 };

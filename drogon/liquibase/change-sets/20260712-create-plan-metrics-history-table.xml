@@ -1,0 +1,101 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+
+
+
+
+
+
+
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+	<changeSet author="clement" id="20260712-1-create-plan-metrics-history-table">
+		<createTable tableName="plan_metrics_history">
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="plan_metrics_history_pkey"/>
+			</column>
+			<column name="plan_id" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+			<column name="date" type="DATE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="task_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="task_added_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="task_completed_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="milestone_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="milestone_added_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="milestone_completed_count" type="INTEGER">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_at" type="TIMESTAMP WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint
+            baseTableName="plan_metrics_history"
+            baseColumnNames="plan_id"
+            referencedTableName="plans"
+            referencedColumnNames="id"
+            constraintName="fk_plan_metrics_history_plan"/>
+	</changeSet>
+	<changeSet author="clement" id="20260712-2-create-plan-metrics-history-table">
+		<addUniqueConstraint
+            tableName="plan_metrics_history"
+            columnNames="plan_id,date"
+            constraintName="uq_plan_metrics_history_plan_date"/>
+	</changeSet>
+	
+	
+	<changeSet author="clement" id="20260712-3-create-plan-metrics-history-table">
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="task_count"
+			defaultValueNumeric="0"/>
+
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="task_added_count"
+			defaultValueNumeric="0"/>
+
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="task_completed_count"
+			defaultValueNumeric="0"/>
+
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="milestone_count"
+			defaultValueNumeric="0"/>
+
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="milestone_added_count"
+			defaultValueNumeric="0"/>
+
+		<addDefaultValue
+			tableName="plan_metrics_history"
+			columnName="milestone_completed_count"
+			defaultValueNumeric="0"/>
+	</changeSet>
+</databaseChangeLog>

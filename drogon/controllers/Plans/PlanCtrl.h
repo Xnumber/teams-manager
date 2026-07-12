@@ -12,6 +12,7 @@ class PlanCtrl : public drogon::HttpController<PlanCtrl>
     ADD_METHOD_TO(PlanCtrl::list, "/plans", Get);           // path is /plans
     ADD_METHOD_TO(PlanCtrl::create, "/plans", Post);        // path is /plans
     ADD_METHOD_TO(PlanCtrl::update, "/plans/{1}", Put);     // path is /plans/{planId}
+    ADD_METHOD_TO(PlanCtrl::updateMetricsHistory, "/plans/{1}/metrics_history", Put);
     ADD_METHOD_TO(PlanCtrl::remove, "/plans/{1}", Delete);  // path is /plans/{planId}
     METHOD_LIST_END
 
@@ -23,6 +24,9 @@ class PlanCtrl : public drogon::HttpController<PlanCtrl>
                 std::function<void(const HttpResponsePtr &)> &&callback);
     void update(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback, std::string planId);
+    void updateMetricsHistory(const HttpRequestPtr &req,
+                  std::function<void(const HttpResponsePtr &)> &&callback,
+                  std::string planId);
     void remove(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback, std::string planId);
 };

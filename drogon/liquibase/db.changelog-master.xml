@@ -39,20 +39,6 @@
     <include file="change-sets/20260608-create-user-project-settings-table.xml"/>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-    
-    
     <include file="change-sets/20260602-create-acceptance-reject-type-table.xml"/>
     <include file="change-sets/20260602-create-acceptance-response-type-table.xml"/>
     <include file="change-sets/20260602-create-milestone-acceptor-table.xml"/>
@@ -70,4 +56,5 @@
     <include file="change-sets/20260630-create-plans-table.xml"/>
     <include file="change-sets/20260705-create-plan-estimation-histories-table.xml"/>
     <include file="change-sets/20260712-create-plan-metrics-history-table.xml"/>
+    <include file="change-sets/20260712-create-task-acceptance-requests-table.xml"/>
 </databaseChangeLog>

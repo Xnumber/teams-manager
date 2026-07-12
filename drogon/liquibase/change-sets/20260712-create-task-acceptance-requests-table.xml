@@ -1,0 +1,60 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/secure
+    http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+	<changeSet author="clement" id="20260712-create-task-acceptance-requests-table">
+		<createTable tableName="task_acceptance_requests">
+			<column defaultValueComputed="gen_random_uuid()" name="id" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="task_acceptance_requests_pkey"/>
+			</column>
+			<column name="task_id" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+			<column name="requester_id" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+            <column
+                name="created_at"
+                type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+		</createTable>
+        <addForeignKeyConstraint 
+            baseTableName="task_acceptance_requests"
+            baseColumnNames="task_id"
+            constraintName="fk_task_acceptance_requests_task"
+            referencedTableName="tasks"
+            referencedColumnNames="id"/>
+        <addForeignKeyConstraint 
+            baseTableName="task_acceptance_requests"
+            baseColumnNames="requester_id"
+            constraintName="fk_task_acceptance_requests_requester"
+            referencedTableName="users"
+            referencedColumnNames="id"/>
+    </changeSet> 
+
+
+
+
+
+
+
+
+    
+    
+    <changeSet author="clement" id="20260712-2-create-task-acceptance-requests-table">
+        <addDefaultValue 
+            tableName="task_acceptance_requests" 
+            columnName="created_at" 
+            defaultValueComputed="now()"
+        />
+    </changeSet>    
+</databaseChangeLog>

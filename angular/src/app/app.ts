@@ -4,7 +4,7 @@ import { routes } from './app.routes';
 import DxForm, { Properties } from "devextreme/ui/form";
 import DxChart, { Properties as ChartProperties } from "devextreme/viz/chart";
 import { Auth } from './services/auth';
-
+// import { BrowserModule } from '@angular/platform-browser';
 DxForm.defaultOptions<Properties>({
   options: {
     labelLocation: 'top',

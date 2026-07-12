@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal, viewChild } from '@angular/core';
-import { DxGanttComponent, DxGanttModule } from 'devextreme-angular/ui/gantt';
+import { DxGanttComponent } from 'devextreme-angular/ui/gantt';
+import { DxGanttModule } from 'devextreme-angular';
 import { Dependency, Resource, ResourceAssignment, Task } from './service/data';
 import { tap, map, switchMap, catchError, of, merge } from 'rxjs';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -17,8 +18,8 @@ import { Column } from 'devextreme/ui/data_grid';
 import { DxChartModule, DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
-import { DependencyInsertingEvent } from 'devextreme/ui/gantt';
-
+import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent } from 'devextreme/ui/gantt';
+import { formatDate } from 'devextreme/localization';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -335,13 +336,6 @@ export class Plans {
     this.gantt()?.instance.zoomOut();
   }
 
-
-
-
-
-
-
-
   // Dependency Type	Supported Values
   // Finish to Start (FS)	0, "0", "FS", "fs"
   // Start to Start (SS)	1, "1", "SS", "ss"
@@ -386,5 +380,64 @@ export class Plans {
       });
       // FS default behavior: allow client insertion (do nothing)
     }
+  }
+
+  
+  onTaskUpdated(e: TaskUpdatedEvent) {
+    console.log('Task updated event:', e);
+    const start = e.values.start;
+    const formattedStart = start ? formatDate(start, 'yyyy-MM-dd') : null;
+    if (start) {
+      this.http.put(`/tasks/scheduled-start-date`, 
+        {
+          task_id: e.key, 
+          scheduled_start_date: formattedStart
+        })
+        .subscribe({
+          next: (res: any) => {
+            this.toastMessage.set(res?.message || 'Task updated');
+            this.toastType.set('success');
+            this.toastVisible.set(true);
+            // // refresh gantt data
+            this.planId$.next(this.planId$.value);
+          },
+          error: (err: any) => {
+            this.toastMessage.set(err?.error?.message || 'Failed to update task');
+            this.toastType.set('error');
+            this.toastVisible.set(true);
+          }
+        });
+    }
+  }
+
+
+  onDependencyDeleting(e: DependencyDeletingEvent) {
+    console.log('Deleting dependency:', e);
+    const dependencyId = e.key;
+    if (!dependencyId) {
+      this.toastMessage.set('Invalid dependency data');
+      this.toastType.set('error');
+      this.toastVisible.set(true);
+      return;
+    }
+    const url = `/tasks/delete-dependency`;
+    this.http.put(url, {
+      predecessor_id: e.values.predecessorId,
+      successor_id: e.values.successorId
+    })
+      .subscribe({
+        next: (res: any) => {
+          this.toastMessage.set(res?.message || 'Dependency deleted');
+          this.toastType.set('success');
+          this.toastVisible.set(true);
+          // refresh gantt data
+          this.planId$.next(this.planId$.value);
+        },
+        error: (err: any) => {
+          this.toastMessage.set(err?.error?.message || 'Failed to delete dependency');
+          this.toastType.set('error');
+          this.toastVisible.set(true);
+        }
+      });
   }
 }

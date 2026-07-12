@@ -9,6 +9,7 @@ import { RequestWithAuthInterceptor } from './interceptor/request-with-auth';
 
 
 
+import DevExtreme from 'devextreme';
 
 export const appConfig: ApplicationConfig = {
   providers: [

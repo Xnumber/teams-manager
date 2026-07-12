@@ -3,6 +3,7 @@
 #include <drogon/HttpResponse.h>
 #include "sql/sql.h"
 #include "models/Tasks.h"
+#include "utils/UuidValidator.h"
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::teams_manager;
@@ -17,10 +18,9 @@ using namespace drogon_model::teams_manager;
  */
 void TaskCtrl::removeDependency(
     const HttpRequestPtr &req,
-    std::function<void(const HttpResponsePtr &)> &&callback, 
-    std::string taskId
+    std::function<void(const HttpResponsePtr &)> &&callback
 ) {
-    LOG_DEBUG << "Task removeDependency called: " << taskId;
+    LOG_DEBUG << "Task removeDependency called";
     try
     {
         const std::shared_ptr<Json::Value> json = req->getJsonObject();
@@ -45,6 +45,17 @@ void TaskCtrl::removeDependency(
             error["result"] = "error";
             error["message"] = "predecessor_id and successor_id cannot be empty";
             drogon::HttpResponsePtr resp = drogon::HttpResponse::newHttpJsonResponse(error);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
+        }
+
+        if (!isValidUuid(predecessorId) || !isValidUuid(successorId))
+        {
+            Json::Value error;
+            error["result"] = "error";
+            error["message"] = "predecessor_id and successor_id must be valid UUID";
+            auto resp = HttpResponse::newHttpJsonResponse(error);
             resp->setStatusCode(k400BadRequest);
             callback(resp);
             return;

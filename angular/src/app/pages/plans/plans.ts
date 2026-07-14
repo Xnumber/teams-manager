@@ -18,7 +18,7 @@ import { Column } from 'devextreme/ui/data_grid';
 import { DxChartModule, DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
-import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent } from 'devextreme/ui/gantt';
+import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent, TaskDblClickEvent } from 'devextreme/ui/gantt';
 import { formatDate } from 'devextreme/localization';
 @Component({
   selector: 'app-plans',
@@ -180,6 +180,10 @@ export class Plans {
 
   popupVisible = signal<boolean>(false);
   popupTask = signal<any | null>(null);
+
+
+
+
 
   toastVisible = signal<boolean>(false);
   toastMessage = signal<string>('');
@@ -439,5 +443,23 @@ export class Plans {
           this.toastVisible.set(true);
         }
       });
+  }
+
+
+
+
+
+  closePopup() {
+    this.popupVisible.set(false);
+  }
+
+  onTaskDblClick(e: TaskDblClickEvent) {
+    console.log('Task double-clicked:', e);
+    
+
+    e.cancel = true; // Prevent the default double-click behavior (e.g., opening the task editor)
+    console.log('Task double-clicked:', e.data);
+    this.popupTask.set(e.data);
+    this.popupVisible.set(true);
   }
 }

@@ -110,6 +110,7 @@
     (onDependencyInserting)="onDependencyInserting($event)"
     (onDependencyDeleting)="onDependencyDeleting($event)"
     (onTaskUpdated)="onTaskUpdated($event)"
+    (onTaskDblClick)="onTaskDblClick($event)"
     dateFormat="yyyy/MM/dd"
     taskTooltipContentTemplate="taskTooltip"
 >
@@ -201,22 +202,27 @@
     </div> -->
 </dx-gantt>
 
-<!-- <dx-popup
+<dx-popup
   [visible]="popupVisible()"
   [title]="popupTask() ? popupTask().title : '任務詳情'"
-  [width]="600"
-  [height]="300"
+  [width]="'100%'"
+  [height]="'100%'"
   (onHiding)="closePopup()"
+  contentTemplate="popup-content"
 >
-  <div *dxTemplate class="popup-content">
+  <div *dxTemplate="let data of 'popup-content'" class="popup-content">
     <div><strong>名稱：</strong> {{ popupTask()?.title }}</div>
     <div><strong>開始：</strong> {{ popupTask()?.start | date: 'yyyy/MM/dd' }}</div>
     <div><strong>結束：</strong> {{ popupTask()?.end | date: 'yyyy/MM/dd' }}</div>
     <div><strong>進度：</strong> {{ popupTask()?.progress }}%</div>
     <div><strong>類型：</strong> {{ popupTask()?.workItemType }}</div>
+    
+    依序
+
+    指定預定日期
   </div>
 
-</dx-popup> -->
+</dx-popup>
 
 <!-- <div class="mb-2">
   @if (delayedTasks().length > 0) {

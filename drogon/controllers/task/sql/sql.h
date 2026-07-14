@@ -8,5 +8,10 @@ extern const char *updateTasksSql;
 extern const char *updateTaskDependencySql;
 
 
+
+
+
+
 extern const char *updateTaskStartDateSql;
 extern const char *deleteTaskDependencySql;
+extern const char *removeScheduledStartDateSql;

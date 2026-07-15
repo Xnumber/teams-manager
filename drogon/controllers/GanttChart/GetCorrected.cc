@@ -128,20 +128,20 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 aheadTasks
             );
 
-            // processDelayedTask(
-            //     ganttData, 
-            //     todayDate, 
-            //     delayedTasks
-            // );
+            processDelayedTask(
+                ganttData, 
+                todayDate, 
+                delayedTasks
+            );
 
             
-            correctDatesByDependencies(
-                dependenciesResult,
-                ganttData,
-                // newGanttData,
-                taskResult,
-                dependencyData
-            );
+            // correctDatesByDependencies(
+            //     dependenciesResult,
+            //     ganttData,
+            //     // newGanttData,
+            //     taskResult,
+            //     dependencyData
+            // );
             
             
             // ganttData = newGanttData;

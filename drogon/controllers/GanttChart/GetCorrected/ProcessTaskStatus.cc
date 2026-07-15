@@ -118,7 +118,7 @@ void processDelayedTask(
     bool isSpecifiedStartDateTaskFound = false;
     bool delayStarted = false;
 
-    for (int i = 0; i < ganttData.size(); ++i)
+    for (int i = 1; i < ganttData.size(); ++i)
     {
         float estimatedWorkdays = ganttData[i]["estimatedWorkdays"].asFloat();
         float executorTimeRatio = ganttData[i]["executorTimeRatio"].asFloat();
@@ -127,13 +127,19 @@ void processDelayedTask(
         bool isCompleted = ganttData[i]["completed"].asBool();
 
         if (
+            ganttData[i]["scheduled_start_date"].asString() != "")
+        {
+            delayStarted = false;
+        }
+
+        if (
             !isCompleted &&
             (taskEnd < todayDate) &&
             ganttData[i]["workItemType"].as<std::string>() == "TASK" &&
             !delayStarted)
         {
             delayStarted = true;
-            LOG_DEBUG << "title  delayStarted = true;" <<  ganttData[i]["title"].asString();
+            LOG_DEBUG << "title  delayStarted = true;" << ganttData[i]["title"].asString();
             int delayDays = date_utils::daysBetweenWorkDays(taskEnd, todayDate);
             ganttData[i]["delayed"] = true;
             ganttData[i]["end"] = todayDate;
@@ -141,16 +147,6 @@ void processDelayedTask(
             ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays + 2;
             delayedTasks.append(ganttData[i]);
         }
-
-        if (
-            ganttData[i]["scheduled_start_date"].asString() != "")
-        {
-            LOG_DEBUG << "scheduled_start_date set to false" <<  ganttData[i]["title"].asString();
-            LOG_DEBUG << "scheduled_start_date set to false " <<  ganttData[i]["scheduled_start_date"].asString();
-            delayStarted = false;
-        }
-
-        // newGanttData.append(ganttData[i]);
     }
 
     for (int i = 1; i < ganttData.size(); ++i)
@@ -170,10 +166,10 @@ void processDelayedTask(
         // ganttData[i - 1]["parentId"] == ganttData[i]["parentId"] &&
         if (ganttData[i]["workItemType"] == "TASK")
         {
-            LOG_DEBUG << "title" << ganttData[i - 1]["title"].asString();
-            LOG_DEBUG << "title" << ganttData[i]["title"].asString();
-            LOG_DEBUG << "previousEnd" << previousEnd;
-            LOG_DEBUG << "currentStart" << currentStart;
+            // LOG_DEBUG << "title" << ganttData[i - 1]["title"].asString();
+            // LOG_DEBUG << "title" << ganttData[i]["title"].asString();
+            // LOG_DEBUG << "previousEnd" << previousEnd;
+            // LOG_DEBUG << "currentStart" << currentStart;
             // LOG_DEBUG << "====== gap" << gap;
 
             if (!ganttData[i]["scheduled_start_date"].asString().empty())

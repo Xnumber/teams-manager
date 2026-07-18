@@ -19,7 +19,8 @@ void processAheadTask(
 void processDelayedTask(
     Json::Value &ganttData,
     const std::string &todayDate,
-    Json::Value &delayedTasks
+    Json::Value &delayedTasks,
+    const Json::Value &dependencyData
 );
 
 void addDelayedTaskMarker(const Json::Value &taskItem, Json::Value &ganttData);
@@ -30,6 +31,7 @@ void processTask(const drogon::orm::Row &taskRawData, const std::string &taskSta
 void addTasksToGanttData(const drogon::orm::Result &taskResult, const std::string &todayDate, Json::Value &ganttData);
 
 Json::Value *findGanttItemById(Json::Value &ganttData, const std::string &id);
+int *findGanttItemIndexById(Json::Value &ganttData, const std::string &id);
 void updateSuccessorDates(
     Json::Value *successorItem, 
     const std::string &newStartDate, 

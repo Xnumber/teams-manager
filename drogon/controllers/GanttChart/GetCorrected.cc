@@ -83,7 +83,6 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 correctDatesByDependencies(
                     dependenciesResult,
                     ganttData,
-                    // newGanttData,
                     taskResult,
                     dependencyData
                 );
@@ -96,8 +95,10 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 // processDelayedTask(
                 //     ganttData, 
                 //     todayDate, 
-                //     delayedTasks
+                //     delayedTasks,
+                //     dependencyData
                 // );
+
                 // correctDatesByDependencies(
                 //     dependenciesResult,
                 //     ganttData,

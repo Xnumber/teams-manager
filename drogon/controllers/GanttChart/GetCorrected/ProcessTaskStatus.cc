@@ -107,10 +107,10 @@ void processAheadTask(
 
 void processDelayedTask(
     Json::Value &ganttData,
-    // Json::Value &newGanttData,
     const std::string &todayDate,
-    Json::Value &delayedTasks)
-{
+    Json::Value &delayedTasks,
+    const Json::Value &dependencyData
+) {
     // Json::Value currentDelayTask;
     bool isSpecifiedStartDateTaskFound = false;
     bool delayStarted = false;
@@ -179,7 +179,8 @@ void processDelayedTask(
             ganttData[i]["end"] = date_utils::addWorkdays(
                 ganttData[i]["start"].asString(),
                 estimatedWorkdays,
-                executorTimeRatio);
+                executorTimeRatio
+            );
         }
     }
 }

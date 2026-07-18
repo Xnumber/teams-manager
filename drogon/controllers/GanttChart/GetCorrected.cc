@@ -89,8 +89,6 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 //     aheadTasks
                 // );
                 
-
-
                 processDelayedTask(
                     ganttData, 
                     todayDate, 

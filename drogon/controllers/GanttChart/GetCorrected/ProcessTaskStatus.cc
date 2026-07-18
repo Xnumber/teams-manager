@@ -109,8 +109,8 @@ void processDelayedTask(
     Json::Value &ganttData,
     const std::string &todayDate,
     Json::Value &delayedTasks,
-    const drogon::orm::Result &dependenciesResult
-) {
+    const drogon::orm::Result &dependenciesResult)
+{
     // Json::Value currentDelayTask;
     bool isSpecifiedStartDateTaskFound = false;
     bool delayStarted = false;
@@ -124,7 +124,7 @@ void processDelayedTask(
         bool isCompleted = ganttData[i]["completed"].asBool();
 
         if (
-            ganttData[i]["scheduled_start_date"].asString() != "")
+            ganttData[i].isMember("scheduled_start_date"))
         {
             delayStarted = false;
         }
@@ -136,22 +136,29 @@ void processDelayedTask(
             !delayStarted)
         {
             delayStarted = true;
-            LOG_DEBUG << "title  delayStarted = true;" << ganttData[i]["title"].asString();
             int delayDays = date_utils::daysBetweenWorkDays(taskEnd, todayDate);
+            ganttData[i]["leadingDelayedTask"] = true;
             ganttData[i]["delayed"] = true;
             ganttData[i]["end"] = todayDate;
             ganttData[i]["delayDays"] = delayDays;
             ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays;
-            delayedTasks.append(ganttData[i]);
+            
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; title " << ganttData[i]["title"].asString();
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; scheduled_start_date " << ganttData[i]["scheduled_start_date"].empty();
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; previous title " << ganttData[i-1]["title"].asString();
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; next title " << ganttData[i+1]["title"].asString();
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; start " << taskStart;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; end " << taskEnd;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; todayDate " << todayDate;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; estimatedWorkdays " << estimatedWorkdays;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; delayDays " << delayDays;
+            // delayedTasks.append(ganttData[i]);
         }
     }
 
-    
-    
     for (int i = 1; i < ganttData.size(); ++i)
     {
         std::string previousEnd = ganttData[i - 1]["end"].asString();
-
         if (previousEnd.empty())
         {
             previousEnd = date_utils::getTodayDate();
@@ -179,9 +186,6 @@ void processDelayedTask(
                     break;
                 }
             }
-            
-
-
 
             if (!dependencyPredecessorId.empty())
             {
@@ -198,23 +202,51 @@ void processDelayedTask(
                 }
                 else
                 {
-                    ganttData[i]["start"] = date_utils::addWorkdays(previousEnd, 1, 1);
+                    ganttData[i]["start"] = date_utils::getNextDate(previousEnd);
+                }
+
+                ganttData[i]["end"] = date_utils::addWorkdays(
+                    ganttData[i]["start"].asString(),
+                    estimatedWorkdays,
+                    executorTimeRatio);
+
+                if(
+                    (ganttData[i]["end"].asString() > todayDate) &&
+                    ganttData[i]["workItemType"].as<std::string>() == "TASK"
+                ) {
+                    ganttData[i].removeMember("delayed");
+                    ganttData[i].removeMember("delayDays");
+                } else if(ganttData[i].isMember("leadingDelayedTask") && ganttData[i]["leadingDelayedTask"].asBool()) {
+                    ganttData[i]["delayed"] = true;
+                    ganttData[i]["delayDays"] = date_utils::daysBetweenWorkDays(ganttData[i]["end"].asString(), todayDate);
+                    ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + ganttData[i]["delayDays"].asFloat();   
                 }
             }
             else if (!ganttData[i]["scheduled_start_date"].asString().empty())
             {
                 ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
+                ganttData[i]["end"] = date_utils::addWorkdays(
+                    ganttData[i]["start"].asString(),
+                    estimatedWorkdays,
+                    executorTimeRatio);
             }
             else
             {
-                ganttData[i]["start"] = date_utils::addWorkdays(previousEnd, 1, 1);
+                ganttData[i]["start"] = date_utils::getNextDate(previousEnd);
+                ganttData[i]["end"] = date_utils::addWorkdays(
+                    ganttData[i]["start"].asString(),
+                    estimatedWorkdays,
+                    executorTimeRatio);
             }
 
-            ganttData[i]["end"] = date_utils::addWorkdays(
-                ganttData[i]["start"].asString(),
-                estimatedWorkdays,
-                executorTimeRatio
-            );
+            if (
+                !ganttData[i]["completed"].asBool() &&
+                ganttData[i]["workItemType"].as<std::string>() == "TASK" &&
+                ganttData[i]["end"].asString() < todayDate
+            )
+            {
+                delayedTasks.append(ganttData[i]);
+            }
         }
     }
 }

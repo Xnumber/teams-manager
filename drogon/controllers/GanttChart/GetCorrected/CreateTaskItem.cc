@@ -7,7 +7,10 @@ Json::Value createBasicTaskGanttItem(
 ) {
     Json::Value item;
     item["start"] = startDate;
-    item["scheduled_start_date"] = taskRawData["scheduled_start_date"].isNull() ? "" : taskRawData["scheduled_start_date"].as<std::string>();
+
+    if (!taskRawData["scheduled_start_date"].isNull()) {
+        item["scheduled_start_date"] = taskRawData["scheduled_start_date"].as<std::string>();
+    }
     item["end"] = endDate;
     item["id"] = taskRawData["id"].as<std::string>();
     item["parentId"] = taskRawData["milestone_id"].as<std::string>();

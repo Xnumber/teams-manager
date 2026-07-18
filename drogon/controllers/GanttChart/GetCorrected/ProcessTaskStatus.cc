@@ -109,7 +109,7 @@ void processDelayedTask(
     Json::Value &ganttData,
     const std::string &todayDate,
     Json::Value &delayedTasks,
-    const Json::Value &dependencyData
+    const drogon::orm::Result &dependenciesResult
 ) {
     // Json::Value currentDelayTask;
     bool isSpecifiedStartDateTaskFound = false;
@@ -146,6 +146,8 @@ void processDelayedTask(
         }
     }
 
+    
+    
     for (int i = 1; i < ganttData.size(); ++i)
     {
         std::string previousEnd = ganttData[i - 1]["end"].asString();
@@ -166,8 +168,40 @@ void processDelayedTask(
             // LOG_DEBUG << "previousEnd" << previousEnd;
             // LOG_DEBUG << "currentStart" << currentStart;
             // LOG_DEBUG << "====== gap" << gap;
+            std::string successorId = ganttData[i]["id"].as<std::string>();
+            std::string dependencyPredecessorId;
 
-            if (!ganttData[i]["scheduled_start_date"].asString().empty())
+            for (const drogon::orm::Row &dependency : dependenciesResult)
+            {
+                if (dependency["successor_id"].as<std::string>() == successorId)
+                {
+                    dependencyPredecessorId = dependency["predecessor_id"].as<std::string>();
+                    break;
+                }
+            }
+            
+
+
+
+            if (!dependencyPredecessorId.empty())
+            {
+                // continue;
+                Json::Value *predecessorItem = findGanttItemById(ganttData, dependencyPredecessorId);
+
+                if (predecessorItem && predecessorItem->isMember("end") && !(*predecessorItem)["end"].asString().empty())
+                {
+                    ganttData[i]["start"] = date_utils::getNextDate((*predecessorItem)["end"].asString());
+                }
+                else if (!ganttData[i]["scheduled_start_date"].asString().empty())
+                {
+                    ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
+                }
+                else
+                {
+                    ganttData[i]["start"] = date_utils::addWorkdays(previousEnd, 1, 1);
+                }
+            }
+            else if (!ganttData[i]["scheduled_start_date"].asString().empty())
             {
                 ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
             }

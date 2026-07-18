@@ -20,7 +20,7 @@ void processDelayedTask(
     Json::Value &ganttData,
     const std::string &todayDate,
     Json::Value &delayedTasks,
-    const Json::Value &dependencyData
+    const drogon::orm::Result &dependenciesResult
 );
 
 void addDelayedTaskMarker(const Json::Value &taskItem, Json::Value &ganttData);
@@ -48,7 +48,7 @@ void correctDependencyDate(const drogon::orm::Row &dependency, Json::Value &gant
 bool checkIfTaskStartEarlierThanDependencyEnd(const drogon::orm::Result &dependenciesResult, Json::Value &ganttData);
 void addDependencyToGanttData(const drogon::orm::Row &dependency, Json::Value &ganttData, const drogon::orm::Result &taskResult, Json::Value &dependencyData, bool &existTaskStartEarlierThanDependencyEnd);
 void addDependenciesToGanttData(const drogon::orm::Result &dependenciesResult, Json::Value &ganttData, const drogon::orm::Result &taskResult, Json::Value &dependencyData);
-void correctDatesByDependencies(const drogon::orm::Result &dependenciesResult, Json::Value &ganttData, const drogon::orm::Result &taskResult, Json::Value &dependencyData);
+void correctDatesByDependencies(const drogon::orm::Result &dependenciesResult, Json::Value &ganttData, const drogon::orm::Result &taskResult);
 
 std::string findLatestTaskEndDate(
     Json::Value &ganttData

@@ -78,13 +78,10 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
             {
                 Json::Value newGanttData(Json::arrayValue);
                 std::string todayDate = date_utils::getTodayDate();
-
-                // newGanttData, 
                 correctDatesByDependencies(
                     dependenciesResult,
                     ganttData,
-                    taskResult,
-                    dependencyData
+                    taskResult
                 );
                 // processAheadTask(
                 //     ganttData, 
@@ -92,12 +89,14 @@ void GanttChartCtrl::getCorrectedGanttChartData(const HttpRequestPtr &req, std::
                 //     aheadTasks
                 // );
                 
-                // processDelayedTask(
-                //     ganttData, 
-                //     todayDate, 
-                //     delayedTasks,
-                //     dependencyData
-                // );
+
+
+                processDelayedTask(
+                    ganttData, 
+                    todayDate, 
+                    delayedTasks,
+                    dependenciesResult
+                );
 
                 // correctDatesByDependencies(
                 //     dependenciesResult,

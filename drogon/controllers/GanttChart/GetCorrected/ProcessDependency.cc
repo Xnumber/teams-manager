@@ -75,17 +75,14 @@ void addDependenciesToGanttData(
 }
 
 
-
-
-
 bool correctDatesByDependency(
     const drogon::orm::Row &dependency, 
     Json::Value &ganttData, 
-    const drogon::orm::Result &taskResult, 
-    Json::Value &dependencyData
+    const drogon::orm::Result &taskResult
     // bool &existTaskStartEarlierThanDependencyEnd
 ) {
     bool isChanged = false;
+    
     std::string predecessorId = dependency["predecessor_id"].as<std::string>();
     std::string successorId = dependency["successor_id"].as<std::string>();
     
@@ -104,37 +101,7 @@ bool correctDatesByDependency(
             (*predecessorItem)["end"].asString()
         );
 
-        // existTaskStartEarlierThanDependencyEnd = true;
-        // LOG_DEBUG << "P TITLE " << (*predecessorItem)["title"].asString();
-        // LOG_DEBUG << "P start " << (*predecessorItem)["start"].asString();
-        // LOG_DEBUG << "P end " << (*predecessorItem)["end"].asString();
-        // LOG_DEBUG << "S task TITLE " << (*successorItem)["title"].asString();
-        // LOG_DEBUG << "S task start " << (*successorItem)["start"].asString();
-        // LOG_DEBUG << "S task end " << (*successorItem)["end"].asString();
-        
-        // std::string newStartDate = date_utils::getNextDate((*predecessorItem)["end"].asString());
-        
-        LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
-        // LOG_DEBUG << "diffDays " << diffDays;
 
-        // updateSuccessorDates(
-        //     successorItem, 
-        //     newStartDate, 
-        //     taskResult,
-        //     diffDays
-        // );
-
-        // std::string predecessorEnd = (*predecessorItem)["end"].asString();
-        // std::string successorStart = date_utils::getNextDate(predecessorEnd);
-
-
-        
-        
         int firstIndex = -1;
         int lastIndex = -1;
         for (int i = 0; i < ganttData.size(); ++i)
@@ -151,10 +118,10 @@ bool correctDatesByDependency(
                 lastIndex = i;
             }
         }
-        LOG_DEBUG << "firstIndex " << firstIndex;
-        LOG_DEBUG << "lastIndex " << lastIndex;
+        // LOG_DEBUG << "firstIndex " << firstIndex;
+        // LOG_DEBUG << "lastIndex " << lastIndex;
         int startIndex = *successorIndex + 1;
-        LOG_DEBUG << "startIndex " << startIndex;
+        // LOG_DEBUG << "startIndex " << startIndex;
 
         ganttData[*successorIndex]["start"] = date_utils::getNextDate((*predecessorItem)["end"].asString());
         ganttData[*successorIndex]["end"] = date_utils::addWorkdays(
@@ -184,8 +151,7 @@ bool correctDatesByDependency(
 void correctDatesByDependencies(
     const drogon::orm::Result &dependenciesResult,
     Json::Value &ganttData,
-    const drogon::orm::Result &taskResult,
-    Json::Value &dependencyData
+    const drogon::orm::Result &taskResult
 ) {
 
     int count = 0;
@@ -203,8 +169,7 @@ void correctDatesByDependencies(
             changed = correctDatesByDependency(
                 dependency, 
                 ganttData, 
-                taskResult, 
-                dependencyData
+                taskResult
             );
         }
         

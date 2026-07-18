@@ -14,7 +14,7 @@ void processTask(const drogon::orm::Row &taskRawData, const std::string &taskSta
     if (taskRawData["completion_date"].isNull() && taskRawData["completed"].as<bool>() == false) {
         endDate = date_utils::addWorkdays(taskStart, estimatedWorkdays, executorTimeRatio);
     } else if (!taskRawData["completion_date"].isNull() && taskRawData["completed"].as<bool>() == true) {
-        endDate = taskRawData["completion_date"].as<std::string>();
+        endDate = taskStart;
     } else {
         endDate = date_utils::addWorkdays(taskStart, estimatedWorkdays, executorTimeRatio);
     }

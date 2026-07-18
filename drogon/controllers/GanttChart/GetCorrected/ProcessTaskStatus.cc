@@ -1,12 +1,13 @@
 #include "utils.h"
 #include "../../../utils/date/date.h"
 
+
+
 void processAheadTask(
     Json::Value &ganttData,
     const std::string &todayDate,
     Json::Value &aheadTasks)
 {
-    // Json::Value currentAheadTask;
     float accumulatedAheadDays = 0;
     bool isAnyAheadTask = false;
     for (int i = 0; i < ganttData.size(); ++i)
@@ -17,7 +18,6 @@ void processAheadTask(
         std::string taskStart = ganttData[i]["start"].as<std::string>();
         std::string taskEnd = ganttData[i]["end"].as<std::string>();
         bool isCompleted = ganttData[i]["completed"].asBool();
-        //  = ganttData[i]["parentId"].as<std::string>();
 
         if (
             isCompleted &&
@@ -112,7 +112,7 @@ void processDelayedTask(
     const drogon::orm::Result &dependenciesResult)
 {
     // Json::Value currentDelayTask;
-    bool isSpecifiedStartDateTaskFound = false;
+    // bool isSpecifiedStartDateTaskFound = false;
     bool delayStarted = false;
 
     for (int i = 1; i < ganttData.size(); ++i)
@@ -144,15 +144,12 @@ void processDelayedTask(
             ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays;
             
             LOG_DEBUG << "TITLE  DELAYSTARTED = true; title " << ganttData[i]["title"].asString();
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; scheduled_start_date " << ganttData[i]["scheduled_start_date"].empty();
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; previous title " << ganttData[i-1]["title"].asString();
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; next title " << ganttData[i+1]["title"].asString();
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; start " << taskStart;
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; end " << taskEnd;
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; todayDate " << todayDate;
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; estimatedWorkdays " << estimatedWorkdays;
-            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; delayDays " << delayDays;
-            // delayedTasks.append(ganttData[i]);
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; scheduled_start_date " << ganttData[i]["scheduled_start_date"].asString();
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; start " << taskStart;
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; end " << taskEnd;
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; todayDate " << todayDate;
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; estimatedWorkdays " << estimatedWorkdays;
+            LOG_DEBUG << "TITLE  DELAYSTARTED = true; delayDays " << delayDays;
         }
     }
 
@@ -237,6 +234,10 @@ void processDelayedTask(
                     ganttData[i]["start"].asString(),
                     estimatedWorkdays,
                     executorTimeRatio);
+            }
+
+            if(ganttData[i]["completed"].asBool()) {
+                ganttData[i]["end"] = ganttData[i]["start"];
             }
 
             if (

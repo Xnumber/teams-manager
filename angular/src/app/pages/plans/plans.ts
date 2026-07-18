@@ -18,7 +18,7 @@ import { Column } from 'devextreme/ui/data_grid';
 import { DxChartModule, DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
-import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent, TaskDblClickEvent } from 'devextreme/ui/gantt';
+import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent, TaskDblClickEvent, TaskUpdatingEvent } from 'devextreme/ui/gantt';
 import { formatDate } from 'devextreme/localization';
 @Component({
   selector: 'app-plans',
@@ -387,9 +387,9 @@ export class Plans {
   }
 
   
-  onTaskUpdated(e: TaskUpdatedEvent) {
+  onTaskUpdating(e: TaskUpdatingEvent) {
     console.log('Task updated event:', e);
-    const start = e.values.start;
+    const start = e.newValues.start;
     const formattedStart = start ? formatDate(start, 'yyyy-MM-dd') : null;
     if (start) {
       this.http.put(`/tasks/scheduled-start-date`, 

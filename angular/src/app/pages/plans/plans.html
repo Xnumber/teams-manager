@@ -7,7 +7,6 @@
   [displayTime]="10000"
   (onHidden)="toastVisible.set(false)"
 ></dx-toast>
-
 <div class="flex-row justify-between mb-2">
   <div class="flex-1 me-2 flex-row">
     <h3 class="me-2 mb-0">計畫</h3>
@@ -26,7 +25,6 @@
       placeholder="選擇一個計劃">
     </dx-select-box>
   </div>
-
 </div>
 
 
@@ -109,7 +107,7 @@
     #gantt
     (onDependencyInserting)="onDependencyInserting($event)"
     (onDependencyDeleting)="onDependencyDeleting($event)"
-    (onTaskUpdated)="onTaskUpdated($event)"
+    (onTaskUpdating)="onTaskUpdating($event)"
     (onTaskDblClick)="onTaskDblClick($event)"
     dateFormat="yyyy/MM/dd"
     taskTooltipContentTemplate="taskTooltip"
@@ -261,3 +259,5 @@
   <dxo-filter-row [visible]="true"> </dxo-filter-row>
   
 </dx-data-grid>
+
+

@@ -27,6 +27,7 @@ void addDelayedTaskMarker(const Json::Value &taskItem, Json::Value &ganttData);
 void processTaskStatus(const drogon::orm::Row &taskRawData, const std::string &endDate, const std::string &todayDate, float estimatedWorkdays, Json::Value &taskItem, Json::Value &ganttData, Json::Value &aheadTasks, Json::Value &delayedTasks);
 
 void processTask(const drogon::orm::Row &taskRawData, const std::string &taskStart, const std::string &todayDate, Json::Value &ganttData);
+void addTasksToGanttData(const drogon::orm::Result &taskResult, const std::string &todayDate, Json::Value &ganttData);
 
 Json::Value *findGanttItemById(Json::Value &ganttData, const std::string &id);
 void updateSuccessorDates(

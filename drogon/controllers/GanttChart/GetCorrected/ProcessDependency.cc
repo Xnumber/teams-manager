@@ -102,13 +102,14 @@ void addDependenciesToGanttData(
 
 
 
-void correctDatesByDependency(
+bool correctDatesByDependency(
     const drogon::orm::Row &dependency, 
     Json::Value &ganttData, 
     const drogon::orm::Result &taskResult, 
     Json::Value &dependencyData
     // bool &existTaskStartEarlierThanDependencyEnd
 ) {
+    bool isChanged = false;
     std::string predecessorId = dependency["predecessor_id"].as<std::string>();
     std::string successorId = dependency["successor_id"].as<std::string>();
     
@@ -121,6 +122,7 @@ void correctDatesByDependency(
     if (predecessorItem && successorItem && predecessorItem->isMember("end") &&
     (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString())
     {
+        isChanged = true;
         float diffDays = date_utils::daysBetweenWorkDays(
             (*successorItem)["start"].asString(),
             (*predecessorItem)["end"].asString()
@@ -197,6 +199,8 @@ void correctDatesByDependency(
             ganttData[i]["end"] = newEndDate;
         }
     }
+
+    return isChanged;
 }
 
 
@@ -210,14 +214,17 @@ void correctDatesByDependencies(
 
     int count = 0;
 
-    bool existTaskStartEarlierThanDependencyEnd = checkIfTaskStartEarlierThanDependencyEnd(dependenciesResult, ganttData);
-
-    while (existTaskStartEarlierThanDependencyEnd)
+    // bool existTaskStartEarlierThanDependencyEnd = checkIfTaskStartEarlierThanDependencyEnd(dependenciesResult, ganttData);
+    bool changed = true;
+    // while (existTaskStartEarlierThanDependencyEnd)
+    while (changed)
     {
+
+        changed = false;
         count += 1;
         for (const drogon::orm::Row &dependency : dependenciesResult)
         {
-            correctDatesByDependency(
+            changed = correctDatesByDependency(
                 dependency, 
                 ganttData, 
                 taskResult, 
@@ -226,7 +233,7 @@ void correctDatesByDependencies(
         }
         
         
-        existTaskStartEarlierThanDependencyEnd = checkIfTaskStartEarlierThanDependencyEnd(dependenciesResult, ganttData);
+        // existTaskStartEarlierThanDependencyEnd = checkIfTaskStartEarlierThanDependencyEnd(dependenciesResult, ganttData);
 
         if (count > 2000) {
             throw std::runtime_error("Exceeded maximum iterations (2000) while correcting dates by dependencies. Possible circular dependency detected.");

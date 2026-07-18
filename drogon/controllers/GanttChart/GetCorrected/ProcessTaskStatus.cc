@@ -62,9 +62,6 @@ void processAheadTask(
         // newGanttData.append(ganttData[i]);
     }
 
-    // 如果前一個parentId跟後一個的一樣，但是前一個end跟後一個start，不小於等於1的話
-    // 則將後一個start設定成前一個end的日期加一天
-
     if (isAnyAheadTask)
     {
         for (int i = 1; i < ganttData.size(); ++i)
@@ -144,7 +141,7 @@ void processDelayedTask(
             ganttData[i]["delayed"] = true;
             ganttData[i]["end"] = todayDate;
             ganttData[i]["delayDays"] = delayDays;
-            ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays + 2;
+            ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays;
             delayedTasks.append(ganttData[i]);
         }
     }
@@ -159,11 +156,9 @@ void processDelayedTask(
             previousEnd = date_utils::minusWorkdays(previousEnd, 1, 1);
         }
         std::string currentStart = ganttData[i]["start"].asString();
-        // std::string currentEnd = ganttData[i]["end"].asString();
         float estimatedWorkdays = ganttData[i]["estimatedWorkdays"].asFloat();
         float executorTimeRatio = ganttData[i]["executorTimeRatio"].asFloat();
-        // float gap = date_utils::daysBetweenWorkDays(previousEnd, currentStart);
-        // ganttData[i - 1]["parentId"] == ganttData[i]["parentId"] &&
+
         if (ganttData[i]["workItemType"] == "TASK")
         {
             // LOG_DEBUG << "title" << ganttData[i - 1]["title"].asString();

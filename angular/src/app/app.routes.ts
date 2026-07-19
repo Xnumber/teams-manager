@@ -178,12 +178,15 @@ export const routes: Routes = [
         path: 'repositories',
         loadComponent: () => import('./pages/repositories/repositories').then(m => m.Repositories)
     },
-
-
     {
         title: "需求確認歷史",
         path: 'requirement-confirmation-histories',
         loadComponent: () => import('./pages/requirement-confirmation-histories/requirement-confirmation-histories').then(m => m.RequirementConfirmationHistories)
+    },
+    {
+        title: "需求確認清單",
+        path: 'requirement-confirmation-lists',
+        loadComponent: () => import('./pages/requirement-confirmation-requests/requirement-confirmation-requests').then(m => m.RequirementConfirmationRequests)
     },
     {
         title: "Plans",

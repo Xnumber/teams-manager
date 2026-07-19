@@ -25,11 +25,21 @@ applyTo:
 - Prefer DevExtreme components when a UI widget is needed instead of introducing a different UI kit.
 - Keep frontend changes inside the Angular app structure and avoid mixing backend responsibilities into UI code.
 
+## Angular Validation Skill Usage
+
+- After any content change under `angular/**/*`, run the reusable skill command: `/angular-syntax-validation`.
+- Use this as the standard post-change validation step before concluding Angular-related tasks.
+
 ## Backend Rules (C++ + Drogon)
 
 - Use Drogon controllers, services, filters, and middleware patterns already present in the repository.
 - Keep business logic in backend C++ code, not in SQL scripts or frontend code.
 - Prefer safe query patterns compatible with PostgreSQL.
+
+## Drogon Validation Skill Usage
+
+- After any content change under `drogon/**/*`, run the reusable skill command: `/drogon-compile-validation`.
+- Use this as the standard post-change validation step before concluding Drogon-related tasks.
 
 ## Database Rules (PostgreSQL)
 
@@ -41,3 +51,5 @@ applyTo:
 
 - Only break these defaults when the user explicitly requests a different framework, language, or database.
 - If the request is ambiguous, ask a short clarification question before switching stack.
+
+

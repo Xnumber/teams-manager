@@ -22,6 +22,7 @@ import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, Tas
 import { formatDate } from 'devextreme/localization';
 import { TaskEditor } from './task-editor/task-editor';
 import { EstimationHistories } from './estimation-histories/estimation-histories';
+import { MetricsHistories } from './metrics-histories/metrics-histories';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -35,7 +36,8 @@ import { EstimationHistories } from './estimation-histories/estimation-histories
     DxSelectBoxModule,
     DxToastModule,
     TaskEditor,
-    EstimationHistories
+    EstimationHistories,
+    MetricsHistories
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',
@@ -156,6 +158,7 @@ export class Plans {
   private planId$ = new BehaviorSubject<string | null>(null);
   selectedPlanId = signal<string | null>(null);
   planHistoryRefreshToken = signal<number>(0);
+  metricsHistoriesRefreshToken = signal<number>(0);
 
   onProjectChanged = (e: ValueChangedEvent) => {
     this.planId$.next(e.value);
@@ -272,6 +275,7 @@ export class Plans {
           this.gantt()?.instance.scrollToDate(earliestStartDateItem.start);
         }
         this.planHistoryRefreshToken.update((value) => value + 1);
+        this.metricsHistoriesRefreshToken.update((value) => value + 1);
       })).pipe(
         catchError((error) => {
           // console.error('Error fetching Gantt chart data:', error);

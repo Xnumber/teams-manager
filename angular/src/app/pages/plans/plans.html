@@ -22,6 +22,10 @@
   [planId]="selectedPlanId()"
   [refreshToken]="planHistoryRefreshToken()"
 ></app-estimation-histories>
+<app-metrics-histories
+  [planId]="selectedPlanId()"
+  [refreshToken]="metricsHistoriesRefreshToken()"
+></app-metrics-histories>
 <div>
   <h3>
     預計完成日 {{ latestTaskEnd() | date: "yyyy/MM/dd" }}

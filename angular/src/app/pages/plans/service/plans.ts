@@ -73,4 +73,24 @@ export class PlanService {
           throw new Error(res?.result || 'Failed to fetch plan history');
         });
     }
+
+    listMetricsHistories(planId: string): Promise<any[]> {
+      return lastValueFrom(this.http.get<{ result: string; data: any[] }>(`/plans/${planId}/metrics_histories`))
+        .then(res => {
+          if (res?.result === 'ok' && Array.isArray(res.data)) {
+            return res.data;
+          }
+          throw new Error(res?.result || 'Failed to fetch metrics histories');
+        });
+    }
+
+    updateMetricsHistory(planId: string): Promise<any> {
+      return lastValueFrom(this.http.put<{ result: string; data: any }>(`/plans/${planId}/metrics_history`, {}))
+        .then(res => {
+          if (res?.result === 'ok') {
+            return res.data;
+          }
+          throw new Error(res?.result || 'Failed to update metrics history');
+        });
+    }
 }

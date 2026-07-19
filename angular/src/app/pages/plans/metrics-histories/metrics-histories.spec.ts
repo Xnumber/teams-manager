@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MetricsHistories } from './metrics-histories';
+import { PlanService } from '../service/plans';
 
 describe('MetricsHistories', () => {
   let component: MetricsHistories;
@@ -8,7 +9,16 @@ describe('MetricsHistories', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetricsHistories]
+      imports: [MetricsHistories],
+      providers: [
+        {
+          provide: PlanService,
+          useValue: {
+            updateMetricsHistory: async () => ({}),
+            listMetricsHistories: async () => [],
+          },
+        },
+      ],
     })
     .compileComponents();
 

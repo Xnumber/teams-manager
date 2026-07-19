@@ -10,6 +10,7 @@ import { TeamTaskContext } from './team-task-context/team-task-context';
 import { Auth } from '../../services/auth';
 import { editingPopupProps } from './config/form';
 import { CompleteTaskButton } from '../../components/complete-task-button/complete-task-button';
+import { AcceptanceRequestButton } from '../../components/acceptance-request-button/acceptance-request-button';
 import { Milestone } from '../../types/milestone';
 import { MilestonesDataSourceService } from './milestones-data-source.service';
 import { ProjectMilestonesLookupDataSourceService } from './project-milestone-lookup-data-source.service';
@@ -27,6 +28,7 @@ import { Task } from '../../services/task';
     DxCheckBoxModule,
     DxTextAreaModule,
     CompleteTaskButton,
+    AcceptanceRequestButton,
     DependenciesEditCell
     // TeamTaskContext
   ],

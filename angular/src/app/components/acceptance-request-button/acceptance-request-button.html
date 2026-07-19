@@ -1,0 +1,49 @@
+<dx-button
+	text="請求確認"
+	type="default"
+	[disabled]="!taskId"
+	(onClick)="openPopup()"
+></dx-button>
+
+<dx-popup
+	[visible]="popupVisible()"
+	title="送出確認請求"
+	[width]="480"
+	[showCloseButton]="true"
+	[hideOnOutsideClick]="true"
+	[dragEnabled]="false"
+	(onHiding)="closePopup()"
+>
+	<div *dxTemplate="let _ of 'content'" class="acceptance-request-popup">
+		<div class="field-label">確認人員</div>
+		<dx-tag-box
+			[dataSource]="acceptors"
+			[value]="selectedAcceptorIds()"
+			valueExpr="id"
+			displayExpr="name"
+			placeholder="選擇確認人員"
+			[searchEnabled]="true"
+			[showSelectionControls]="true"
+			applyValueMode="useButtons"
+			(onValueChanged)="onAcceptorChanged($event)"
+		></dx-tag-box>
+
+		@if (errorMessage()) {
+			<div class="error-text">{{ errorMessage() }}</div>
+		}
+
+		<div class="actions">
+			<dx-button
+				text="取消"
+				stylingMode="outlined"
+				(onClick)="closePopup()"
+			></dx-button>
+			<dx-button
+				text="送出"
+				type="success"
+				[disabled]="selectedAcceptorIds().length === 0 || isSubmitting()"
+				(onClick)="submit()"
+			></dx-button>
+		</div>
+	</div>
+</dx-popup>

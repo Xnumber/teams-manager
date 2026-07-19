@@ -175,12 +175,22 @@
 				<dxi-column type="buttons">
 					<dxi-button name="edit"></dxi-button>
 					<dxi-button 
+						name="acceptanceRequest"
+						text="請求確認"
+						template="acceptanceRequest"
+					>
+					</dxi-button>
+					<dxi-button 
 						name="complete"
-						text="完成"
+						text="完成123"
 						template="complete"
 					>
 					</dxi-button>
 				</dxi-column>
+				<app-acceptance-request-button
+					*dxTemplate="let data of 'acceptanceRequest'"
+					[taskId]="data.data.id"
+				></app-acceptance-request-button>
 				<app-complete-task-button 
 					*dxTemplate="let data of 'complete'"
 					[taskId]="data.data.id"

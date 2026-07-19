@@ -20,6 +20,7 @@ import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
 import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent, TaskDblClickEvent, TaskUpdatingEvent } from 'devextreme/ui/gantt';
 import { formatDate } from 'devextreme/localization';
+import { TaskEditor } from './task-editor/task-editor';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -32,7 +33,8 @@ import { formatDate } from 'devextreme/localization';
     DxDataGridModule,
     DxSelectBoxModule,
     DxToastModule,
-    DxChartModule
+    DxChartModule,
+    TaskEditor
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',
@@ -249,9 +251,18 @@ export class Plans {
           });
         })
       ).pipe(tap((items) => {
-        const firstItemWithStartDate = items.find((item: any) => item.start !== null);
-        if (firstItemWithStartDate) {
-          this.gantt()?.instance.scrollToDate(firstItemWithStartDate.start);
+        const earliestStartDateItem = items
+          .filter((item: any) => item.start !== null)
+          .reduce((earliest: any, item: any) => {
+            if (!earliest) {
+              return item;
+            }
+
+            return item.start < earliest.start ? item : earliest;
+          }, null);
+
+        if (earliestStartDateItem) {
+          this.gantt()?.instance.scrollToDate(earliestStartDateItem.start);
         }
         this.refreshPlanHistory();
       })).pipe(
@@ -402,7 +413,6 @@ export class Plans {
             this.toastMessage.set(res?.message || 'Task updated');
             this.toastType.set('success');
             this.toastVisible.set(true);
-            // // refresh gantt data
             this.planId$.next(this.planId$.value);
           },
           error: (err: any) => {
@@ -416,7 +426,6 @@ export class Plans {
 
 
   onDependencyDeleting(e: DependencyDeletingEvent) {
-    console.log('Deleting dependency:', e);
     const dependencyId = e.key;
     if (!dependencyId) {
       this.toastMessage.set('Invalid dependency data');
@@ -451,6 +460,8 @@ export class Plans {
 
   closePopup() {
     this.popupVisible.set(false);
+    this.popupTask.set(null);
+    this.planId$.next(this.planId$.value);
   }
 
   onTaskDblClick(e: TaskDblClickEvent) {

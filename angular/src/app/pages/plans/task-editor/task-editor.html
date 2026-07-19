@@ -1,0 +1,27 @@
+<dx-popup
+	[visible]="visible()"
+	[title]="task()?.title || '任務設定'"
+	[width]="'60%'"
+	[height]="'auto'"
+	[showCloseButton]="true"
+	[hideOnOutsideClick]="true"
+	contentTemplate="task-editor-content"
+	(onHiding)="onClose()"
+>
+	<div *dxTemplate="let _ of 'task-editor-content'" class="task-editor-popup">
+		<div class="task-title mb-1">{{ task()?.title || '-' }}</div>
+		<div class="description mb-1">工作依序進行，不依指定日期。</div>
+
+		@if (errorMessage()) {
+			<div class="error-message">{{ errorMessage() }}</div>
+		}
+
+		<dx-button
+			text="不指定start 日期"
+			type="default"
+			stylingMode="contained"
+			[disabled]="isSubmitting() || !task()?.id"
+			(onClick)="onRemoveScheduledStartDate()"
+		></dx-button>
+	</div>
+</dx-popup>

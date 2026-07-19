@@ -76,7 +76,7 @@ void TaskCtrl::update(const HttpRequestPtr &req,
         std::string statusName = (*json)["status_name"].asString();
 
         int estimatedWorkdays = (*json)["estimated_workdays"].asInt();
-        int priority = (*json)["priority"].asInt();
+        // int priority = (*json)["priority"].asInt();
 
         // ===== arrays =====
         std::vector<std::string> executorIds;
@@ -142,7 +142,7 @@ void TaskCtrl::update(const HttpRequestPtr &req,
             statusId,
             statusName,
             estimatedWorkdays,
-            priority,
+            // priority,
             executorArray,
             mentorArray,
             dependencyArray);

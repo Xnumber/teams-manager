@@ -24,7 +24,7 @@ const char *updateTasksSql = R"(
             status_id = $14::uuid,
             status_name = $15,
             estimated_workdays = $16,
-            priority = $17,
+            -- priority = $17,
             concurrency_stamp = gen_random_uuid()::character varying
         WHERE
             id = $1::uuid
@@ -51,7 +51,7 @@ const char *updateTasksSql = R"(
             (dep->>'predecessorType')::work_item_type as pred_type,
             (dep->>'predecessorId')::uuid as pred_id,
             COALESCE((dep->>'dependencyType'), 'FS')::work_item_dependency_type as dep_type
-        FROM jsonb_array_elements(COALESCE($20::jsonb, '[]'::jsonb)) AS dep
+        FROM jsonb_array_elements(COALESCE($19::jsonb, '[]'::jsonb)) AS dep
     ),
     insert_executors AS (
         INSERT INTO executors_tasks (
@@ -63,7 +63,7 @@ const char *updateTasksSql = R"(
             $1::uuid,
             u.id,
             u.username
-        FROM unnest($18::uuid[]) AS executor_id
+        FROM unnest($17::uuid[]) AS executor_id
         JOIN users u ON u.id = executor_id
         RETURNING task_id
     ),
@@ -77,7 +77,7 @@ const char *updateTasksSql = R"(
             $1::uuid,
             u.id,
             u.username
-        FROM unnest($19::uuid[]) AS mentor_id
+        FROM unnest($18::uuid[]) AS mentor_id
         JOIN users u ON u.id = mentor_id
         RETURNING task_id
     ),

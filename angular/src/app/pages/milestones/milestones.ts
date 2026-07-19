@@ -168,11 +168,10 @@ export class Milestones {
       //   visible: false,
       //   formItem: { editorOptions: { min: 0, format: 'percent', max: 1, step: 0.05 }, visible: false },
       // },
-      // {
-      //   dataField: 'scheduled_start_date', caption: '開始日期', dataType: 'date',
-      //   format: 'yyyy/MM/dd', hidingPriority: 5,
-      //   formItem: { visible: false },
-      // },
+      {
+        dataField: 'scheduled_start_date', caption: '預計開始日期(可不填，有確定指定才填)', dataType: 'date',
+        format: 'yyyy/MM/dd', hidingPriority: 5
+      },
       // {
       //   dataField: 'scheduled_end_date', caption: '結束日期', dataType: 'date',
       //   format: 'yyyy/MM/dd', hidingPriority: 6,

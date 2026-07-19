@@ -15,12 +15,13 @@ import { ValueChangedEvent as CheckboxValueChangedEvent } from 'devextreme/ui/ch
 import { DxTagBoxModule } from 'devextreme-angular/ui/tag-box';
 import { DxCheckBoxModule } from 'devextreme-angular/ui/check-box';
 import { Column } from 'devextreme/ui/data_grid';
-import { DxChartModule, DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
+import { DxDataGridModule, DxSelectBoxModule, DxToastModule } from 'devextreme-angular';
 import { DxPopupModule } from 'devextreme-angular/ui/popup';
 import { PlanService } from './service/plans';
 import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, TaskUpdatedEvent, TaskDblClickEvent, TaskUpdatingEvent } from 'devextreme/ui/gantt';
 import { formatDate } from 'devextreme/localization';
 import { TaskEditor } from './task-editor/task-editor';
+import { EstimationHistories } from './estimation-histories/estimation-histories';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -33,8 +34,8 @@ import { TaskEditor } from './task-editor/task-editor';
     DxDataGridModule,
     DxSelectBoxModule,
     DxToastModule,
-    DxChartModule,
-    TaskEditor
+    TaskEditor,
+    EstimationHistories
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',
@@ -153,19 +154,18 @@ export class Plans {
   }
 
   private planId$ = new BehaviorSubject<string | null>(null);
-  private refreshPlanHistory$ = new Subject<void>();
+  selectedPlanId = signal<string | null>(null);
+  planHistoryRefreshToken = signal<number>(0);
 
   onProjectChanged = (e: ValueChangedEvent) => {
     this.planId$.next(e.value);
-  }
-
-  refreshPlanHistory() {
-    this.refreshPlanHistory$.next();
+    this.selectedPlanId.set(e.value);
   }
 
 
   onPlanChanged = (e: SelectBoxValueChangedEvent) => {
     this.planId$.next(e.value);
+    this.selectedPlanId.set(e.value);
   }
 
   tasks: Task[];
@@ -239,6 +239,7 @@ export class Plans {
 
             const item = {
               id: task.id,
+              scheduled_start_date: task.scheduled_start_date,
               estimatedWorkdays: task.estimatedWorkdays,
               parentId: task.parentId,
               title: task.title,
@@ -270,7 +271,7 @@ export class Plans {
         if (earliestStartDateItem) {
           this.gantt()?.instance.scrollToDate(earliestStartDateItem.start);
         }
-        this.refreshPlanHistory();
+        this.planHistoryRefreshToken.update((value) => value + 1);
       })).pipe(
         catchError((error) => {
           // console.error('Error fetching Gantt chart data:', error);
@@ -282,60 +283,6 @@ export class Plans {
       )
     })
   )
-
-  convergenceStartDate = new Date()
-  convergenceEndDate = new Date()
-
-  planHistory$ = this.refreshPlanHistory$.pipe(
-    switchMap(() => {
-      const planId = this.planId$.value;
-      if (!planId) {
-        return Promise.resolve([]);
-      }
-      console.log('planHistory data:', planId);
-
-      return this.planService.getPlanHistory(planId).then(data => {
-        console.log('planHistory data:', data);
-        const histories = data?.map((item) => ({
-          x: new Date(item.estimation_date),
-          complete_date: new Date(item.complete_date),
-          optimistic_estimated_complete_date: new Date(item.optimistic_estimated_complete_date),
-          pessimistic_estimated_complete_date: new Date(item.pessimistic_estimated_complete_date),
-          left_tasks: item.left_tasks,
-        })) || [];
-
-        const completeDates = histories
-          .map((item: { complete_date: Date }) => item.complete_date)
-          .filter((date: Date) => !Number.isNaN(date.getTime()));
-
-        if (completeDates.length > 0) {
-          const minCompleteDate = new Date(Math.min(...completeDates.map((date: Date) => date.getTime())));
-          const maxCompleteDate = new Date(Math.max(...completeDates.map((date: Date) => date.getTime())));
-
-          this.convergenceStartDate = new Date(minCompleteDate);
-          this.convergenceStartDate.setMonth(this.convergenceStartDate.getMonth() - 3);
-
-          this.convergenceEndDate = new Date(maxCompleteDate);
-          this.convergenceEndDate.setMonth(this.convergenceEndDate.getMonth() + 3);
-        }
-
-        // Calculate leftTasksRangeStart and leftTasksRangeEnd from the last data point
-        if (histories.length > 0) {
-          // const lastLeftTasks = histories[histories.length - 1].left_tasks;
-          // this.leftTasksRangeStart = Math.max(0, lastLeftTasks - 15);
-          // this.leftTasksRangeEnd = lastLeftTasks + 15;
-        }
-
-        return histories;
-        return data;
-      }).catch(error => {
-        this.toastMessage.set(error.error.message || 'An error occurred while fetching plan history.');
-        this.toastType.set('error');
-        this.toastVisible.set(true);
-        return [];
-      });
-    })
-  );
 
   service = inject(Data);
 

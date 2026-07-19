@@ -1,0 +1,38 @@
+<div>
+	<div class="chart-title">
+		<h3>預估完成歷史</h3>
+	</div>
+	<dx-chart
+		[dataSource]="planHistory$ | async"
+		[commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+		style="height: 300px; width: 100%;"
+	>
+		<dxi-series valueField="complete_date" name="預計"></dxi-series>
+		<dxi-series
+			valueField="optimistic_estimated_complete_date"
+			name="樂觀"
+		></dxi-series>
+		<dxi-series
+			valueField="pessimistic_estimated_complete_date"
+			name="悲觀"
+		></dxi-series>
+		<dxo-tooltip [enabled]="true"></dxo-tooltip>
+		<dxo-legend
+			verticalAlignment="bottom"
+			horizontalAlignment="center"
+			[visible]="true"
+		></dxo-legend>
+		<dxi-value-axis
+			argumentType="date"
+			[label]="{ format: 'yyyy/MM/dd' }"
+			[visualRange]="{
+				startValue: convergenceStartDate,
+				endValue: convergenceEndDate
+			}"
+		></dxi-value-axis>
+		<dxo-argument-axis
+			[label]="{ format: 'yyyy/MM/dd' }"
+			[tickInterval]="{ days: 5 }"
+		></dxo-argument-axis>
+	</dx-chart>
+</div>

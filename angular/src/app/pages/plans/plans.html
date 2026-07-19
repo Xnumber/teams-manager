@@ -1,5 +1,3 @@
-
-
 <dx-toast
   [visible]="toastVisible()"
   [message]="toastMessage()"
@@ -10,13 +8,6 @@
 <div class="flex-row justify-between mb-2">
   <div class="flex-1 me-2 flex-row">
     <h3 class="me-2 mb-0">計畫</h3>
-    <!-- <dx-tag-box
-      [dataSource]="projects"
-      displayExpr="name"
-      (onValueChanged)="onProjectChanged($event)"
-      valueExpr="id"
-      placeholder="Select a project">
-    </dx-tag-box> -->
     <dx-select-box
       [dataSource]="plans"
       displayExpr="name"
@@ -26,11 +17,6 @@
     </dx-select-box>
   </div>
 </div>
-
-
-
-
-
 
 <div>
   <div class="chart-title">
@@ -75,14 +61,6 @@
     <div class="chart-title me-2">
         <h5 class="mb-0">時間表</h5>
     </div>
-    <!-- <div class="me-1">
-      <dx-check-box
-        text="校正"
-        [value]="isCorrected()"
-        (onValueChanged)="onIsCorrectedChanged($event)"
-      >
-      </dx-check-box>
-    </div> -->
     <div class="me-1">
       <dx-button
         icon="add"
@@ -147,8 +125,7 @@
     </dxo-editing>
   
   
-  
-  
+
   <dxo-gantt-tasks 
     [dataSource]="data$ | async"
     [colorExpr]="'color'"
@@ -192,12 +169,6 @@
 
   <dxo-gantt-validation [autoUpdateParentTasks]="true">
   </dxo-gantt-validation>
-      <!-- /* class="task"
-      [style.background]="item.taskData.color"
-      [style.width.px]="item.taskSize.width" */ -->
-    <!-- <div *dxTemplate="let item of 'taskContentTemplate'" class="task">
-      123  {{ item.taskData.title }}
-    </div> -->
 </dx-gantt>
 
 <app-task-editor
@@ -205,31 +176,6 @@
   [task]="popupTask()"
   (closed)="closePopup()"
 ></app-task-editor>
-
-
-
-<!-- <div class="mb-2">
-  @if (delayedTasks().length > 0) {
-    <h3 class="mb-1">
-      延遲的工作 {{ totalDelayedDays() }} 天
-    </h3>
-    @for (item of delayedTasks(); track $index) {
-      <div>
-        <div>
-          <span class="delayed-task-title">{{ item.name }}</span>
-        </div>
-        <div>
-         <span class="delayed-scheduled-date">
-           {{ item.scheduled_end_date | date: "yyyy/MM/dd" }} 
-         </span> 
-          ~ <span class="delayed-days"> {{ item.delayDays }} </span> 天
-        </div>
-      </div>
-    } 
-  
-  }
-</div> -->
-
 
 
 
@@ -245,5 +191,3 @@
   <dxo-filter-row [visible]="true"> </dxo-filter-row>
   
 </dx-data-grid>
-
-

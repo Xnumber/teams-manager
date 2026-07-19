@@ -1,27 +1,32 @@
-<dx-popup
-	[visible]="visible()"
-	[title]="task()?.title || '任務設定'"
-	[width]="'60%'"
-	[height]="'auto'"
-	[showCloseButton]="true"
-	[hideOnOutsideClick]="true"
-	contentTemplate="task-editor-content"
-	(onHiding)="onClose()"
->
+<dx-popup [visible]="visible()" [title]="task()?.title || '任務設定'" [width]="'60%'" [height]="'auto'"
+	[showCloseButton]="true" [hideOnOutsideClick]="true" contentTemplate="task-editor-content" (onHiding)="onClose()">
 	<div *dxTemplate="let _ of 'task-editor-content'" class="task-editor-popup">
-		<div class="task-title mb-1">{{ task()?.title || '-' }}</div>
-		<div class="description mb-1">工作依序進行，不依指定日期。</div>
+		<div>
+			<div class="task-title mb-1">{{ task()?.title || '-' }}</div>
+			<div class="description mb-1">工作依序進行，不依指定日期。</div>
 
-		@if (errorMessage()) {
-			<div class="error-message">{{ errorMessage() }}</div>
-		}
+			@if (errorMessage()) {
+				<div class="error-message">{{ errorMessage() }}</div>
+			}
 
-		<dx-button
-			text="不指定start 日期"
-			type="default"
-			stylingMode="contained"
-			[disabled]="isSubmitting() || !task()?.id"
-			(onClick)="onRemoveScheduledStartDate()"
-		></dx-button>
+			<dx-button text="不指定start 日期" type="default" stylingMode="contained"
+				[disabled]="isSubmitting() || !task()?.id" (onClick)="onRemoveScheduledStartDate()"></dx-button>
+		</div>
+		<div>
+			<dx-number-box
+				[disabled]="isSubmitting() || !task()?.id"
+				[value]="estimatedWorkdays() ?? 0"
+				[showSpinButtons]="true"
+				[placeholder]="'請輸入預估工作天數'"
+				[min]="0"
+				(onValueChanged)="onEstimatedWorkdaysChanged($event)"
+			></dx-number-box>
+			<dx-button text="更新預估工作天數" type="default" stylingMode="contained"
+				[disabled]="isSubmitting() || !task()?.id"
+				(onClick)="onUpdateEstimatedWorkdays()"
+			></dx-button>
+		</div>
+
+
 	</div>
 </dx-popup>

@@ -57,6 +57,9 @@ export class Plans {
 
 
 
+  ngOnInit() {
+    (window as any).plansComponent = this;
+  }
 
   http = inject(HttpClient);
   projectService = inject(ProjectsService);
@@ -185,7 +188,7 @@ export class Plans {
 
 
 
-
+  _data = []
 
   toastVisible = signal<boolean>(false);
   toastMessage = signal<string>('');
@@ -197,7 +200,7 @@ export class Plans {
         return Promise.resolve([]);
       }
 
-      const isCorrected = this.isCorrected();
+      // const isCorrected = this.isCorrected();
       // const url = isCorrected ? '/corrected-gantt-chart' : '/gantt-chart';
       const url = '/corrected-gantt-chart';
 
@@ -214,7 +217,7 @@ export class Plans {
           // this.latestTaskEnd.set('2026-07-31'); // Set a default value for latestTaskEnd
         }),
         map((data: any) => {
-          return data.data.map((task: any) => {
+          const result = data.data.map((task: any) => {
             // const start = task.start ? new Date(`${task.start}T00:00:00.000+08:00`) : null;
             // const end = task.end ? new Date(`${task.end}T24:00:00.000+08:00`) : null;
             const start = task.start ? new Date(`${task.start}T00:01:00.000+08:00`) : null;
@@ -236,6 +239,7 @@ export class Plans {
 
             const item = {
               id: task.id,
+              estimatedWorkdays: task.estimatedWorkdays,
               parentId: task.parentId,
               title: task.title,
               start: start,
@@ -249,6 +253,8 @@ export class Plans {
 
             return item;
           });
+          this._data = result;
+          return result;
         })
       ).pipe(tap((items) => {
         const earliestStartDateItem = items
@@ -470,11 +476,21 @@ export class Plans {
 
   onTaskDblClick(e: TaskDblClickEvent) {
     console.log('Task double-clicked:', e);
-    
+    const taskId = e.key;
+
+    const task = this._data.find((t: any) => t.id === taskId);
+    if (!task) {
+      this.toastMessage.set('Task not found');
+      this.toastType.set('error');
+      this.toastVisible.set(true);
+      return;
+    }
+
+
 
     e.cancel = true; // Prevent the default double-click behavior (e.g., opening the task editor)
-    console.log('Task double-clicked:', e.data);
-    this.popupTask.set(e.data);
+    console.log('Task double-clicked:', task);
+    this.popupTask.set(task);
     this.popupVisible.set(true);
   }
 }

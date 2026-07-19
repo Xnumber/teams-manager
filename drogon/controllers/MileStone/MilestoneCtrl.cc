@@ -46,7 +46,7 @@ void Milestone::list(const HttpRequestPtr &req,
 	std::string project_id = req->getParameter("project_id");
 	std::string filter = req->getParameter("filter");
 	std::string completeInput = req->getParameter("completed");
-	LOG_DEBUG << "JWT Tenant_id in Milestone List: " << tenant_id;
+	// LOG_DEBUG << "JWT Tenant_id in Milestone List: " << tenant_id;
 	try
 	{
 		DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");

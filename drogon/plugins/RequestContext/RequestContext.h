@@ -18,7 +18,7 @@ public:
     }
     static void setUserId(const std::string &id)
     {
-        LOG_DEBUG << "Setting userId in RequestContext: " << id;
+        // LOG_DEBUG << "Setting userId in RequestContext: " << id;
         userId = id;
     }
     static void setTeamId(const std::string &id)

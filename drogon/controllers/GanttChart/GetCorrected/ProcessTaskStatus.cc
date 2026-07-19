@@ -87,7 +87,7 @@ void processAheadTask(
                 LOG_DEBUG << "currentStart" << currentStart;
                 // LOG_DEBUG << "====== gap" << gap;
 
-                if (!ganttData[i]["scheduled_start_date"].asString().empty())
+                if (ganttData[i].isMember("scheduled_start_date") && !ganttData[i]["scheduled_start_date"].asString().empty())
                 {
                     ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
                 }
@@ -143,13 +143,13 @@ void processDelayedTask(
             ganttData[i]["delayDays"] = delayDays;
             ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + delayDays;
             
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; title " << ganttData[i]["title"].asString();
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; scheduled_start_date " << ganttData[i]["scheduled_start_date"].asString();
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; start " << taskStart;
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; end " << taskEnd;
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; todayDate " << todayDate;
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; estimatedWorkdays " << estimatedWorkdays;
-            LOG_DEBUG << "TITLE  DELAYSTARTED = true; delayDays " << delayDays;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; title " << ganttData[i]["title"].asString();
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; scheduled_start_date " << ganttData[i]["scheduled_start_date"].asString();
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; start " << taskStart;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; end " << taskEnd;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; todayDate " << todayDate;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; estimatedWorkdays " << estimatedWorkdays;
+            // LOG_DEBUG << "TITLE  DELAYSTARTED = true; delayDays " << delayDays;
         }
     }
 
@@ -189,11 +189,19 @@ void processDelayedTask(
                 // continue;
                 Json::Value *predecessorItem = findGanttItemById(ganttData, dependencyPredecessorId);
 
-                if (predecessorItem && predecessorItem->isMember("end") && !(*predecessorItem)["end"].asString().empty())
-                {
+                if (
+                    predecessorItem && 
+                    predecessorItem->isMember("end") && 
+                    !(*predecessorItem)["end"].asString().empty() &&
+                    (
+                        !ganttData[i].isMember("scheduled_start_date") ||
+                        ganttData[i]["scheduled_start_date"].asString().empty() ||
+                        ganttData[i]["scheduled_start_date"].asString() < (*predecessorItem)["end"].asString()
+                    )
+                ) {
                     ganttData[i]["start"] = date_utils::getNextDate((*predecessorItem)["end"].asString());
                 }
-                else if (!ganttData[i]["scheduled_start_date"].asString().empty())
+                else if (ganttData[i].isMember("scheduled_start_date") && !ganttData[i]["scheduled_start_date"].asString().empty())
                 {
                     ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
                 }
@@ -219,7 +227,7 @@ void processDelayedTask(
                     ganttData[i]["estimatedWorkdays"] = estimatedWorkdays + ganttData[i]["delayDays"].asFloat();   
                 }
             }
-            else if (!ganttData[i]["scheduled_start_date"].asString().empty())
+            else if (ganttData[i].isMember("scheduled_start_date") && !ganttData[i]["scheduled_start_date"].asString().empty())
             {
                 ganttData[i]["start"] = ganttData[i]["scheduled_start_date"].asString();
                 ganttData[i]["end"] = date_utils::addWorkdays(

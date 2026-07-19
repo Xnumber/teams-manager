@@ -59,7 +59,7 @@ void Project::list(const HttpRequestPtr &req,
 	// std::string tenant_id = req->getAttributes()->get<std::string>("tenant_id");
 	// std::cout << "JWT Payload in Project List: " << jwtPayload << std::endl;
 	std::string tenant_id = jwtPayload.get_claim_value<std::string>("tenant_id");
-	LOG_DEBUG << "JWT Tenant_id in Project List: " << tenant_id;
+	// LOG_DEBUG << "JWT Tenant_id in Project List: " << tenant_id;
 	// jwt::jwt_object jwtPayload = req->getAttributes()->get<jwt::jwt_payload>("jwt_payload");
 	// jwt::jwt_object jwtPayload = req->attributes()->get("f");
 	LOG_DEBUG << "Project list called";

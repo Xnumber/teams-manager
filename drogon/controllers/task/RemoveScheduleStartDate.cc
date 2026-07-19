@@ -14,25 +14,11 @@ using namespace drogon_model::teams_manager;
  * @param callback 回调函数
  */
 void TaskCtrl::removeScheduledStartDate(const HttpRequestPtr &req,
-                std::function<void(const HttpResponsePtr &)> &&callback)
+                std::function<void(const HttpResponsePtr &)> &&callback, const std::string taskId)
 {
     LOG_DEBUG << "Task removeScheduledStartDate called";
     try
     {
-        const std::shared_ptr<Json::Value> json = req->getJsonObject();
-        if (!json)
-        {
-            Json::Value error;
-            error["result"] = "error";
-            error["message"] = "Invalid JSON body";
-            auto resp = HttpResponse::newHttpJsonResponse(error);
-            resp->setStatusCode(k400BadRequest);
-            callback(resp);
-            return;
-        }
-
-        std::string taskId = json->get("task_id", "").asString();
-
         DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");
 
         if (taskId.empty())

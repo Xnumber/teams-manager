@@ -16,7 +16,7 @@ public:
     // ADD_METHOD_TO(TaskCtrl::updateEndDate, "/tasks/{1}/endTime", Put, "AuthFilter"); // path is /tasks/{taskId}
     ADD_METHOD_TO(TaskCtrl::updateDependency, "/tasks/{1}/dependency", Put, "AuthFilter"); // path is /tasks/{taskId}/dependency
     ADD_METHOD_TO(TaskCtrl::removeDependency, "/tasks/delete-dependency", Put, "AuthFilter"); // path is /tasks/{taskId}/dependency
-    ADD_METHOD_TO(TaskCtrl::removeScheduledStartDate, "/tasks/delete-scheduled-start-date", Delete, "AuthFilter"); // path is /tasks/{taskId}/dependency
+    ADD_METHOD_TO(TaskCtrl::removeScheduledStartDate, "/tasks/delete-scheduled-start-date/{1}", Delete, "AuthFilter"); // path is /tasks/{taskId}/dependency
     ADD_METHOD_TO(TaskCtrl::getDependency, "/tasks/{1}/dependency", Get, "AuthFilter"); // path is /tasks/{taskId}/dependency
     // ADD_METHOD_TO(TaskCtrl::remove, "/tasks/{1}", Delete, "AuthFilter"); // path is /tasks/{taskId}
     ADD_METHOD_TO(TaskCtrl::listFilter, "/tasks-filter", Get, "AuthFilter"); // path is /list-filter
@@ -62,7 +62,7 @@ public:
     void remove(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
     void removeScheduledStartDate(const HttpRequestPtr &req,
-                std::function<void(const HttpResponsePtr &)> &&callback);
+                std::function<void(const HttpResponsePtr &)> &&callback, std::string taskId);
     void removeDependency(const HttpRequestPtr &req,
                 std::function<void(const HttpResponsePtr &)> &&callback);
     void listFilter(const HttpRequestPtr &req,

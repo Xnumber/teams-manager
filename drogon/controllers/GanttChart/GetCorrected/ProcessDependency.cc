@@ -92,10 +92,21 @@ bool correctDatesByDependency(
     
     int *successorIndex = findGanttItemIndexById(ganttData, successorId);
     
-    if (predecessorItem && successorItem && predecessorItem->isMember("end") &&
-    (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString())
-    {
+    if (
+        predecessorItem && 
+        successorItem && 
+        predecessorItem->isMember("end") &&
+        (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString() &&
+        (
+            !successorItem->isMember("scheduled_start_date") ||
+            (*successorItem)["scheduled_start_date"].asString() < (*predecessorItem)["end"].asString()
+        )
+    ) {
+        LOG_DEBUG << "correctDatesByDependency: predecessorId " << (*predecessorItem)["title"].asString() << " end " << (*predecessorItem)["end"].asString();
+        LOG_DEBUG << "correctDatesByDependency: successorId " << (*successorItem)["title"].asString() << " start " << (*successorItem)["start"].asString();
+
         isChanged = true;
+
         float diffDays = date_utils::daysBetweenWorkDays(
             (*successorItem)["start"].asString(),
             (*predecessorItem)["end"].asString()
@@ -181,23 +192,23 @@ void correctDatesByDependencies(
         }
     }
 }
-bool checkIfTaskStartEarlierThanDependencyEnd(
-    const drogon::orm::Result &dependenciesResult,
-    Json::Value &ganttData
-) {
-    for (const drogon::orm::Row &dependency : dependenciesResult)
-    {
-        std::string predecessorId = dependency["predecessor_id"].as<std::string>();
-        std::string successorId = dependency["successor_id"].as<std::string>();
+// bool checkIfTaskStartEarlierThanDependencyEnd(
+//     const drogon::orm::Result &dependenciesResult,
+//     Json::Value &ganttData
+// ) {
+//     for (const drogon::orm::Row &dependency : dependenciesResult)
+//     {
+//         std::string predecessorId = dependency["predecessor_id"].as<std::string>();
+//         std::string successorId = dependency["successor_id"].as<std::string>();
         
-        Json::Value *predecessorItem = findGanttItemById(ganttData, predecessorId);
-        Json::Value *successorItem = findGanttItemById(ganttData, successorId);
+//         Json::Value *predecessorItem = findGanttItemById(ganttData, predecessorId);
+//         Json::Value *successorItem = findGanttItemById(ganttData, successorId);
 
-        if (predecessorItem && successorItem && predecessorItem->isMember("end") &&
-            (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString())
-        {
-            return true;
-        }
-    }
-    return false;
-}
+//         if (predecessorItem && successorItem && predecessorItem->isMember("end") &&
+//             (*predecessorItem)["end"].asString() > (*successorItem)["start"].asString())
+//         {
+//             return true;
+//         }
+//     }
+//     return false;
+// }

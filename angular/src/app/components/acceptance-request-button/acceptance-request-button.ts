@@ -72,8 +72,14 @@ export class AcceptanceRequestButton {
           this.failed.emit(message);
         },
         error: (err) => {
-          const message = err?.error?.message || err?.message || '送出確認請求失敗';
+          let message = err?.error?.message || err?.message || '送出確認請求失敗';
+          if(err.status !== 409) {
+            message = err?.error?.message || err?.message || '送出確認請求失敗';
+          } else {  
+            message = "送出確認請求失敗，已經送出過。";
+          }
           this.errorMessage.set(message);
+          
           this.failed.emit(message);
         },
       });

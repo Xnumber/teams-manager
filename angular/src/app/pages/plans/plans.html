@@ -5,170 +5,157 @@
   [displayTime]="10000"
   (onHidden)="toastVisible.set(false)"
 ></dx-toast>
-<div class="flex-row justify-between mb-2">
-  <div class="flex-1 me-2 flex-row">
-    <h3 class="me-2 mb-0">計畫</h3>
-    <dx-select-box
-      [dataSource]="plans"
-      displayExpr="name"
-      (onValueChanged)="onPlanChanged($event)"
-      valueExpr="id"
-      placeholder="選擇一個計劃">
-    </dx-select-box>
-  </div>
-</div>
-
-<app-estimation-histories
-  [planId]="selectedPlanId()"
-  [refreshToken]="planHistoryRefreshToken()"
-></app-estimation-histories>
-<div class="flex-row">
-  <div class="flex-1 p-2">
-    <app-plan-task-metrics-histories
-      [planId]="selectedPlanId()"
-      [refreshToken]="metricsHistoriesRefreshToken()"
-    ></app-plan-task-metrics-histories>
-  </div>
-
-  <div class="flex-1 p-2">
-    <app-plan-milestone-metrics-histories
-      [planId]="selectedPlanId()"
-      [refreshToken]="metricsHistoriesRefreshToken()"
-    ></app-plan-milestone-metrics-histories>
-  </div>
-
-</div>
-<div>
-  <h3>
-    預計完成日 {{ latestTaskEnd() | date: "yyyy/MM/dd" }}
-  </h3>
-</div>
-
-
-<div class="flex-row">
-    <div class="chart-title me-2">
-        <h5 class="mb-0">時間表</h5>
-    </div>
-    <div class="me-1">
-      <dx-button
-        icon="add"
-        type="default"
-        (onClick)="zoomIn()">
-      </dx-button>
-    </div>
-    <div>
-      <dx-button
-        icon="minus"
-        type="default"
-        (onClick)="zoomOut()">
-      </dx-button>
-    </div>
-  </div>
-
-
-
-  <dx-gantt
-    scaleType="months"
-    height="calc(100vh - 100px)"
-    #gantt
-    (onDependencyInserting)="onDependencyInserting($event)"
-    (onDependencyDeleting)="onDependencyDeleting($event)"
-    (onTaskUpdating)="onTaskUpdating($event)"
-    (onTaskDblClick)="onTaskDblClick($event)"
-    dateFormat="yyyy/MM/dd"
-    taskTooltipContentTemplate="taskTooltip"
->
-    <dxo-context-menu [enabled]="false">
-                <dxi-item name="addTask"></dxi-item>
-        <dxi-item name="deleteTask"></dxi-item>
-        <dxi-item text="Zoom">
-          <dxi-item name="zoomIn"></dxi-item>
-          <dxi-item name="zoomOut"></dxi-item>
-        </dxi-item>   
-    </dxo-context-menu>
-    <!-- (onTaskMoving)="onTaskMoving($event)" -->
-  <!-- /* (onTaskDblClick)="onTaskDblClick($event)" */ -->
-  <div *dxTemplate="let task of 'taskTooltip'" class="gantt-tooltip-container">
-    <div class="gantt-tooltip">
-      <div class="gantt-tooltip-title">
-          <span>
-            {{ task.title }}
-          </span>
+<dx-tab-panel width="100%">
+  <dxi-item title="時間表">
+    <div *dxTemplate class="p-2">
+      <div class="flex-row justify-between mb-2">
+        <div class="flex-1 me-2 flex-row">
+          <h3 class="me-2 mb-0">計畫</h3>
+          <dx-select-box
+            [dataSource]="plans"
+            displayExpr="name"
+            (onValueChanged)="onPlanChanged($event)"
+            valueExpr="id"
+            placeholder="選擇一個計劃">
+          </dx-select-box>
+        </div>
       </div>
-      <div class="gantt-tooltip-date">開始：{{ task.start | date: "yyyy/MM/dd" }}</div>
-      <div class="gantt-tooltip-date">結束：{{ task.end | date: "yyyy/MM/dd" }}</div>
+
+      <app-estimation-histories
+        [planId]="selectedPlanId()"
+        [refreshToken]="planHistoryRefreshToken()"
+      ></app-estimation-histories>
+
+      <div class="flex-row">
+        <div class="flex-1 p-2">
+          <app-plan-task-metrics-histories
+            [planId]="selectedPlanId()"
+            [refreshToken]="metricsHistoriesRefreshToken()"
+          ></app-plan-task-metrics-histories>
+        </div>
+
+        <div class="flex-1 p-2">
+          <app-plan-milestone-metrics-histories
+            [planId]="selectedPlanId()"
+            [refreshToken]="metricsHistoriesRefreshToken()"
+          ></app-plan-milestone-metrics-histories>
+        </div>
+      </div>
+
+      <div>
+        <h3>
+          預計完成日 {{ latestTaskEnd() | date: "yyyy/MM/dd" }}
+        </h3>
+      </div>
+
+      <div class="flex-row">
+        <div class="chart-title me-2">
+          <h5 class="mb-0">時間表</h5>
+        </div>
+        <div class="me-1">
+          <dx-button
+            icon="add"
+            type="default"
+            (onClick)="zoomIn()">
+          </dx-button>
+        </div>
+        <div>
+          <dx-button
+            icon="minus"
+            type="default"
+            (onClick)="zoomOut()">
+          </dx-button>
+        </div>
+      </div>
+
+      <dx-gantt
+        scaleType="months"
+        height="calc(100vh - 100px)"
+        #gantt
+        (onDependencyInserting)="onDependencyInserting($event)"
+        (onDependencyDeleting)="onDependencyDeleting($event)"
+        (onTaskUpdating)="onTaskUpdating($event)"
+        (onTaskDblClick)="onTaskDblClick($event)"
+        dateFormat="yyyy/MM/dd"
+        taskTooltipContentTemplate="taskTooltip"
+      >
+        <dxo-context-menu [enabled]="false">
+          <dxi-item name="addTask"></dxi-item>
+          <dxi-item name="deleteTask"></dxi-item>
+          <dxi-item text="Zoom">
+            <dxi-item name="zoomIn"></dxi-item>
+            <dxi-item name="zoomOut"></dxi-item>
+          </dxi-item>
+        </dxo-context-menu>
+        <!-- (onTaskMoving)="onTaskMoving($event)" -->
+        <!-- /* (onTaskDblClick)="onTaskDblClick($event)" */ -->
+        <div *dxTemplate="let task of 'taskTooltip'" class="gantt-tooltip-container">
+          <div class="gantt-tooltip">
+            <div class="gantt-tooltip-title">
+              <span>
+                {{ task.title }}
+              </span>
+            </div>
+            <div class="gantt-tooltip-date">開始：{{ task.start | date: "yyyy/MM/dd" }}</div>
+            <div class="gantt-tooltip-date">結束：{{ task.end | date: "yyyy/MM/dd" }}</div>
+          </div>
+        </div>
+
+        <dxo-editing
+          [enabled]="true"
+          [allowDependencyAdding]="true"
+          [allowDependencyDeleting]="true"
+          [allowResourceAdding]="true"
+          [allowResourceDeleting]="true"
+          [allowTaskAdding]="true"
+          [allowTaskDeleting]="true"
+          [allowTaskResourceUpdating]="true"
+          [allowTaskUpdating]="true">
+        </dxo-editing>
+
+        <dxo-gantt-tasks
+          [dataSource]="data$ | async"
+          [colorExpr]="'color'"
+        >
+        </dxo-gantt-tasks>
+
+        <dxo-gantt-dependencies [dataSource]="dependencies"></dxo-gantt-dependencies>
+        <dxo-gantt-resources [dataSource]="resources"></dxo-gantt-resources>
+        <dxo-gantt-resource-assignments [dataSource]="resourceAssignments"></dxo-gantt-resource-assignments>
+
+        <dxi-gantt-column
+          [allowSorting]="false"
+          [allowFiltering]="true" dataField="title" caption="項目" [width]="300"
+          cellTemplate="title-item"
+        >
+        </dxi-gantt-column>
+        <div
+          *dxTemplate="let data of 'title-item'"
+          [class.ahead]="data.data?.ahead"
+          [class.delayed]="data.data?.delayed"
+        >
+          {{ data?.data?.title }}
+        </div>
+        <dxi-gantt-column [allowSorting]="false" dataField="start" caption="開始日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
+        <dxi-gantt-column [allowSorting]="false" dataField="end" caption="終了日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
+
+        <dxo-gantt-validation [autoUpdateParentTasks]="true">
+        </dxo-gantt-validation>
+      </dx-gantt>
+
+      <app-task-editor
+        [visible]="popupVisible()"
+        [task]="popupTask()"
+        (closed)="closePopup()"
+      ></app-task-editor>
     </div>
-  </div>
-  <!-- taskContentTemplate="taskContentTemplate" -->
-      <dxo-editing
-        [enabled]="true" 
-        [allowDependencyAdding]="true" 
-        [allowDependencyDeleting]="true" 
-        [allowResourceAdding]="true"
-        [allowResourceDeleting]="true"
-        [allowTaskAdding]="true"
-        [allowTaskDeleting]="true"
-        [allowTaskResourceUpdating]="true"
-        [allowTaskUpdating]="true">
-    </dxo-editing>
-  
-  
+  </dxi-item>
 
-  <dxo-gantt-tasks 
-    [dataSource]="data$ | async"
-    [colorExpr]="'color'"
-
-  >
-  </dxo-gantt-tasks>
-  
-  <dxo-gantt-dependencies [dataSource]="dependencies"></dxo-gantt-dependencies>
-  <dxo-gantt-resources [dataSource]="resources"></dxo-gantt-resources>
-  <dxo-gantt-resource-assignments [dataSource]="resourceAssignments"></dxo-gantt-resource-assignments>
-
-  <dxi-gantt-column 
-    [allowSorting]="false" 
-    [allowFiltering]="true" dataField="title" caption="項目" [width]="300"
-    cellTemplate="title-item"
-  >
-  </dxi-gantt-column>
-  <div 
-    *dxTemplate="let data of 'title-item'"
-    [class.ahead]="data.data?.ahead"
-    [class.delayed]="data.data?.delayed" 
-  >
-    {{ data?.data?.title }} 
-  </div>
-  <dxi-gantt-column [allowSorting]="false" dataField="start" caption="開始日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
-  <dxi-gantt-column [allowSorting]="false" dataField="end" caption="終了日" dataType="date" format="yyyy/MM/dd"></dxi-gantt-column>
-
-  <!-- <dxo-gantt-toolbar>
-    <dxi-gantt-item name="undo"></dxi-gantt-item>
-    <dxi-gantt-item name="redo"></dxi-gantt-item>
-    <dxi-gantt-item name="separator"></dxi-gantt-item>
-    <dxi-gantt-item name="collapseAll"></dxi-gantt-item>
-    <dxi-gantt-item name="expandAll"></dxi-gantt-item>
-    <dxi-gantt-item name="separator"></dxi-gantt-item>
-    <dxi-gantt-item name="addTask"></dxi-gantt-item>
-    <dxi-gantt-item name="deleteTask"></dxi-gantt-item>
-    <dxi-gantt-item name="separator"></dxi-gantt-item>
-    <dxi-gantt-item name="zoomIn"></dxi-gantt-item>
-    <dxi-gantt-item name="zoomOut"></dxi-gantt-item>
-  </dxo-gantt-toolbar> -->
-
-  <dxo-gantt-validation [autoUpdateParentTasks]="true">
-  </dxo-gantt-validation>
-</dx-gantt>
-
-<app-task-editor
-  [visible]="popupVisible()"
-  [task]="popupTask()"
-  (closed)="closePopup()"
-></app-task-editor>
-
-
-
-
-
-<div class="mb-2"></div>
-<h3>計畫列表</h3>
-<app-list></app-list>
+  <dxi-item title="計畫列表">
+    <div *dxTemplate  class="p-2">
+      <div class="mb-2"></div>
+      <h3>計畫列表</h3>
+      <app-list></app-list>
+    </div>
+  </dxi-item>
+</dx-tab-panel>

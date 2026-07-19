@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal, viewChild } from '@angular/core';
+import { DxTabPanelModule } from 'devextreme-angular/ui/tab-panel';
 import { DxGanttComponent } from 'devextreme-angular/ui/gantt';
 import { DxGanttModule } from 'devextreme-angular';
 import { Dependency, Resource, ResourceAssignment, Task } from './service/data';
@@ -40,9 +41,9 @@ import { List } from './list/list';
     TaskEditor,
     EstimationHistories,
     PlanTaskMetricsHistories,
-    PlanMilestoneMetricsHistories
-    ,
-    List
+    PlanMilestoneMetricsHistories,
+    List,
+    DxTabPanelModule
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',

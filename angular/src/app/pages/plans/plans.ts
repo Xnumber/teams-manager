@@ -399,7 +399,11 @@ export class Plans {
 
   
   onTaskUpdating(e: TaskUpdatingEvent) {
-    console.log('Task updated event:', e);
+    if (
+      e.newValues.start === undefined || e.newValues.end === undefined) {
+      e.cancel = true;
+      return
+    }
     const start = e.newValues.start;
     const formattedStart = start ? formatDate(start, 'yyyy-MM-dd') : null;
     if (start) {

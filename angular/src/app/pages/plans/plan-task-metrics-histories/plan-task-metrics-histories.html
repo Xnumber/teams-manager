@@ -1,0 +1,35 @@
+<div>
+	<div class="chart-title">
+		<h3>工作數歷史</h3>
+	</div>
+	<dx-chart
+		[dataSource]="metricsHistories$ | async"
+		[commonSeriesSettings]="{ argumentField: 'x', type: 'line' }"
+		style="height: 320px; width: 100%;"
+	>
+		<dxi-series valueField="task_added_count" name="新增工作"></dxi-series>
+		<dxi-series valueField="task_count" name="工作總數"></dxi-series>
+		<dxi-series valueField="task_completed_count" name="完成工作"></dxi-series>
+		<!-- <dxi-series valueField="milestone_count" name="里程碑總數"></dxi-series>
+		<dxi-series
+			valueField="milestone_added_count"
+			name="新增里程碑"
+		></dxi-series>
+		<dxi-series
+			valueField="milestone_completed_count"
+			name="完成里程碑"
+		></dxi-series> -->
+
+		<dxo-tooltip [enabled]="true"></dxo-tooltip>
+		<dxo-legend
+			verticalAlignment="bottom"
+			horizontalAlignment="center"
+			[visible]="true"
+		></dxo-legend>
+		<dxo-argument-axis
+			argumentType="datetime"
+			[label]="{ format: 'yyyy/MM/dd' }"
+			[tickInterval]="{ days: 7 }"
+		></dxo-argument-axis>
+	</dx-chart>
+</div>

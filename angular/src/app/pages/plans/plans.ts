@@ -22,7 +22,8 @@ import { DependencyDeletingEvent, DependencyInsertingEvent, TaskMovingEvent, Tas
 import { formatDate } from 'devextreme/localization';
 import { TaskEditor } from './task-editor/task-editor';
 import { EstimationHistories } from './estimation-histories/estimation-histories';
-import { MetricsHistories } from './metrics-histories/metrics-histories';
+import { PlanTaskMetricsHistories } from './plan-task-metrics-histories/plan-task-metrics-histories';
+import { PlanMilestoneMetricsHistories } from './plan-milestone-metrics-histories/plan-milestone-metrics-histories';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -37,7 +38,8 @@ import { MetricsHistories } from './metrics-histories/metrics-histories';
     DxToastModule,
     TaskEditor,
     EstimationHistories,
-    MetricsHistories
+    PlanTaskMetricsHistories,
+    PlanMilestoneMetricsHistories
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',

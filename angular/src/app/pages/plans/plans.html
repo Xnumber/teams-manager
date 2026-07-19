@@ -22,10 +22,22 @@
   [planId]="selectedPlanId()"
   [refreshToken]="planHistoryRefreshToken()"
 ></app-estimation-histories>
-<app-metrics-histories
-  [planId]="selectedPlanId()"
-  [refreshToken]="metricsHistoriesRefreshToken()"
-></app-metrics-histories>
+<div class="flex-row">
+  <div class="flex-1 p-2">
+    <app-plan-task-metrics-histories
+      [planId]="selectedPlanId()"
+      [refreshToken]="metricsHistoriesRefreshToken()"
+    ></app-plan-task-metrics-histories>
+  </div>
+
+  <div class="flex-1 p-2">
+    <app-plan-milestone-metrics-histories
+      [planId]="selectedPlanId()"
+      [refreshToken]="metricsHistoriesRefreshToken()"
+    ></app-plan-milestone-metrics-histories>
+  </div>
+
+</div>
 <div>
   <h3>
     預計完成日 {{ latestTaskEnd() | date: "yyyy/MM/dd" }}

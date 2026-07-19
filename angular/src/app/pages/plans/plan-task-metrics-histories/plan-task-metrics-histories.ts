@@ -6,12 +6,12 @@ import { combineLatest, from, map, of, switchMap, catchError } from 'rxjs';
 import { PlanService } from '../service/plans';
 
 @Component({
-  selector: 'app-metrics-histories',
+  selector: 'app-plan-task-metrics-histories',
   imports: [CommonModule, DxChartModule],
-  templateUrl: './metrics-histories.html',
-  styleUrl: './metrics-histories.scss',
+  templateUrl: './plan-task-metrics-histories.html',
+  styleUrl: './plan-task-metrics-histories.scss',
 })
-export class MetricsHistories {
+export class PlanTaskMetricsHistories {
   planId = input<string | null>(null);
   refreshToken = input<number>(0);
 

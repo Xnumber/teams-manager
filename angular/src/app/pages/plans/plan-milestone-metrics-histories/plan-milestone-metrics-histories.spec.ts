@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MetricsHistories } from './metrics-histories';
+import { PlanMilestoneMetricsHistories } from './plan-milestone-metrics-histories';
 import { PlanService } from '../service/plans';
 
-describe('MetricsHistories', () => {
-  let component: MetricsHistories;
-  let fixture: ComponentFixture<MetricsHistories>;
+describe('PlanMilestoneMetricsHistories', () => {
+  let component: PlanMilestoneMetricsHistories;
+  let fixture: ComponentFixture<PlanMilestoneMetricsHistories>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetricsHistories],
+      imports: [PlanMilestoneMetricsHistories],
       providers: [
         {
           provide: PlanService,
@@ -22,7 +22,7 @@ describe('MetricsHistories', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MetricsHistories);
+    fixture = TestBed.createComponent(PlanMilestoneMetricsHistories);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

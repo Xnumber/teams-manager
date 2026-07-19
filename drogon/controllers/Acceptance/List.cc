@@ -5,10 +5,6 @@
 #include "plugins/RequestContext/RequestContext.h"
 #include "models/PlansProjects.h"
 
-
-
-
-
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::teams_manager;
@@ -22,14 +18,16 @@ void AcceptanceCtrl::list(const HttpRequestPtr &req,
         DbClientPtr clientPtr = drogon::app().getDbClient("teams_manager");
 
         std::string requesterId = req->getParameter("requester_id");
-        std::optional<std::string> requesterParam;
+        // std::optional<std::string> requesterParam;
         if (requesterId.empty())
         {
-            requesterParam = std::nullopt;
-        }
-        else
-        {
-            requesterParam = requesterId;
+            Json::Value error;
+            error["result"] = "error";
+            error["message"] = "Missing requester_id parameter and user context";
+            auto resp = HttpResponse::newHttpJsonResponse(error);
+            resp->setStatusCode(k400BadRequest);
+            callback(resp);
+            return;
         }
 
         clientPtr->execSqlAsync(
@@ -74,7 +72,7 @@ void AcceptanceCtrl::list(const HttpRequestPtr &req,
                 resp->setStatusCode(k500InternalServerError);
                 callback(resp);
             },
-            requesterParam);
+            requesterId);
     }
     catch (const std::exception &e)
     {

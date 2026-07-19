@@ -34,6 +34,28 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 		std::string user_id = RequestContext::getUserId();
 		std::string task_id = (*json)["task_id"].asString();
 
+		if (user_id.empty())
+		{
+			Json::Value error;
+			error["result"] = "error";
+			error["message"] = "Unauthorized: missing requester_id from request context";
+			auto resp = HttpResponse::newHttpJsonResponse(error);
+			resp->setStatusCode(k401Unauthorized);
+			callback(resp);
+			return;
+		}
+
+		if (task_id.empty())
+		{
+			Json::Value error;
+			error["result"] = "error";
+			error["message"] = "task_id is required";
+			auto resp = HttpResponse::newHttpJsonResponse(error);
+			resp->setStatusCode(k400BadRequest);
+			callback(resp);
+			return;
+		}
+
 		// serialize acceptors array to JSON string for SQL jsonb parameter
 		std::string acceptorsJson;
 		if (json->isMember("acceptors") && (*json)["acceptors"].isArray())
@@ -44,6 +66,17 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 		else
 		{
 			acceptorsJson = "[]";
+		}
+
+		if (acceptorsJson == "[]")
+		{
+			Json::Value error;
+			error["result"] = "error";
+			error["message"] = "acceptors is required";
+			auto resp = HttpResponse::newHttpJsonResponse(error);
+			resp->setStatusCode(k400BadRequest);
+			callback(resp);
+			return;
 		}
 
 		clientPtr->execSqlAsync(
@@ -102,12 +135,18 @@ void AcceptanceCtrl::createRequest(const HttpRequestPtr &req,
 			},
 			[callback](const DrogonDbException &e)
 			{
-				LOG_ERROR << "Acceptance Request Error: " << e.base().what();
+				const std::string dbMessage = e.base().what();
+				LOG_ERROR << "Acceptance Request Error: " << dbMessage;
 				Json::Value err;
 				err["result"] = "error";
-				err["message"] = std::string("Create failed: ") + e.base().what();
+				err["message"] = std::string("Create failed: ") + dbMessage;
 				auto resp = HttpResponse::newHttpJsonResponse(err);
-				resp->setStatusCode(k500InternalServerError);
+
+				const bool isDuplicateRequester =
+					dbMessage.find("unique_task_requester") != std::string::npos ||
+					dbMessage.find("duplicate key value") != std::string::npos;
+
+				resp->setStatusCode(isDuplicateRequester ? k409Conflict : k500InternalServerError);
 				callback(resp);
 			},
 			user_id,

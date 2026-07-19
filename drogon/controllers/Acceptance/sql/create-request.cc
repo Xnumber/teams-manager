@@ -6,11 +6,11 @@ WITH ins AS (
 	VALUES ($1, $2)
 	RETURNING id, task_id, requester_id, created_at
 ), acc AS (
-	INSERT INTO task_acceptor (task_id, user_id)
-	SELECT ins.task_id, (jsonb_array_elements_text($3::jsonb))::uuid
+	INSERT INTO task_acceptor (task_id, user_id, request_id)
+	SELECT ins.task_id, (jsonb_array_elements_text($3::jsonb))::uuid, ins.id
 	FROM ins
 	ON CONFLICT DO NOTHING
-	RETURNING task_id, user_id
+	RETURNING task_id, user_id, request_id
 )
 SELECT
 	ins.id,

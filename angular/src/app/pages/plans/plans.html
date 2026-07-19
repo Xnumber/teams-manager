@@ -171,11 +171,4 @@
 
 <div class="mb-2"></div>
 <h3>計畫列表</h3>
-<dx-data-grid
-  [dataSource]="plansDataSource"
-  [columns]="planColumns"
-  [editing]="{ allowAdding: true, allowUpdating: true, mode: 'popup' }"
->
-  <dxo-filter-row [visible]="true"> </dxo-filter-row>
-  
-</dx-data-grid>
+<app-list></app-list>

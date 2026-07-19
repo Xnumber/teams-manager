@@ -2,16 +2,11 @@
 import { Component, inject } from '@angular/core';
 import { DxButtonModule, DxChartModule, DxDataGridModule, DxSelectBoxModule, DxTagBoxModule, DxTextBoxModule } from 'devextreme-angular';
 import { DxiChartSeriesComponent } from 'devextreme-angular/ui/chart/nested';
-import { Line } from './line/line';
-import { TeamProgressCompare } from './team-progress-compare/team-progress-compare';
-import { MemberProgressCompare } from './member-progress-compare/member-progress-compare';
 import { AnalyticsLookupDataSourceService } from './lookup-data-source.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProjectEstimationHistories } from '../../components/project-estimation-histories/project-estimation-histories';
-import { MilestoneEstimationHistoryAndTaskList } from '../../components/milestone-estimation-history-and-task-list/milestone-estimation-history';
-import { ProjectMetricsHistories } from '../components/project-metrics-histories/project-metrics-histories';
 
 
 
@@ -25,12 +20,7 @@ import { ProjectMetricsHistories } from '../components/project-metrics-histories
     DxSelectBoxModule,
     DxTextBoxModule,
     CommonModule,
-    Line,
-    TeamProgressCompare,
-    MemberProgressCompare,
-    ProjectEstimationHistories,
-    MilestoneEstimationHistoryAndTaskList,
-    ProjectMetricsHistories
+    ProjectEstimationHistories
   ],
   templateUrl: './analytics.html',
   styleUrl: './analytics.scss',

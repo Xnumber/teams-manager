@@ -9,7 +9,6 @@ import { EditorPreparingEvent, InitNewRowEvent, RowPreparedEvent } from 'devextr
 import { TeamTaskContext } from './team-task-context/team-task-context';
 import { Auth } from '../../services/auth';
 import { editingPopupProps } from './config/form';
-import { PersonalTasks } from '../../components/personal-tasks/personal-tasks';
 import { CompleteTaskButton } from '../../components/complete-task-button/complete-task-button';
 import { Milestone } from '../../types/milestone';
 import { MilestonesDataSourceService } from './milestones-data-source.service';
@@ -27,7 +26,6 @@ import { Task } from '../../services/task';
     DxSelectBoxModule,
     DxCheckBoxModule,
     DxTextAreaModule,
-    PersonalTasks,
     CompleteTaskButton,
     DependenciesEditCell
     // TeamTaskContext

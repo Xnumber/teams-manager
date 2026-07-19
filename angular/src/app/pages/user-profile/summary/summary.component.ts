@@ -8,7 +8,6 @@ import { months, years } from './const';
 import { forkJoin, from } from 'rxjs';
 import { formatDate } from 'devextreme/localization';
 import { HttpClient } from '@angular/common/http';
-import { Analytics } from "../../analytics/analytics";
 
 @Component({
   selector: 'app-user-profile-summary',
@@ -19,8 +18,7 @@ import { Analytics } from "../../analytics/analytics";
     DxSelectBoxModule,
     DxFormModule,
     DxTabPanelModule,
-    DxDataGridModule,
-    Analytics
+    DxDataGridModule
 ]
 })
 export class UserProfileSummaryComponent {

@@ -24,6 +24,7 @@ import { TaskEditor } from './task-editor/task-editor';
 import { EstimationHistories } from './estimation-histories/estimation-histories';
 import { PlanTaskMetricsHistories } from './plan-task-metrics-histories/plan-task-metrics-histories';
 import { PlanMilestoneMetricsHistories } from './plan-milestone-metrics-histories/plan-milestone-metrics-histories';
+import { List } from './list/list';
 @Component({
   selector: 'app-plans',
   imports: [
@@ -40,6 +41,8 @@ import { PlanMilestoneMetricsHistories } from './plan-milestone-metrics-historie
     EstimationHistories,
     PlanTaskMetricsHistories,
     PlanMilestoneMetricsHistories
+    ,
+    List
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',

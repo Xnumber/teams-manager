@@ -1,5 +1,12 @@
+podman build -f ./Dockerfile.base -t drogon-base:1.0 .
+
+podman build -t teams-manager .
+
 podman build -t teams-manager-angular .
+
 podman rmi teams-manager-angular
+
+
 podman build --no-cache -t teams-manager .
 
 podman run -d \
@@ -12,7 +19,7 @@ podman run -d \
 
 podman run -d   --replace   --name project-manager-angular   -p 8080:80   localhost/project-manager-angular:latest
 
-
+podman run -d --replace   --name teams-manager   -p 5001:5001   localhost/teams-manager:latest
 
 1. 重新 build（不要用舊 cache）
 podman build --no-cache -t teams-manager .

@@ -59,7 +59,7 @@ RUN mkdir build && \
 cd build && \
 cmake .. && \
 make -j$(nproc)
-COPY ./config.json ./build/config.json
+COPY ./hetzner.config.json ./build/config.json
 
 EXPOSE 5001
 

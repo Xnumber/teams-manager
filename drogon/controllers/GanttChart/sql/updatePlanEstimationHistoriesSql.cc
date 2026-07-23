@@ -1,6 +1,6 @@
 #include "sql.h"
 
-extern const char *updatePlanEstimationHistoriesSql = R"(
+const char *updatePlanEstimationHistoriesSql = R"(
     INSERT INTO plan_estimation_histories (
         plan_id,
         estimation_date,

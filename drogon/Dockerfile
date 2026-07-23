@@ -1,19 +1,66 @@
-FROM ubuntu:24.04
+# FROM ubuntu:24.04
 
-RUN apt-get update && apt-get install -y \
-    libpq5 \
-    libssl3 \
-    libjsoncpp25 \
-    zlib1g \
-    && rm -rf /var/lib/apt/lists/*
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     gcc \
+#     g++ \
+#     cmake \
+#     git \
+#     libjsoncpp-dev \
+#     uuid-dev \
+#     zlib1g-dev \
+#     openssl \
+#     libssl-dev \
+#     libpq-dev &&\
+#     rm -rf /var/lib/apt/lists/*
+#     # postgresql-all
+
+# # 安裝 Drogon
+# RUN git clone https://github.com/drogonframework/drogon && \
+#     cd drogon && \
+#     git submodule update --init && \
+#     mkdir build && \
+#     cd build && \
+#     cmake .. && \
+#     make -j$(nproc) && \
+#     make install
+
+# WORKDIR /app
+
+# COPY . .
+
+# RUN mkdir build && \
+#     cd build && \
+#     cmake .. && \
+#     make -j$(nproc)
+
+# EXPOSE 8080
+
+# CMD ["./build/teams-manager"]
+
+
+
+
+
+
+
+
+
+
+
+FROM drogon-base:1.0
 
 WORKDIR /app
 
-COPY build/teams-manager ./teams-manager
-COPY config.json .
+COPY . .
 
-RUN useradd -m appuser
+RUN mkdir build && \
+cd build && \
+cmake .. && \
+make -j$(nproc)
+COPY ./config.json ./build/config.json
 
-USER appuser
+EXPOSE 5001
 
-CMD ["./teams-manager"]
+CMD ["./build/teams-manager"]

@@ -1,0 +1,37 @@
+FROM ubuntu:24.04
+
+
+
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    build-essential \
+    cmake \
+    git \
+    libjsoncpp-dev \
+    uuid-dev \
+    zlib1g-dev \
+    openssl \
+    libssl-dev \
+    libpq-dev \
+    libcpp-jwt-dev \
+    libargon2-dev \
+    nlohmann-json3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+
+RUN git clone --depth=1 https://github.com/drogonframework/drogon.git /tmp/drogon && \
+    cd /tmp/drogon && \
+    git submodule update --init && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make -j$(nproc) && \
+    make install && \
+    cd / && \
+    rm -rf /tmp/drogon

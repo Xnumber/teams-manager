@@ -38,7 +38,7 @@
           },
           "configurations": {
             "production": {
-              "outputPath": "dist/teams-manager/browser",
+              "outputPath": "dist/teams-manager",
               "budgets": [
                 {
                   "type": "initial",

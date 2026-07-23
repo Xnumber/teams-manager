@@ -1,4 +1,10 @@
 {
     "cmake.sourceDirectory": "/home/clement/projects/project-teams-manager/drogon",
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5501,
+    "chat.tools.terminal.autoApprove": {
+        "cd /home/clement/projects/project-teams-manager/angular && npx ngc -p tsconfig.app.json --noEmit": true,
+        "npx ngc -p tsconfig.app.json --noEmit": true,
+        "cd /home/clement/projects/project-teams-manager/angular ": true,
+        "cd angular && npx ngc -p tsconfig.app.json --noEmit": true
+    }
 }
